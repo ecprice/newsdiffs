@@ -10,7 +10,7 @@ urlpatterns = patterns('',
    url(r'^newsdiffer/static/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root': '/mit/ecprice/web_scripts/newsdiffer/static',
         }),
-   (r'^newsdiffer/', include('newsdiffer.frontend.urls')),
+   (r'^newsdiffer/', include('website.frontend.urls')),
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),

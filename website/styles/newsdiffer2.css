@@ -239,16 +239,19 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#f1f1f1, endCol
 }
 
 #title {
-	font-family: "museo-slab";
-	font-size: 50px;
-	text-align: center 
+	font-family: "futura-pt",sans-serif;
+	font-style: normal;
+	font-weight: 700;	
+	font-size: 60px;
+	text-align: center; 
 	padding-top:10px;
 	
 
 #subtitle {
-	font-family: "futura-pt",sans-serif;
+	font-family: "museo-slab",sans-serif;
 	font-size: 28px;
-	text-align: center 
+	padding-top:-10px;
+	text-align: center; 
 	padding-bottom:10px;
 }
 
