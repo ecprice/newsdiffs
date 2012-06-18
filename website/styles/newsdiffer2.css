@@ -1,0 +1,510 @@
+body {
+	background-color: white;
+	font-family: "futura-pt",sans-serif;
+	font-size: 18px;}
+
+li { width: 100%; }
+
+p {
+	margin-top: 0;
+	margin-bottom: 1em;
+	font-size:18px;
+}
+
+
+ul li {
+	padding-bottom: .25em
+}
+
+form {
+	margin: 0;
+	padding: 0;
+}
+
+FIELDSET {
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+	
+applet {
+	padding: 10px;
+}
+
+h1 {
+	font-size:48 px;
+}
+h2 {
+	font-size:36 px;
+}
+h3 {
+	font-size:24 px;
+}
+h4 {
+	font-size:18 px;
+}
+
+blockquote {
+	margin: 12px;
+}
+
+#header {
+	width: 100%;
+	margin: auto;
+	padding: 1em;
+	background-color: white;
+}
+
+
+#main {
+	width: 840px;
+	margin: auto;
+	padding: 1em;
+	background-color: white;
+}
+
+#listings {
+	width: 100%;
+	margin: auto;
+	padding: 1em;
+	background-color: white;
+}
+
+#create {
+	font-size: 120%;
+	font-weight: bold;
+}
+
+#nav {
+	padding: 0;
+	align: center;
+	text-decoration: none;
+
+}
+
+#nav td {
+	font-weight: bold;
+	font-color: black;
+	text-decoration: none;
+	width: 5em;
+	text-align: center;
+	font-size:20px;
+}
+
+#nav td:hover {
+	font-weight: bold;
+	font-color: white;
+	text-align: center;
+	width: 5em;
+	background-color:#cccccc;
+}
+
+#listing td a img {
+	margin-bottom: -2px;
+	margin-right: 20px;
+}
+
+#listing th  {
+	font-weight: bold;
+	font-size: 20px;
+	text-align: left;
+}
+
+#listing {
+	padding: 0;
+	align: center;
+	text-decoration: none;
+
+}
+
+#listing table {
+	width: 100%
+}
+
+#listing td {
+	font-color: black;
+	font-size:20px;
+}
+
+#listing td:hover {}
+
+
+hr {
+	color: #eee;
+	background-color: #eee;
+	height: 2px;
+	width: 100%;
+	margin-bottom: 18px;
+	margin-top: 10;
+}
+
+/* url form and button stuff */
+
+.urlform .txt {
+    vertical-align:middle;
+    font:italic 18px futura-pt, Arial, Helvetica, sans-serif;
+    background:#fff;
+    width:600px;
+    height:23px;
+    padding:11px 6px;
+    float:left;
+    -webkit-box-shadow:0 0 4px #4b4b4b;
+    -moz-box-shadow:0 0 4px #4b4b4b;
+    box-shadow:0 0 4px #4b4b4b;
+    margin:4px;
+}
+
+.urlform .button, 
+.urlform .button:active, 
+.urlform .button.active {
+     float:right;
+     width: 151px;
+  height: 55px;
+  margin-top: 3px;
+  margin-left:4px;
+  font-size:18px;   
+
+}
+
+.urlform .button:hover
+{
+	background-color: #bebebe !important;
+   	background: -o-linear-gradient( #bebebe,#f1f1f1) !important;
+	background: linear-gradient( #bebebe,#f1f1f1) !important;
+	background: -moz-linear-gradient(top,  #bebebe,#f1f1f1);
+
+/* webkit based browsers */
+	background: -webkit-gradient(linear, left top, left bottom, from(#bebebe ), to(#f1f1f1)) !important;
+
+/* For Internet Explorer 5.5 - 7 */
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#bebebe, endColorstr=#f1f1f1)!important;
+/* For Internet Explorer 8 & 9 */
+-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#bebebe, endColorstr=#f1f1f1)"!important;
+
+}  
+
+.urlform .button, 
+.urlform .button:active, 
+.urlform .button.active {
+     border-color: #f1f1f1 !important;
+  color:#444444 !important;
+       text-shadow: 0 1px #FEFEFE !important;  
+   background-color: #f1f1f1 !important;
+  background: -o-linear-gradient( #f1f1f1,#bebebe) !important;
+background: linear-gradient( #f1f1f1,#bebebe) !important;
+background: -moz-linear-gradient(top,  #f1f1f1,#bebebe);
+/* webkit based browsers */
+background: -webkit-gradient(linear, left top, left bottom, from(#f1f1f1 ), to(#bebebe)) !important;
+
+/* For Internet Explorer 5.5 - 7 */
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#f1f1f1, endColorstr=#bebebe)!important;
+/* For Internet Explorer 8 & 9 */
+-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#f1f1f1, endColorstr=#bebebe)"!important;
+}
+
+/* end button stuff */
+
+#ac {
+	border: 2px #eee solid;
+}
+
+#controls {
+	margin-top: .5em
+}
+
+#error {
+	margin: 1em 0 1em 0;
+	padding: 1em;
+	border: 1px gray solid;
+	background-color: white;
+	color: red;
+	font-size: 200%
+}
+
+#file {
+	padding: 1px;
+}
+
+.or {
+	font-variant: small-caps;
+	font-size: 250%;
+	font-family: serif;
+	padding: 10px;
+	margin: .25em 0 .25em 0;
+}
+
+.submit {
+	display: block;
+	margin-top: 4px
+}
+
+#title {
+	font-family: "museo-slab";
+	font-size: 50px;
+	text-align: center 
+	padding-top:10px;
+	
+
+#subtitle {
+	font-family: "futura-pt",sans-serif;
+	font-size: 28px;
+	text-align: center 
+	padding-bottom:10px;
+}
+
+#maintitle {
+	font-family: "museo-slab";
+	font-size: 23px;
+	text-align: center 
+	padding-top:-10px;
+	
+p.drop:FIRST-LETTER {
+	float: left;
+	font-size: 24pt;
+	font-weight: bold;
+}
+
+td.title {
+	padding-left: 4px
+}
+
+img.thumb {
+	padding: 4px;
+	border: 1px solid #ddd;
+}
+
+img.center {
+    margin-left: auto;
+    margin-right: auto;
+    }
+
+
+img.centered {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#latest {
+	width: 100%
+}
+
+#latest td {
+	width: 170px
+}
+
+#bottom {
+	margin-top: 2em;
+	margin-bottom: 0
+}
+
+#footer {
+	border-top: 1px solid #999;
+	margin-top: 2em;
+}
+
+#footer td {
+	font-size: 80%;
+}
+
+#embed {
+	font-size: 85%;
+	background-color: #eef;
+}
+
+.disabled {
+	color: gray
+}
+
+.username {
+	font-size: 85%
+}
+
+.ago {
+	font-size: 85%;
+	color: #666
+}
+
+blockquote {
+	margin: 25px;
+	padding: 25px;
+}
+
+#comment p {
+	margin: 0;
+	padding: 0
+}
+
+#commment {
+	margin-bottom: 2px
+}
+
+.fonts td {
+	padding-bottom: .5em
+}
+
+td.fontdesc {
+	padding-left: 2em
+}
+
+td.fontname {
+	font-weight: bold;
+	width: 25em;
+}
+
+#deli {
+	padding-top: 6px;
+	margin-bottom: 6px;
+}
+
+}
+#deli a,#deli a:visited {
+	font-weight: bold;
+	color: #444;
+	margin-right: 8px
+}
+
+#deli img {
+	margin-right: 2px
+}
+
+#saver {
+	float: right;
+}
+
+#deli a {
+	border: 1px solid #ccc;
+}
+
+#saver a {
+	color: #339922;
+}
+
+td a.button {
+	position: relative;
+	padding: 3px;
+	text-decoration: none;
+	color: black;
+	font-weight: bold;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
+a.button {
+	position: relative;
+	padding: 3px;
+	text-decoration: none;
+	color: black;
+	font-weight: bold;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
+a.button:hover {
+	left: -1;
+	top: -1;
+	padding: 2px;
+	margin-right: 2px ! important;
+	}
+
+a.button:active {
+	left: 0;
+	top: 0;
+	padding: 2px;
+}
+
+p.newsitem {
+	margin-bottom: 2em
+}
+
+.newsdate {
+	font-weight: bold
+}
+
+h2.faq {
+	margin-bottom: .25em
+}
+
+div.answer {
+	margin-bottom: 2em
+}
+
+.goog {
+	margin: 4px 0 12px 0 ! important
+}
+
+.icon {
+	border: none;
+	vertical-align: baseline
+}
+
+.donate {
+	background: left center url(/static/v1356/money.png) no-repeat;
+	padding-left: 16px;
+	font-size: 12px;
+}
+
+#embedinstructions {
+	margin-top: 1em
+}
+
+.build {
+	text-align: right;
+	font-size: 70%;
+	color: gray;
+	padding: 0;
+	margin: 0
+}
+
+#wordlenav {
+	margin-bottom: .5em
+}
+
+.random {
+	padding-left: 18px;
+	background: left center url(/static/v1356/arrow_refresh.png) no-repeat;
+}
+
+#atomlink {
+	padding-left: 15px;
+	background: left center url(/static/v1356/feed-icon-12x12.png) no-repeat
+		;
+}
+
+#attribution {
+	margin-top: .5em;
+	width: 100%
+}
+
+#savedverbiage {
+	font-size: 85%
+}
+
+.win .formac, .mac .forwin { display: none }
+
+#tm {
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	background-color: #FFFF99;
+	border: 1px solid #9999FF;
+	padding: 1em ! important;
+	margin-bottom: 1em;
+	max-width: 31em;
+}
+
+#tm h3 {
+	margin-top:0;
+	margin-bottom: 8px;
+}
+
+#tm p {
+	margin:0;
+}
+
+.deletion_notice {
+	border: 1px solid #ccc;
+	background-color: #ffc;
+	padding: 0 1em 0 1em;
+	margin: 1em 0 1em 0;
+}
+
+.danger { color: red ! important; }

@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>
+      News Differ
+    </title>
+  </head>
+  <body>
+    <h1>News Differ</h1>
+    <table>
+      <tr><th>Url</th><th>Date</th><th>Diff</th></tr>
+      {% for url, nc, changes in articles %}
+      <tr><td rowspan="{{nc}}"><a href="{{url}}">{{url}}</a></td>
+        {% for link, difflink, date in changes %}
+        <td><a href="{{link}}">{{date}}</a></td>
+        {% if difflink %}
+        <td><a href="{{difflink}}">(diff)</a></td></tr><tr>
+        {% else %}
+        <td></td></tr>
+        {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </table>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteRule ^static - [L]
+RewriteRule ^images - [L]
+RewriteRule ^styles - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /newsdiffer/mysite.fcgi/newsdiffer/$1 [QSA,L]

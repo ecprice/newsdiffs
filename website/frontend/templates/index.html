@@ -1,0 +1,65 @@
+
+
+<html>
+  <head>
+    <title>
+      News Differ | Browse
+    </title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>NewsDiffer | Browse</title>
+		<link rel="stylesheet" type="text/css" href="http://ecprice.scripts.mit.edu/newsdiffer/styles/newsdiffer2.css" />
+		
+			<!-- typekit -->
+		<script type="text/javascript" src="http://use.typekit.com/nsl6mvb.js"></script>
+		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+  </head>
+  <body>
+
+<! -- header  -->			
+
+		<div id="header">   
+		  <div style="position:relative">
+			<table id="nav" style="width:100%;position:relative"><tr valign="bhseline">
+				<td><a class="button" title="Home " href="http://ecprice.scripts.mit.edu/newsdiffer/">Home</a></td>
+				<td><a class="button" title="Browse" href="http://ecprice.scripts.mit.edu/newsdiffer/browse/">Browse</a></td>
+				<td><a class="button" title="Examples" href="http://ecprice.scripts.mit.edu/newsdiffer/examples/">Examples</a></td>
+				<td><a class="button" title="About" href="http://ecprice.scripts.mit.edu/newsdiffer/about/">About</a></td>
+				<td><a class="button" title="Examples" href="http://ecprice.scripts.mit.edu/newsdiffer/contact/">Contact</a></td>
+						</tr></table>
+          </div>
+		  <hr/>
+		<div id="title" align="center">The New York Times NewsDiffer!</div>
+		<div id="subtitle" align="center"><h3>Tracking Changes in New York Times Articles Over Time</h3></a></div>
+			<p>
+			<hr/>
+		</div>
+<! -- end header  -->			
+<div id="#listing">
+    <table id="listing" style="width:100%">
+      <tr><th>Article</th><th>Date</th><th>Diff</th></tr>
+      {% for url, date, title, byline, nc, changes in articles %}
+      <tr><td rowspan="{{nc}}" valign="top"><a href="{{url}}">{{title}}</a></td>
+        {% for link, difflink, date in changes %}
+        <td><a href="{{link}}">{{date}}</a></td>
+        {% if difflink %}
+        <td><a href="{{difflink}}">(Compare)</a></td></tr><tr>
+        {% else %}
+        <td></td></tr>
+        {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </table>
+</div>
+<! -- footer below here -->			
+			<div id="footer">
+				<table width="100%"><tr valign="bottom" align="center">
+					<td valign="bottom" style="width:25%;">
+						&copy; 2012 <a href="/contact">NewsDiffer</a>
+					</td>
+				</tr></table>
+			</div>
+
+
+  </body>
+</html>
