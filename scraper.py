@@ -7,9 +7,13 @@ from BeautifulSoup import BeautifulSoup
 import os
 import errno
 import models
+import re
+from datetime import datetime, timedelta
 
 DIFF_DIR = 'articles/'
 GIT_DIR = DIFF_DIR + '.git'
+
+DATE_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
 def mkdir_p(path):
     try:
@@ -20,7 +24,7 @@ def mkdir_p(path):
         else:
             raise
 
-
+# Begin hot patch for https://bugs.launchpad.net/bugs/788986
 def bs_fixed_getText(self, separator=u""):
     bsmod = sys.modules[BeautifulSoup.__module__]
     if not len(self.contents):
@@ -33,12 +37,11 @@ def bs_fixed_getText(self, separator=u""):
             strings.append(current)
         current = current.next
     return separator.join(strings)
-
 sys.modules[BeautifulSoup.__module__].Tag.getText = bs_fixed_getText
-
+# End fix
 
 def canonicalize_url(url):
-    return url[:url.find('?')]
+    return (url+'?')[:url.find('?')]
 
 def strip_prefix(string, prefix):
     if string.startswith(prefix):
@@ -54,20 +57,27 @@ def grab_url(url):
         return grab_url(url)
     return text
 
-feeder_urls = ['http://www.nytimes.com/', 'http://www.nytimes.com/pages/opinion/index.html']
-def nyt_filter(url):
-    return url and 'nytimes.com/201' in url
+feeders = [('http://www.nytimes.com/',
+            lambda url: 'nytimes.com/201' in url),
+           ('http://edition.cnn.com/',
+            lambda url: 'edition.cnn.com/201' in url),
+               ]
 
-
-def find_article_urls(html, filter_article):
+def find_article_urls(feeder_url, filter_article):
+    html = grab_url(feeder_url)
     soup = BeautifulSoup(html)
-    urls = [a.get('href') for a in soup.findAll('a')]
+
+    # "or ''" to make None into str
+    urls = [a.get('href') or '' for a in soup.findAll('a')]
+
+    domain = os.path.dirname(feeder_url)
+    urls = [url if '://' in url else domain + url for url in urls]
     return [url for url in urls if filter_article(url)]
 
 def get_all_article_urls():
     ans = set()
-    for feeder_url in feeder_urls:
-        urls = find_article_urls(grab_url(feeder_url), nyt_filter)
+    for (feeder_url, filter_func) in feeders:
+        urls = find_article_urls(feeder_url, filter_func)
         ans = ans.union(map(canonicalize_url, urls))
     return ans
 
@@ -76,6 +86,7 @@ class Article(object):
     title = None
     date = None
     body = None
+    real_article = True
     meta = []
     SUFFIX = '?pagewanted=all'
 
@@ -107,7 +118,40 @@ class Article(object):
     def __unicode__(self):
         return u'\n'.join((self.date, self.title, self.byline,
                           self.top_correction, self.body,
-                          self.authorid, self.bottom_correction,))
+                          self.authorid, self.bottom_correction,)).strip()+'\n'
+
+
+class CNNArticle(Article):
+    SUFFIX = ''
+
+    def _parse(self, html):
+        soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES)
+        p_tags = soup.findAll('p', attrs={'class':re.compile(r'\bcnn_storypgraphtxt\b')})
+        if not p_tags:
+            self.real_article = False
+            return
+
+        self.meta = soup.findAll('meta')
+        self.title = soup.find('meta', attrs={'itemprop':'headline'}).get('content')
+        datestr = soup.find('meta', attrs={'itemprop':'dateModified'}).get('content')
+        date = datetime.strptime(datestr, '%Y-%m-%dT%H:%M:%SZ') - timedelta(hours=4)
+        self.date = date.strftime(DATE_FORMAT)
+        self.byline = soup.find('meta', attrs={'itemprop':'author'}).get('content')
+        lede = p_tags[0].previousSibling.previousSibling
+
+        editornotes = soup.findAll('p', attrs={'class':'cnnEditorialNote'})
+        contributors = soup.findAll('p', attrs={'class':'cnn_strycbftrtxt'})
+        
+
+        self.body = '\n'+'\n\n'.join([p.getText() for p in
+                                      editornotes + [lede] + p_tags + contributors])
+        authorids = soup.find('div', attrs={'class':'authorIdentification'})
+
+    def __unicode__(self):
+        return u'\n'.join((self.date, self.title, self.byline,
+                          self.body,)).strip()+'\n'
+
+
 
 class BlogArticle(Article):
     SUFFIX = '?pagemode=print'
@@ -125,6 +169,7 @@ class BlogArticle(Article):
 DomainNameToClass = {'www.nytimes.com': Article,
                      'opinionator.blogs.nytimes.com': BlogArticle,
                      'krugman.blogs.nytimes.com': BlogArticle,
+                     'edition.cnn.com': CNNArticle,
                      }
 
 def get_parser(url):
@@ -159,6 +204,8 @@ def update_article(url):
         print 'Unable to parse domain, skipping'
         return
     article = parser(url)
+    if not article.real_article:
+        return 0
     to_store = unicode(article).encode('utf8')
     return add_to_git_repo(to_store, url_to_filename(url))
 
@@ -170,15 +217,29 @@ def insert_all_articles(session):
     session.commit()
 
 
+def get_update_delay(minutes_since_update):
+    days_since_update = minutes_since_update // 24
+    if days_since_update < 1:
+        return 10
+    elif days_since_update < 7:
+        return 60
+    elif days_since_update < 30:
+        return 60*24
+    else:
+        return 60*24*7
+
 
 if __name__ == '__main__':
     session = models.Session()
     insert_all_articles(session)
     for article_row in session.query(models.Article).all():
-        if article_row.minutes_since_update() < 10:
+        print 'Woo:', article_row.minutes_since_update(), article_row.minutes_since_check()
+        delay = get_update_delay(article_row.minutes_since_update())
+        if article_row.minutes_since_check() < delay:
             continue
         print 'Considering', article_row.url
         if update_article(article_row.url):
             print 'Updated!'
-            article_row.update()
-            session.commit()
+            article_row.last_update = datetime.now()
+        article_row.last_check = datetime.now()
+        session.commit()
