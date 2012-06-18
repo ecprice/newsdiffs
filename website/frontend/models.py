@@ -22,6 +22,9 @@ def _reset_metadata():
     for commit in commits:
         (v, author, datestr, blank, changem) = commit.splitlines()
         fname = changem.split()[-1]
+        changekind = changem.split()[0]
+        if changekind == 'Reformat':
+            continue
         date = datetime.strptime(' '.join(datestr.split()[1:-1]),
                                  '%a %b %d %H:%M:%S %Y')
         d.setdefault(fname, []).append((date, v))
