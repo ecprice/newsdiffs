@@ -1,8 +1,10 @@
+import datetime
+import re
+
 from django.shortcuts import render_to_response, get_object_or_404
 from models import Article
 import models
 from django.http import HttpResponse, HttpResponseRedirect
-import re
 
 
 OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
@@ -47,11 +49,13 @@ def diffview(request):
     title = article.metadata()[1]
     date1 = models.get_commit_date(v1).strftime(OUT_FORMAT)
     date2 = models.get_commit_date(v2).strftime(OUT_FORMAT)
-    return render_to_response('diffview_templated.html', {'title': title,
-                                                          'date1':date1,
-                                                          'date2':date2,
-                                                'url1':url_template % v1,
-                                                'url2':url_template % v2})
+    return render_to_response('diffview_templated.html', {
+            'title': title,
+            'date1':date1, 'date2':date2,
+            'url1':url_template % v1, 'url2':url_template % v2,
+            'article_url': url, 'v1': v1, 'v2': v2,
+            'form_action': 'upvote',
+            })
 
 def view(request):
     url = request.REQUEST.get('url')
@@ -59,6 +63,16 @@ def view(request):
     article = Article.objects.get(url=url)
     text = article.get_version(v)
     return HttpResponse(text, content_type='text/plain;charset=utf-8')
+
+def upvote(request):
+    article_url = request.REQUEST.get('article_url')
+    diff_v1 = request.REQUEST.get('diff_v1')
+    diff_v2 = request.REQUEST.get('diff_v2')
+    remote_ip = request.META.get('REMOTE_ADDR')
+    article_id = Article.objects.get(url=article_url).id
+    models.Upvote(article_id=article_id, diff_v1=diff_v1, diff_v2=diff_v2, creation_time=datetime.datetime.now(), upvoter_ip=remote_ip).save()
+    return render_to_response('upvote.html')
+    
 
 def about(request):
     return render_to_response('about.html', {})
