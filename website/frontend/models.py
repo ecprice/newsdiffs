@@ -4,7 +4,9 @@ import subprocess
 import os
 from datetime import datetime
 
-GIT_DIR = '/mit/ecprice/web_scripts/newsdiffs/articles'
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+ROOT_DIR = os.path.dirname(os.path.dirname(THIS_DIR))
+GIT_DIR = ROOT_DIR+'/articles'
 
 def strip_prefix(string, prefix):
     if string.startswith(prefix):
@@ -35,7 +37,7 @@ class Article(models.Model):
     class Meta:
         db_table = 'articles'
 
-    url = models.CharField(max_length=255, blank=False)
+    url = models.CharField(max_length=255, blank=False, unique=True, db_index=True)
 
     def filename(self):
         return strip_prefix(self.url, 'http://').rstrip('/')
@@ -59,6 +61,17 @@ class Article(models.Model):
         title = f.readline().strip()
         byline = f.readline().strip()
         return (date, title, byline)
+
+
+class Upvote(models.Model):
+    class Meta:
+        db_table = 'upvotes'
+
+    article_id = models.IntegerField(blank=False)
+    diff_v1 = models.CharField(max_length=255, blank=False)
+    diff_v2 = models.CharField(max_length=255, blank=False)
+    creation_time = models.DateTimeField(blank=False)
+    upvoter_ip = models.CharField(max_length=255)
 
 
 def get_commit_date(commit):
