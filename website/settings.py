@@ -12,7 +12,10 @@ MANAGERS = ADMINS
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = '../newsdiffer.db'             # Or path to database file if using sqlite3.
 DATABASE_USER = 'ecprice'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'xxx'         # Not used with sqlite3.
+for line in open('/mit/ecprice/.my.cnf').read().split():
+    if line.startswith('password='):
+        pwd = line.split('=')[1]
+DATABASE_PASSWORD = pwd         # Not used with sqlite3.
 DATABASE_HOST = 'sql.mit.edu'             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 

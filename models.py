@@ -4,15 +4,22 @@ from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine('sqlite:///newsdiffer.db', echo=False)
+for line in open('/mit/ecprice/.my.cnf').read().split():
+    if line.startswith('password='):
+        pwd = line.split('=')[1]
+engine = create_engine('mysql://ecprice:%s@sql.mit.edu/ecprice+newsdiffs'%pwd, echo=False)
+#engine = create_engine('sqlite:///newsdiffer.db', echo=False)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
+
+
+ancient = datetime(1901, 1, 1)
 
 class Article(Base):
     __tablename__ = 'Articles'
 
     id = Column(Integer, primary_key=True)
-    url = Column(String, unique=True)
+    url = Column(String(255), unique=True)
     initial_date = Column(DateTime, nullable=False)
     last_update = Column(DateTime, nullable=False)
     last_check = Column(DateTime, nullable=False)
@@ -24,7 +31,7 @@ class Article(Base):
             initial_date = datetime.now()
         self.initial_date = initial_date
         self.last_update = datetime.now()
-        self.last_check = datetime.min
+        self.last_check = ancient
 
     def minutes_since_update(self):
         delta = datetime.now() - self.last_update
@@ -40,7 +47,23 @@ class Article(Base):
 if __name__ == '__main__':
     import sys
     import subprocess
-    Base.metadata.create_all(engine)
+
+    if '-s' in sys.argv:
+        Base.metadata.create_all(engine)
+
+    if '--canonicalize' in sys.argv:
+        def canonicalize_url(url):
+            url = url.strip()+'?'
+            return url[:url.find('?')]
+        session = Session()
+        for article_row in session.query(Article).all():
+            newurl = canonicalize_url(article_row.url)
+            if session.query(Article).filter_by(url=newurl).first() is None:
+                article_row.url = newurl
+            else:
+                session.delete(article_row)
+        session.commit()
+
     if '-r' in sys.argv:
         #reload from git
         session = Session()
@@ -50,6 +73,6 @@ if __name__ == '__main__':
             art = Article(url)
             session.add(art)
             if '--reformat' in sys.argv:
-                txt = open('articles/'+file_list).read()
-                open('articles/'+file_list, 'w').write(txt.strip()+'\n')
+                txt = open('articles/'+fname).read()
+                open('articles/'+fname, 'w').write(txt.strip()+'\n')
         session.commit()
