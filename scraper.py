@@ -117,8 +117,11 @@ class Article(object):
         self.body = '\n'.join([p.getText() for p in p_tags])
         authorids = soup.find('div', attrs={'class':'authorIdentification'})
         self.authorid = authorids.getText() if authorids else ''
-        self.top_correction = soup.find('nyt_correction_top').getText()
-        self.bottom_correction = soup.find('nyt_correction_bottom').getText()
+
+        self.top_correction = '\n'.join(x.getText() for x in
+                                        soup.findAll('nyt_correction_top'))
+        self.bottom_correction = '\n'.join(x.getText() for x in
+                                        soup.findAll('nyt_correction_bottom'))
 
     def __unicode__(self):
         return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
