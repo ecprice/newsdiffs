@@ -8,6 +8,7 @@ urlpatterns = patterns('',
   (r'^about', 'frontend.views.about'),
   (r'^browse', 'frontend.views.browse'),
   (r'^contact', 'frontend.views.contact'),
+  (r'^subscribe', 'frontend.views.subscribe'),
   (r'^examples', 'frontend.views.examples'),
   (r'^$', 'frontend.views.front'),
 )

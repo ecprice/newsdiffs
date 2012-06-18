@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>
+      News Differ
+    </title>
+    
+        <!-- Requires jQuery -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+        <!-- Optional jquery.corner for rounded buttons -->
+        <script src="jquery.corner.js" type="text/javascript"></script>
+        
+        <!-- Requires CodeMirror 2.16 -->
+        <script type="text/javascript" src="../lib/codemirror.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="../lib/codemirror.css" />
+        
+        <!-- Requires Mergely -->
+        <script type="text/javascript" src="../lib/mergely.js"></script>
+        <link type="text/css" rel="stylesheet" href="../lib/mergely.css" />
+
+
+                <script type="text/javascript">
+
+        $(document).ready(function () {
+                        $('#compare').mergely({
+                                cmsettings: { readOnly: false, lineWrapping: true }
+                        });
+                        $.ajax({
+                                type: 'GET', async: true, dataType: 'text',
+                                url: '{{url1}}',
+                                success: function (response) {
+                                        $('#compare').mergely('lhs', response);
+                                }
+                        });
+                        $.ajax({
+                                type: 'GET', async: true, dataType: 'text',
+                                url: '{{url2}}',
+                                success: function (response) {
+                                        $('#compare').mergely('rhs', response);
+                                }
+                        });
+                });
+        </script>
+
+
+  </head>
+  <body>
+    <h1>News Differ: {{url}}</h1>
+    <div id="mergely-resizer">
+      <div id="compare">
+      </div>
+    </div>
+  </body>
+  
+</html>
