@@ -4,7 +4,9 @@ import subprocess
 import os
 from datetime import datetime
 
-GIT_DIR = '/mit/ecprice/web_scripts/newsdiffer/articles'
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+ROOT_DIR = os.path.dirname(os.path.dirname(THIS_DIR))
+GIT_DIR = ROOT_DIR+'/articles'
 
 def strip_prefix(string, prefix):
     if string.startswith(prefix):
