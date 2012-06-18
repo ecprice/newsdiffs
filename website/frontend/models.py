@@ -2,7 +2,7 @@ from django.db import models
 import re
 import subprocess
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(THIS_DIR))
@@ -14,9 +14,15 @@ def strip_prefix(string, prefix):
     return string
 
 _all_logs = {}
+_last_update = datetime.min
 
-def _reset_metadata():
+def _refresh_metadata(timeout=60):
     global _all_logs
+    global _last_update
+
+    timediff = (datetime.now() - _last_update)
+    if timediff < timedelta(seconds=timeout):
+        return
     git_output = subprocess.check_output(['/usr/bin/git', 'log'], cwd=GIT_DIR)
     commits = git_output.split('\n\ncommit ')
     commits[0] = commits[0][len('commit '):]
@@ -27,17 +33,20 @@ def _reset_metadata():
         changekind = changem.split()[0]
         if changekind == 'Reformat':
             continue
-        if not os.path.exists(fname): #file introduced accidentally
+        if not os.path.exists(os.path.join(GIT_DIR,fname)): #file introduced accidentally
             continue
         date = datetime.strptime(' '.join(datestr.split()[1:-1]),
                                  '%a %b %d %H:%M:%S %Y')
         d.setdefault(fname, []).append((date, v))
+    for key in d:
+        d[key].sort()
     _all_logs = d
+    _last_update = datetime.now()
 
 # Create your models here.
 class Article(models.Model):
     class Meta:
-        db_table = 'articles'
+        db_table = 'Articles'
 
     url = models.CharField(max_length=255, blank=False, unique=True, db_index=True)
 

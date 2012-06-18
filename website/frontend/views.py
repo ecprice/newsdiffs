@@ -12,17 +12,18 @@ OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
 def browse(request):
     articles = []
-    models._reset_metadata()
+    models._refresh_metadata()
     for article in Article.objects.all():
         url = article.url
         if 'blogs.nytimes.com' in url: #XXX temporary
+            continue
+        elif 'editions.cnn.com' in url:
             continue
         vs = article.versions()
         nc = len(vs)
         if nc < 2:
             continue
         rowinfo = []
-        vs.reverse()
         lastcommit = None
         for date, commit in vs:
             if lastcommit is None:
