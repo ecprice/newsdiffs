@@ -1,11 +1,12 @@
 #!/usr/bin/python
 import sys, os
 
-DIR='/mit/ecprice/web_scripts/newsdiffs'
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+ROOT_DIR = os.path.dirname(THIS_DIR)
 
 # Add a custom Python path.
-sys.path.insert(0, DIR)
-sys.path.insert(0, DIR+"/website")
+sys.path.insert(0, os.path.dirname(ROOT_DIR))
+sys.path.insert(0, ROOT_DIR)
 
 # Switch to the directory of your project. (Optional.)
 # os.chdir("/home/user/myproject")
