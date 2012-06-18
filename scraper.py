@@ -221,7 +221,7 @@ def insert_all_articles(session):
 def get_update_delay(minutes_since_update):
     days_since_update = minutes_since_update // 24
     if days_since_update < 1:
-        return 30
+        return 15
     elif days_since_update < 7:
         return 60
     elif days_since_update < 30:
