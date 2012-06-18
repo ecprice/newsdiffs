@@ -41,7 +41,8 @@ sys.modules[BeautifulSoup.__module__].Tag.getText = bs_fixed_getText
 # End fix
 
 def canonicalize_url(url):
-    return (url+'?')[:url.find('?')]
+    url = url.strip()+'?'
+    return url[:url.find('?')]
 
 def strip_prefix(string, prefix):
     if string.startswith(prefix):
@@ -94,7 +95,7 @@ class Article(object):
         self.url = url
         self.html = grab_url(url + self.SUFFIX)
         open('/tmp/moo', 'w').write(self.html)
-        open('/tmp/moo3', 'w').write(url)
+        open('/tmp/moo3', 'w').write(url+self.SUFFIX)
         self._parse(self.html)
 
     def _parse(self, html):
@@ -163,7 +164,7 @@ class BlogArticle(Article):
         self.document = soup.find('div', attrs={'id':div_id})
 
     def __unicode__(self):
-        return self.document.getText()
+        return self.document.getText().strip()+'\n'
 
  
 DomainNameToClass = {'www.nytimes.com': Article,
@@ -220,7 +221,7 @@ def insert_all_articles(session):
 def get_update_delay(minutes_since_update):
     days_since_update = minutes_since_update // 24
     if days_since_update < 1:
-        return 10
+        return 30
     elif days_since_update < 7:
         return 60
     elif days_since_update < 30:
