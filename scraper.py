@@ -58,6 +58,10 @@ def grab_url(url):
         return grab_url(url)
     return text
 
+def strip_whitespace(text):
+    lines = text.split('\n')
+    return '\n'.join(x.strip().rstrip(u'\xa0') for x in lines).strip() + '\n'
+
 feeders = [('http://www.nytimes.com/',
             lambda url: 'nytimes.com/201' in url),
            ('http://edition.cnn.com/',
@@ -103,7 +107,7 @@ class Article(object):
         self.meta = soup.findAll('meta')
         self.seo_title = soup.find('meta', attrs={'name':'hdl'}).get('content')
         tmp = soup.find('meta', attrs={'name':'hdl_p'})
-        if tmp:
+        if tmp and tmp.get('content'):
             self.title = tmp.get('content')
         else:
             self.title = self.seo_title
@@ -117,9 +121,10 @@ class Article(object):
         self.bottom_correction = soup.find('nyt_correction_bottom').getText()
 
     def __unicode__(self):
-        return u'\n'.join((self.date, self.title, self.byline,
-                          self.top_correction, self.body,
-                          self.authorid, self.bottom_correction,)).strip()+'\n'
+        return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
+                                            self.top_correction, self.body,
+                                            self.authorid,
+                                            self.bottom_correction,)))
 
 
 class CNNArticle(Article):
@@ -149,8 +154,8 @@ class CNNArticle(Article):
         authorids = soup.find('div', attrs={'class':'authorIdentification'})
 
     def __unicode__(self):
-        return u'\n'.join((self.date, self.title, self.byline,
-                          self.body,)).strip()+'\n'
+        return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
+                                            self.body,)))
 
 
 
@@ -164,7 +169,7 @@ class BlogArticle(Article):
         self.document = soup.find('div', attrs={'id':div_id})
 
     def __unicode__(self):
-        return self.document.getText().strip()+'\n'
+        return strip_whitespace(self.document.getText())
 
  
 DomainNameToClass = {'www.nytimes.com': Article,
@@ -219,7 +224,7 @@ def insert_all_articles(session):
 
 
 def get_update_delay(minutes_since_update):
-    days_since_update = minutes_since_update // 24
+    days_since_update = minutes_since_update // (24 * 60)
     if days_since_update < 1:
         return 15
     elif days_since_update < 7:
