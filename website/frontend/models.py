@@ -25,6 +25,8 @@ def _reset_metadata():
         changekind = changem.split()[0]
         if changekind == 'Reformat':
             continue
+        if not os.path.exists(fname): #file introduced accidentally
+            continue
         date = datetime.strptime(' '.join(datestr.split()[1:-1]),
                                  '%a %b %d %H:%M:%S %Y')
         d.setdefault(fname, []).append((date, v))
