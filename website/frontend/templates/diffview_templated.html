@@ -22,20 +22,12 @@
 
         $(document).ready(function () {
                         $('#compare').mergely({
-                                cmsettings: { readOnly: false, lineWrapping: true }
-                        });
-                        $.ajax({
-                                type: 'GET', async: true, dataType: 'text',
-                                url: '{{url1}}',
-                                success: function (response) {
-                                        $('#compare').mergely('lhs', response);
-                                }
-                        });
-                        $.ajax({
-                                type: 'GET', async: true, dataType: 'text',
-                                url: '{{url2}}',
-                                success: function (response) {
-                                        $('#compare').mergely('rhs', response);
+                                cmsettings: { readOnly: false, lineWrapping: true },
+                                lhs: function(setValue) {
+                                        setValue('{{text1|escapejs}}');
+                                },
+                                rhs: function(setValue) {
+                                        setValue('{{text2|escapejs}}');
                                 }
                         });
                 });

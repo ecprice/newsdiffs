@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from models import Article
 import models
+import simplejson
 from django.http import HttpResponse, HttpResponseRedirect
 import re
 
@@ -16,7 +17,7 @@ def browse(request):
             continue
         vs = article.versions()
         nc = len(vs)
-        if nc < 1:
+        if nc < 2:
             continue
         rowinfo = []
         vs.reverse()
@@ -27,7 +28,7 @@ def browse(request):
             else:
                 diffl = '../diffview?url=%s&v1=%s&v2=%s' % (url, lastcommit, commit)
             link = '../view?url=%s&v=%s' % (url, commit)
-            rowinfo.append((link, diffl, date.strftime(OUT_FORMAT)))
+            rowinfo.append((link, diffl, date))
             lastcommit = commit
         rowinfo.reverse()
         (date, title, byline) = article.metadata()
@@ -41,17 +42,17 @@ def diffview(request):
     v1 = request.REQUEST.get('v1')
     v2 = request.REQUEST.get('v2')
     article = Article.objects.get(url=url)
-    #text1 = article.get_version(v1)
-    #text2 = article.get_version(v2)
-    url_template = 'view?url='+url+'&v=%s'
+    text1 = (article.get_version(v1))
+    text2 = (article.get_version(v2))
+    #url_template = 'view?url='+url+'&v=%s'
     title = article.metadata()[1]
     date1 = models.get_commit_date(v1).strftime(OUT_FORMAT)
     date2 = models.get_commit_date(v2).strftime(OUT_FORMAT)
     return render_to_response('diffview_templated.html', {'title': title,
                                                           'date1':date1,
                                                           'date2':date2,
-                                                'url1':url_template % v1,
-                                                'url2':url_template % v2})
+                                                          'text1':text1,
+                                                          'text2':text2})
 
 def view(request):
     url = request.REQUEST.get('url')
