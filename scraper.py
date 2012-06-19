@@ -83,8 +83,7 @@ sys.modules[BeautifulSoup.__module__].Tag.getText = bs_fixed_getText
 # End fix
 
 def canonicalize_url(url):
-    url = url.strip()+'?'
-    return url[:url.find('?')]
+    return url.split('?')[0].split('#')[0].strip()
 
 def strip_prefix(string, prefix):
     if string.startswith(prefix):
@@ -266,11 +265,11 @@ def update_article(url):
         return
     try:
         article = parser(url)
-    except AttributeError, exc:
+    except (AttributeError, urllib2.HTTPError), exc:
         print 'Exception when parsing', url
         traceback.print_exc()
         print 'Continuing'
-        return 0
+        return -1
     if not article.real_article:
         return 0
     to_store = unicode(article).encode('utf8')
@@ -286,10 +285,12 @@ def insert_all_articles(session):
 
 def get_update_delay(minutes_since_update):
     days_since_update = minutes_since_update // (24 * 60)
-    if days_since_update < 1:
+    if minutes_since_update < 60*3:
         return 15
+    elif days_since_update < 1:
+        return 30
     elif days_since_update < 7:
-        return 60
+        return 120
     elif days_since_update < 30:
         return 60*24
     else:
@@ -299,14 +300,17 @@ def get_update_delay(minutes_since_update):
 if __name__ == '__main__':
     session = models.Session()
     insert_all_articles(session)
-    for article_row in session.query(models.Article).all():
-        print 'Woo:', article_row.minutes_since_update(), article_row.minutes_since_check()
+    num_articles = session.query(models.Article).count()
+    for i, article_row in enumerate(session.query(models.Article).all()):
+        print 'Woo:', article_row.minutes_since_update(), article_row.minutes_since_check(), '(%s/%s)' % (i+1, num_articles)
         delay = get_update_delay(article_row.minutes_since_update())
         if article_row.minutes_since_check() < delay:
             continue
         print 'Considering', article_row.url
-        if update_article(article_row.url):
+        retcode = update_article(article_row.url)
+        if retcode > 1:
             print 'Updated!'
             article_row.last_update = datetime.now()
-        article_row.last_check = datetime.now()
+        if retcode >= 0:
+            article_row.last_check = datetime.now()
         session.commit()
