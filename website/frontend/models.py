@@ -16,7 +16,7 @@ def strip_prefix(string, prefix):
 _all_logs = {}
 _last_update = datetime.min
 
-def _refresh_metadata(timeout=60):
+def _refresh_metadata(timeout=1):
     global _all_logs
     global _last_update
 
@@ -43,6 +43,10 @@ def _refresh_metadata(timeout=60):
     _all_logs = d
     _last_update = datetime.now()
 
+PublicationDict = {'www.nytimes.com': 'NYT',
+                   'edition.cnn.com': 'CNN',
+                   }
+
 # Create your models here.
 class Article(models.Model):
     class Meta:
@@ -54,6 +58,7 @@ class Article(models.Model):
         return strip_prefix(self.url, 'http://').rstrip('/')
 
     def versions(self):
+        _refresh_metadata(60*10)
         vs = _all_logs.get(self.filename(), [])
         print vs
         return vs
@@ -71,7 +76,8 @@ class Article(models.Model):
         date = f.readline().strip()
         title = f.readline().strip()
         byline = f.readline().strip()
-        return (date, title, byline)
+        publication = PublicationDict.get(self.filename().split('/')[0])
+        return (date, title, byline, publication)
 
 
 class Upvote(models.Model):

@@ -26,6 +26,36 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+       <!-- Requires jQuery -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+        <!-- Optional jquery.corner for rounded buttons -->
+        <script src="jquery.corner.js" type="text/javascript"></script>
+        
+        <!-- Requires CodeMirror 2.16 -->
+        <script type="text/javascript" src="static/lib/codemirror.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="static/lib/codemirror.css" />
+        
+        <!-- Requires Mergely -->
+        <script type="text/javascript" src="static/lib/mergely.js"></script>
+        <link type="text/css" rel="stylesheet" href="static/lib/mergely.css" />
+
+
+                <script type="text/javascript">
+
+        $(document).ready(function () {
+                        $('#compare').mergely({
+                                cmsettings: { readOnly: false, lineWrapping: true },
+                                lhs: function(setValue) {
+                                        setValue('{{text1|escapejs}}');
+                                },
+                                rhs: function(setValue) {
+                                        setValue('{{text2|escapejs}}');
+                                }
+                        });
+                });
+        </script>
+
+
   </head>
 
   <body>
@@ -38,12 +68,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="http://newsdiffs.org/">NewsDiffs</a>
+          <a class="brand" href="#">NewsDiffs</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li><a href="http://newsdiffs.org/">Home</a></li>
+              <li><a href="#">Home</a></li>
               <li><a href="http://newsdiffs.org/about/">About</a></li>
-              <li class="active"><a href="http://newsdiffs.org/browse/">Browse</a></li>
+              <li><a href="http://newsdiffs.org/browse">Browse</a></li>
               <li><a href="http://newsdiffs.org/examples/">Highlights</a></li>
               <li><a href="http://newsdiffs.org/subscribe/">Subscribe</a></li>
               <li><a href="http://newsdiffs.org/contact/">Contact</a></li>
@@ -54,28 +84,24 @@
       </div>
     </div>
 
-    <div class="container">
-      <h1>Changed Articles</h1>
-      <h3>From nytimes.com and cnn.com,	Starting June 17, 2012</h3>
-      <p>
-    		
-			
-    <table class="table table-condensed"  style="width:100%">
-      <thead><tr><th text-align:"left";>Article</th><th>Version</th><th>Diff</th></tr></thead>
-      {% for url, date, title, byline, publication, nc, changes in articles %}
-      <tr><td rowspan="{{nc}}" valign="top"><a href="{{url}}">{{title}}</a> ({{publication}})<br>{{byline}}</td>
-        {% for link, difflink, date in changes %}
-        <td><a href="{{link}}">{{date}}</a></td>
-        {% if difflink %}
-        <td><a href="{{difflink}}">(Compare)</a></td></tr><tr>
-        {% else %}
-        <td></td></tr>
-        {% endif %}
-        {% endfor %}
-      {% endfor %}
-    </table>
-
-</div>
+<div class="container">
+	    <h1>Comparison</h1>
+	    <div class="boldhead">{{title}}</div>
+	    <h4>{{article_url}}</h4>
+    <ul>
+      <li>Left: {{date1}}</li>
+      <li>Right: {{date2}}</li>
+    </ul>
+    <form action="{{form_action}}" method=POST>
+      <input type=hidden name=article_url value="{{article_url}}">
+      <input type=hidden name=diff_v1 value="{{v1}}">
+      <input type=hidden name=diff_v2 value="{{v2}}">
+      <input type=submit name=submit value="This is fascinating!">
+    </form>
+    <div id="mergely-resizer">
+      <div id="compare">
+      </div>
+    </div>
 
 <hr>
 	<footer>

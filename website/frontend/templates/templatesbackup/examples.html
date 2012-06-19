@@ -38,13 +38,13 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="http://newsdiffs.org/">NewsDiffs</a>
+          <a class="brand" href="#">NewsDiffs</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li><a href="http://newsdiffs.org/">Home</a></li>
+              <li><a href="#">Home</a></li>
               <li><a href="http://newsdiffs.org/about/">About</a></li>
-              <li class="active"><a href="http://newsdiffs.org/browse/">Browse</a></li>
-              <li><a href="http://newsdiffs.org/examples/">Highlights</a></li>
+              <li><a href="http://newsdiffs.org/browse">Browse</a></li>
+              <li class="active"><a href="http://newsdiffs.org/examples/">Highlights</a></li>
               <li><a href="http://newsdiffs.org/subscribe/">Subscribe</a></li>
               <li><a href="http://newsdiffs.org/contact/">Contact</a></li>
 
@@ -55,25 +55,46 @@
     </div>
 
     <div class="container">
-      <h1>Changed Articles</h1>
-      <h3>From nytimes.com and cnn.com,	Starting June 17, 2012</h3>
-      <p>
-    		
-			
-    <table class="table table-condensed"  style="width:100%">
-      <thead><tr><th text-align:"left";>Article</th><th>Version</th><th>Diff</th></tr></thead>
-      {% for url, date, title, byline, publication, nc, changes in articles %}
-      <tr><td rowspan="{{nc}}" valign="top"><a href="{{url}}">{{title}}</a> ({{publication}})<br>{{byline}}</td>
-        {% for link, difflink, date in changes %}
-        <td><a href="{{link}}">{{date}}</a></td>
-        {% if difflink %}
-        <td><a href="{{difflink}}">(Compare)</a></td></tr><tr>
-        {% else %}
-        <td></td></tr>
-        {% endif %}
-        {% endfor %}
-      {% endfor %}
-    </table>
+		<h1>Examples</h1>
+		<p>These are some highlights of changes that have been handcurated</p>
+		<p>
+		<p>
+		<ul>
+		<li>In <a href="http://ecprice.scripts.mit.edu/newsdiffer/diffview?url=http://www.nytimes.com/2012/06/17/world/asia/activism-grows-as-singapore-loosens-restrictions.html&v1=8c73ea8dc679a3f7731d6d274cefec405e0f5e3d&v2=59998a00954fae6adaabed6fd92c3022c5b6f285">As Singapore Loosens Its Grip, Residents Lose Fear to Challenge Authority</a>
+		<br>By ANDREW JACOBS on June 16, 2012
+		<br>"Singapore’s single-party <strong>rule</strong>" ==> "Singapore’s single-party <strong>dominance</strong>."
+		</li>
+		</ul>
+		<ul>
+		<li>In <a href="hhttp://www.newsdiffs.org/diffview?url=http://www.nytimes.com/2012/06/18/world/middleeast/egyptian-presidential-vote-enters-second-day.html&v1=c21d75799d83220e7ec796a198f782b6c57e1758&v2=d2778475ba76046b0f5b05bb4df2640962442dad">
+Egyptians Return to Polls for a Second Day</a>
+		<br>By DAVID D. KIRKPATRICK and KAREEM FAHIM on June 17, 2012
+		<br>"the <strong>democratically</strong> elected, Islamist-led Parliament" ==> "the <strong>competitively</strong> elected, Islamist-led Parliament."
+		</li>	
+		</ul>
+		<ul>
+		<li>In <a href="http://www.newsdiffs.org/diffview?url=http://www.nytimes.com/2012/06/17/world/asia/in-shift-china-stifles-debate-on-economic-change.html&v1=9d5ebdf5f906015644a7c6f4cc40bcea0977304c&v2=e28e6667ba3b80f85a13849495fc8267d99e2bd7">
+China Closes Window on Economic Debate, Protecting Dominance of State</a>
+		<br>By IAN JOHNSON on June 16, 2012
+		<br>A "<strong>Propaganda Ministry</strong> directive" ==> "A <strong>propaganda department</strong> directive".
+		<br>With the correction: "An earlier version of this article incorrectly referred to the Propaganda Ministry of the Communist Party. While there is a propaganda department under the Communist Party Central Committee, there is no government ministry by that name."
+		</li>	
+		</ul>
+	
+		<ul>
+		<li>In <a href="http://www.newsdiffs.org/diffview?url=http://www.nytimes.com/2012/06/18/us/rodney-king-whose-beating-led-to-la-riots-dead-at-47.html&v1=0bb4b9e6c8b4ed03bece8906e89631b8a660d795&v2=3079d91d61b7d7d0338974de07e4fa6cbe84db5c&pagewanted=all
+">
+Rodney King, Whose Beating Led to L.A. Riots, Dies at 47</a>
+		<br>By JENNIFER MEDINA on June 17, 2012
+		<br>The breaking news story of Rodney King's death evolved over time. Changes ranged from adding his middle initial (G.) to attributing the suspected cause of death (drowning).
+		</li>	
+		</ul>
+		<ul>
+		<li>In <a href="http://www.newsdiffs.org/diffview?url=http://www.nytimes.com/2012/06/18/world/europe/greek-elections.html&v1=8c8c7e09966fe1cec63f5131fdb24961bd4237cd&v2=4638704b4edf6bc7259432ca76e6be42a8b89ca4&pagewanted=all">Supporters of Bailout Claim Victory in Greece</a>
+		<br>By RACHEL DONADIO on June 17, 2012	
+		<br>The following paragraph was removed: "The fact that Syriza did not place first may make European leaders more likely to grant some concessions to Greece, but they also have to consider the larger economies of Spain and Italy, which are also under intense pressure."
+</li>	
+		</ul>
 
 </div>
 

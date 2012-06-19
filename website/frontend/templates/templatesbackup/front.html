@@ -38,12 +38,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="http://newsdiffs.org/">NewsDiffs</a>
+          <a class="brand" href="#">NewsDiffs</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li><a href="http://newsdiffs.org/">Home</a></li>
+              <li class="active"><a href="http://newsdiffs.org/">Home</a></li>
               <li><a href="http://newsdiffs.org/about/">About</a></li>
-              <li class="active"><a href="http://newsdiffs.org/browse/">Browse</a></li>
+              <li><a href="http://newsdiffs.org/browse/">Browse</a></li>
               <li><a href="http://newsdiffs.org/examples/">Highlights</a></li>
               <li><a href="http://newsdiffs.org/subscribe/">Subscribe</a></li>
               <li><a href="http://newsdiffs.org/contact/">Contact</a></li>
@@ -55,27 +55,25 @@
     </div>
 
     <div class="container">
-      <h1>Changed Articles</h1>
-      <h3>From nytimes.com and cnn.com,	Starting June 17, 2012</h3>
+		<img align="right" width="450" style="padding:15px; margin:15px" src="http://blogs.villagevoice.com/runninscared/NYTBBArrest.jpg">	
+
+      <h1>NewsDiffs</h1>
+      <h3>Tracking Online News Articles Over Time</h3>
       <p>
     		
-			
-    <table class="table table-condensed"  style="width:100%">
-      <thead><tr><th text-align:"left";>Article</th><th>Version</th><th>Diff</th></tr></thead>
-      {% for url, date, title, byline, publication, nc, changes in articles %}
-      <tr><td rowspan="{{nc}}" valign="top"><a href="{{url}}">{{title}}</a> ({{publication}})<br>{{byline}}</td>
-        {% for link, difflink, date in changes %}
-        <td><a href="{{link}}">{{date}}</a></td>
-        {% if difflink %}
-        <td><a href="{{difflink}}">(Compare)</a></td></tr><tr>
-        {% else %}
-        <td></td></tr>
-        {% endif %}
-        {% endfor %}
-      {% endfor %}
-    </table>
+			<p>NewsDiffs allows you to compare evolving versions of online news articles as they change over time, starting with <a href="http://nytimes.com">The New York Times</a> and <a href="http://cnn.com">CNN</a>.</p> 
+			<p>Sometimes the changes are minor — small edits in language or correction of spelling mistakes. Other times, the stories change and evolve rapidly, as a result of breaking news. 
+			Occasionally, the lede and substance of an article changes, as in the example to the right.<p>
 
-</div>
+			<p>The project is inspired by the version control tracking used in computer programming.
+			
+			<p>NewsDiff tracking began on June 17, 2012, as the project was inspired by the <a href="http://opennews-mit.eventbrite.com/">Knight Mozilla MIT Hackathon.</a> 
+			
+			<p>You can <a href="href="http://newsdiffs.org/browse/">browse</a> our repository of articles.
+			<p>Or you can take a look at <a href="http://newsdiffs.org/examples/">some of the examples</a> of articles that have changed.
+			<p>If you are so inclined, you can <a href="http://newsdiffs.org/subscribe/">subscribe</a> to whatever it is that we may eventually send out some time in the future.
+  
+      </p>
 
 <hr>
 	<footer>
