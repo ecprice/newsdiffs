@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python
 
 import sys
 import subprocess
@@ -9,11 +9,52 @@ import errno
 import models
 import re
 from datetime import datetime, timedelta
+import traceback
 
 DIFF_DIR = 'articles/'
 GIT_DIR = DIFF_DIR + '.git'
 
 DATE_FORMAT = '%B %d, %Y at %l:%M%P EDT'
+
+# Begin utility functions
+
+# subprocess.check_output appeared in python 2.7.
+# Linerva only has 2.6
+def check_output(*popenargs, **kwargs):
+    r"""Run command with arguments and return its output as a byte string.
+
+    If the exit code was non-zero it raises a CalledProcessError.  The
+    CalledProcessError object will have the return code in the returncode
+    attribute and output in the output attribute.
+
+    The arguments are the same as for the Popen constructor.  Example:
+
+    >>> check_output(["ls", "-l", "/dev/null"])
+    'crw-rw-rw- 1 root root 1, 3 Oct 18  2007 /dev/null\n'
+
+    The stdout argument is not allowed as it is used internally.
+    To capture standard error in the result, use stderr=STDOUT.
+
+    >>> check_output(["/bin/sh", "-c",
+    ...               "ls -l non_existent_file ; exit 0"],
+    ...              stderr=STDOUT)
+    'ls: non_existent_file: No such file or directory\n'
+    """
+    from subprocess import PIPE, CalledProcessError, Popen
+    if 'stdout' in kwargs:
+        raise ValueError('stdout argument not allowed, it will be overridden.')
+    process = Popen(stdout=PIPE, *popenargs, **kwargs)
+    output, unused_err = process.communicate()
+    retcode = process.poll()
+    if retcode:
+        cmd = kwargs.get("args")
+        if cmd is None:
+            cmd = popenargs[0]
+        raise CalledProcessError(retcode, cmd, output=output)
+    return output
+
+if not hasattr(subprocess, 'check_output'):
+    subprocess.check_output = check_output
 
 def mkdir_p(path):
     try:
@@ -25,6 +66,7 @@ def mkdir_p(path):
             raise
 
 # Begin hot patch for https://bugs.launchpad.net/bugs/788986
+# Ick.
 def bs_fixed_getText(self, separator=u""):
     bsmod = sys.modules[BeautifulSoup.__module__]
     if not len(self.contents):
@@ -54,6 +96,7 @@ def url_to_filename(url):
 
 def grab_url(url):
     text = urllib2.urlopen(url).read()
+    # Occasionally need to retry
     if '<title>NY Times Advertisement</title>' in text:
         return grab_url(url)
     return text
@@ -62,12 +105,17 @@ def strip_whitespace(text):
     lines = text.split('\n')
     return '\n'.join(x.strip().rstrip(u'\xa0') for x in lines).strip() + '\n'
 
+# End utility functions
+
+
+
 feeders = [('http://www.nytimes.com/',
             lambda url: 'nytimes.com/201' in url),
            ('http://edition.cnn.com/',
             lambda url: 'edition.cnn.com/201' in url),
                ]
 
+#Article urls for a single website
 def find_article_urls(feeder_url, filter_article):
     html = grab_url(feeder_url)
     soup = BeautifulSoup(html)
@@ -86,6 +134,8 @@ def get_all_article_urls():
         ans = ans.union(map(canonicalize_url, urls))
     return ans
 
+#Parser for NYT articles
+#also used as a base class for other parsers; probably should be split
 class Article(object):
     url = None
     title = None
@@ -119,9 +169,9 @@ class Article(object):
         self.authorid = authorids.getText() if authorids else ''
 
         self.top_correction = '\n'.join(x.getText() for x in
-                                        soup.findAll('nyt_correction_top'))
+                                   soup.findAll('nyt_correction_top')) or '\n'
         self.bottom_correction = '\n'.join(x.getText() for x in
-                                        soup.findAll('nyt_correction_bottom'))
+                                   soup.findAll('nyt_correction_bottom')) or '\n'
 
     def __unicode__(self):
         return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
@@ -129,7 +179,7 @@ class Article(object):
                                             self.authorid,
                                             self.bottom_correction,)))
 
-
+# XXX CNN might have an issue with unicode
 class CNNArticle(Article):
     SUFFIX = ''
 
@@ -161,7 +211,8 @@ class CNNArticle(Article):
                                             self.body,)))
 
 
-
+# NYT blogs
+# currently broken
 class BlogArticle(Article):
     SUFFIX = '?pagemode=print'
 
@@ -174,7 +225,6 @@ class BlogArticle(Article):
     def __unicode__(self):
         return strip_whitespace(self.document.getText())
 
- 
 DomainNameToClass = {'www.nytimes.com': Article,
                      'opinionator.blogs.nytimes.com': BlogArticle,
                      'krugman.blogs.nytimes.com': BlogArticle,
@@ -206,13 +256,21 @@ def add_to_git_repo(data, filename):
     subprocess.call(['/usr/bin/git', 'commit', filename, '-m', commit_message], cwd=DIFF_DIR)
     return return_value
 
+#Update url in git
+#Return whether it changed
 def update_article(url):
     try:
         parser = get_parser(url)
     except KeyError:
         print 'Unable to parse domain, skipping'
         return
-    article = parser(url)
+    try:
+        article = parser(url)
+    except AttributeError, exc:
+        print 'Exception when parsing', url
+        traceback.print_exc()
+        print 'Continuing'
+        return 0
     if not article.real_article:
         return 0
     to_store = unicode(article).encode('utf8')
