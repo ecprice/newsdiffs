@@ -10,5 +10,7 @@ urlpatterns = patterns('',
   (r'^contact', 'frontend.views.contact'),
   (r'^subscribe', 'frontend.views.subscribe'),
   (r'^examples', 'frontend.views.examples'),
+  (r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/static/images/favicon.ico'}),
+  (r'^assets/ico/favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/static/images/favicon.ico'}),
   (r'^$', 'frontend.views.front'),
 )
