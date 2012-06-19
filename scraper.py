@@ -9,6 +9,7 @@ import errno
 import models
 import re
 from datetime import datetime, timedelta
+import traceback
 
 DIFF_DIR = 'articles/'
 GIT_DIR = DIFF_DIR + '.git'
@@ -119,9 +120,9 @@ class Article(object):
         self.authorid = authorids.getText() if authorids else ''
 
         self.top_correction = '\n'.join(x.getText() for x in
-                                        soup.findAll('nyt_correction_top'))
+                                   soup.findAll('nyt_correction_top')) or '\n'
         self.bottom_correction = '\n'.join(x.getText() for x in
-                                        soup.findAll('nyt_correction_bottom'))
+                                   soup.findAll('nyt_correction_bottom')) or '\n'
 
     def __unicode__(self):
         return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
@@ -212,7 +213,13 @@ def update_article(url):
     except KeyError:
         print 'Unable to parse domain, skipping'
         return
-    article = parser(url)
+    try:
+        article = parser(url)
+    except AttributeError, exc:
+        print 'Exception when parsing', url
+        traceback.print_exc()
+        print 'Continuing'
+        return 0
     if not article.real_article:
         return 0
     to_store = unicode(article).encode('utf8')
