@@ -3,13 +3,21 @@
 import sys
 import subprocess
 import urllib2
-from BeautifulSoup import BeautifulSoup
+import httplib
 import os
 import errno
 import models
 import re
 from datetime import datetime, timedelta
 import traceback
+
+# Different versions of BeautifulSoup have different properties.
+# Some work with one site, some with another.
+# This is BeautifulSoup 3.2.
+from BeautifulSoup import BeautifulSoup
+# This is BeautifulSoup 4
+import bs4
+
 
 DIFF_DIR = 'articles/'
 GIT_DIR = DIFF_DIR + '.git'
@@ -112,12 +120,15 @@ feeders = [('http://www.nytimes.com/',
             lambda url: 'nytimes.com/201' in url),
            ('http://edition.cnn.com/',
             lambda url: 'edition.cnn.com/201' in url),
+           ('http://www.politico.com/',
+            lambda url: 'www.politico.com/news/stories' in url,
+            bs4.BeautifulSoup),
                ]
 
 #Article urls for a single website
-def find_article_urls(feeder_url, filter_article):
+def find_article_urls(feeder_url, filter_article, SoupVersion=BeautifulSoup):
     html = grab_url(feeder_url)
-    soup = BeautifulSoup(html)
+    soup = SoupVersion(html)
 
     # "or ''" to make None into str
     urls = [a.get('href') or '' for a in soup.findAll('a')]
@@ -128,8 +139,8 @@ def find_article_urls(feeder_url, filter_article):
 
 def get_all_article_urls():
     ans = set()
-    for (feeder_url, filter_func) in feeders:
-        urls = find_article_urls(feeder_url, filter_func)
+    for feeder in feeders:
+        urls = find_article_urls(*feeder)
         ans = ans.union(map(canonicalize_url, urls))
     return ans
 
@@ -210,6 +221,35 @@ class CNNArticle(Article):
                                             self.body,)))
 
 
+class PoliticoArticle(Article):
+    SUFFIX = ''
+
+    def _parse(self, html):
+        soup = bs4.BeautifulSoup(html)
+        print_link = soup.findAll('a', text='Print')[0].get('href')
+        html2 = grab_url(print_link)
+        # Now we have to switch back to bs3.  Hilarious.
+        # and the labeled encoding is wrong, so force utf-8.
+        soup = BeautifulSoup(html2, convertEntities=BeautifulSoup.HTML_ENTITIES,
+                             fromEncoding='utf-8')
+
+        self.meta = soup.findAll('meta')
+        p_tags = soup.findAll('p')[1:]
+
+        self.title = soup.find('strong').getText()
+        entity = soup.find('span', attrs={'class':'author'})
+        children = list(entity.childGenerator())
+        self.byline = 'By ' + children[1].getText()
+        datestr = children[-1].strip()
+        self.date = datestr
+
+        self.body = '\n'+'\n\n'.join([p.getText() for p in p_tags])
+
+    def __unicode__(self):
+        return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
+                                            self.body,)))
+
+
 # NYT blogs
 # currently broken
 class BlogArticle(Article):
@@ -228,6 +268,7 @@ DomainNameToClass = {'www.nytimes.com': Article,
                      'opinionator.blogs.nytimes.com': BlogArticle,
                      'krugman.blogs.nytimes.com': BlogArticle,
                      'edition.cnn.com': CNNArticle,
+                     'www.politico.com': PoliticoArticle,
                      }
 
 def get_parser(url):
@@ -265,7 +306,7 @@ def update_article(url):
         return
     try:
         article = parser(url)
-    except (AttributeError, urllib2.HTTPError), exc:
+    except (AttributeError, urllib2.HTTPError, httplib.HTTPException), exc:
         print 'Exception when parsing', url
         traceback.print_exc()
         print 'Continuing'
@@ -301,7 +342,8 @@ if __name__ == '__main__':
     session = models.Session()
     insert_all_articles(session)
     num_articles = session.query(models.Article).count()
-    for i, article_row in enumerate(session.query(models.Article).all()):
+    articles = session.query(models.Article).order_by(models.Article.last_check).all()
+    for i, article_row in enumerate(articles):
         print 'Woo:', article_row.minutes_since_update(), article_row.minutes_since_check(), '(%s/%s)' % (i+1, num_articles)
         delay = get_update_delay(article_row.minutes_since_update())
         if article_row.minutes_since_check() < delay:
