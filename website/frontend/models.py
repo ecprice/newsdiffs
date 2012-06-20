@@ -45,6 +45,7 @@ def _refresh_metadata(timeout=1):
 
 PublicationDict = {'www.nytimes.com': 'NYT',
                    'edition.cnn.com': 'CNN',
+                   'www.politico.com': 'Politico',
                    }
 
 # Create your models here.
