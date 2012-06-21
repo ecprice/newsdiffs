@@ -265,8 +265,8 @@ class BlogArticle(Article):
         return strip_whitespace(self.document.getText())
 
 DomainNameToClass = {'www.nytimes.com': Article,
-                     'opinionator.blogs.nytimes.com': BlogArticle,
-                     'krugman.blogs.nytimes.com': BlogArticle,
+#                     'opinionator.blogs.nytimes.com': BlogArticle,
+#                     'krugman.blogs.nytimes.com': BlogArticle,
                      'edition.cnn.com': CNNArticle,
                      'www.politico.com': PoliticoArticle,
                      }

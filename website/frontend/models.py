@@ -16,7 +16,7 @@ def strip_prefix(string, prefix):
 _all_logs = {}
 _last_update = datetime.min
 
-def _refresh_metadata(timeout=1):
+def _refresh_metadata(timeout=300):
     global _all_logs
     global _last_update
 

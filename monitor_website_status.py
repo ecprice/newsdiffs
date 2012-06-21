@@ -7,7 +7,11 @@ from datetime import datetime, timedelta
 import subprocess
 
 WEBSITE = 'http://www.newsdiffs.org/browse/'
-MAX_TIME = timedelta(hours=1)
+if datetime.now().hour < 8: #Overnight, less frequent updates
+    MAX_TIME = timedelta(minutes=60)
+else:
+    MAX_TIME = timedelta(minutes=30)
+    
 EMAILS = 'ecprice@mit.edu jenny8lee@gmail.com price@mit.edu'.split()
 
 def send_alert_email(subject, body):
