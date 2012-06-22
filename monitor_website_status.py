@@ -4,6 +4,7 @@ import urllib2
 from BeautifulSoup import BeautifulSoup
 from StringIO import StringIO
 from datetime import datetime, timedelta
+import dateutil.parser
 import subprocess
 
 WEBSITE = 'http://www.newsdiffs.org/browse/'
@@ -28,7 +29,7 @@ def get_update_time():
     html = urllib2.urlopen(WEBSITE)
     soup = BeautifulSoup(html)
     datestr = soup.findAll('td')[1].findChild('a').getText()
-    date = datetime.strptime(datestr.replace('.', ''), '%B %d, %Y, %I:%M %p')
+    date = dateutil.parser.parse(datestr)
     return date
 
 if __name__ == '__main__':
