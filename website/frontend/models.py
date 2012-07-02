@@ -65,6 +65,8 @@ class Article(models.Model):
         return vs
 
     def get_version(self, version):
+        if version is None:
+            return None
         return subprocess.check_output(['/usr/bin/git', 'show',
                                         version+':'+self.filename()],
                                        cwd=GIT_DIR)
