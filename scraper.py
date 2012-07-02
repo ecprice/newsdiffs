@@ -10,6 +10,7 @@ import models
 import re
 from datetime import datetime, timedelta
 import traceback
+import sqlalchemy
 
 # Different versions of BeautifulSoup have different properties.
 # Some work with one site, some with another.
@@ -307,7 +308,7 @@ def update_article(url):
     try:
         article = parser(url)
     except (AttributeError, urllib2.HTTPError, httplib.HTTPException), exc:
-        print 'Exception when parsing', url
+        print >> sys.stderr, 'Exception when parsing', url
         traceback.print_exc()
         print 'Continuing'
         return -1
@@ -339,20 +340,33 @@ def get_update_delay(minutes_since_update):
 
 
 if __name__ == '__main__':
+    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+    sys.stderr = os.fdopen(sys.stderr.fileno(), 'w', 0)
     session = models.Session()
     insert_all_articles(session)
     num_articles = session.query(models.Article).count()
     articles = session.query(models.Article).order_by(models.Article.last_check).all()
+    articles.sort(key = lambda x: get_update_delay(x.minutes_since_update()) - x.minutes_since_check())
     for i, article_row in enumerate(articles):
         print 'Woo:', article_row.minutes_since_update(), article_row.minutes_since_check(), '(%s/%s)' % (i+1, num_articles)
         delay = get_update_delay(article_row.minutes_since_update())
         if article_row.minutes_since_check() < delay:
             continue
-        print 'Considering', article_row.url
-        retcode = update_article(article_row.url)
+        print 'Considering', article_row.url, datetime.now()
+        try:
+            retcode = update_article(article_row.url)
+        except Exception, e:
+            print >> sys.stderr, 'Unknown exception when updating', article_row.url
+            traceback.print_exc()
         if retcode > 1:
             print 'Updated!'
             article_row.last_update = datetime.now()
         if retcode >= 0:
             article_row.last_check = datetime.now()
-        session.commit()
+        try:
+            session.commit()
+        except sqlalchemy.exc.OperationalError, e:
+            print >> sys.stderr, 'Exception when committing', url
+            traceback.print_exc()
+            print 'Continuing'
+            
