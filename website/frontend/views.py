@@ -98,3 +98,7 @@ def front(request):
 
 def subscribe(request):
     return render_to_response('subscribe.html', {})
+
+def press(request):
+    return render_to_response('press.html', {})
+
