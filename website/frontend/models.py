@@ -95,5 +95,7 @@ class Upvote(models.Model):
 
 
 def get_commit_date(commit):
+    if commit is None:
+        return datetime.now()
     datestr = subprocess.check_output(['/usr/bin/git', 'show', '-s', '--format=%ci', commit], cwd=GIT_DIR)
     return datetime.strptime(datestr.strip(), '%Y-%m-%d %H:%M:%S -0400')
