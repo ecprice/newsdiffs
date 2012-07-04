@@ -1,4 +1,4 @@
 newsdiffer
 ==========
 
-Automatic scraper that tracks changes in news articles over time.
+A website and framework that tracks changes in online news articles over time.
