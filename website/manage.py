@@ -1,4 +1,13 @@
 #!/usr/bin/python
+
+# Use dev settings if not otherwise configured.
+import os
+THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+try:
+    os.symlink('settings_dev.py', THIS_DIR+'/settings.py')
+except OSError:
+    pass
+
 from django.core.management import execute_manager
 try:
     import settings # Assumed to be in the same directory.
