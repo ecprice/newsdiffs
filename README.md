@@ -16,6 +16,11 @@ You will need Django installed, and other libraries.  On a Debian- or
 Ubuntu-based system, it may suffice (untested) to run
   $ sudo apt-get install python-django python-simplejson
 
+On Mac OS, the easiest way may be to install pip:
+  http://www.pip-installer.org/en/latest/installing.html
+and then
+  $ pip install Django
+
 
 Running for yourself
 --------------------
