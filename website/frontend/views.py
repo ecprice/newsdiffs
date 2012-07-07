@@ -80,11 +80,10 @@ def article_view(request):
         else:
             diffl = '%s?%s' % (reverse(diffview),
                                urllib.urlencode(dict(url=url, v1=lastcommit, v2=commit)))
-
         rowinfo.append((diffl, date))
         lastcommit = commit
-        rowinfo.reverse()
 
+    rowinfo.reverse()
     return render_to_response('article_view.html', {'url':url,
                                              'metadata':metadata,
                                              'versions':rowinfo})
