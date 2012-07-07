@@ -1,4 +1,4 @@
-articles
+/articles
 
 *~
 *.py[co]
@@ -30,3 +30,4 @@ pip-log.txt
 .mr.developer.cfg
 
 newsdiffs.db
+database_settings.py
