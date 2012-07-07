@@ -1,0 +1,56 @@
+{% extends "template.html" %}
+
+{% block head %}
+
+        <!-- Requires jQuery -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+        <!-- Optional jquery.corner for rounded buttons -->
+        <!--
+        <script src="{% url static 'lib/jquery.corner.js' %}" type="text/javascript"></script>
+        -->
+
+        <!-- Requires CodeMirror 2.16 -->
+        <script type="text/javascript" src="{% url static 'lib/codemirror.min.js' %}"></script>
+        <link type="text/css" rel="stylesheet" href="{% url static 'lib/codemirror.css' %}" />
+        
+        <!-- Requires Mergely -->
+        <script type="text/javascript" src="{% url static 'lib/mergely.js' %}"></script>
+        <link type="text/css" rel="stylesheet" href="{% url static 'lib/mergely.css' %}" />
+
+
+                <script type="text/javascript">
+
+        $(document).ready(function () {
+                        $('#compare').mergely({
+                                cmsettings: { readOnly: false, lineWrapping: true },
+                                lhs: function(setValue) {
+                                        setValue('{{text1|escapejs}}');
+                                },
+                                rhs: function(setValue) {
+                                        setValue('{{text2|escapejs}}');
+                                }
+                        });
+                });
+        </script>
+{% endblock %}
+
+{% block content %}
+    <h2>Comparing: {{title}}</h2>
+    <h3>{{article_url}}</h3>
+    <ul>
+      <li>Left: {{date1}}</li>
+      <li>Right: {{date2}}</li>
+    </ul>
+Are these changes interesting?   <form action="{{form_action}}" method=POST>
+      <input type=hidden name=article_url value={{article_url}}>
+      <input type=hidden name=diff_v1 value={{v1}}>
+      <input type=hidden name=diff_v2 value={{v2}}>
+      <input type=submit name=submit value="Yes">
+    </form>
+    <div id="mergely-resizer">
+      <div id="compare">
+      </div>
+    </div>
+{% endblock %}
+
+{% block title %}Diffing: {{title}}{% endblock %}

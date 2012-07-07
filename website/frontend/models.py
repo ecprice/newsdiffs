@@ -80,7 +80,7 @@ class Article(models.Model):
         title = f.readline().strip()
         byline = f.readline().strip()
         publication = PublicationDict.get(self.filename().split('/')[0])
-        return (date, title, byline, publication)
+        return dict(date=date, title=title, byline=byline, publication=publication)
 
 
 class Upvote(models.Model):

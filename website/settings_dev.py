@@ -2,7 +2,7 @@
 
 import os.path
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -18,8 +18,7 @@ WEBAPP_ROOT = os.path.dirname(os.path.abspath(__file__))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'FILE': 'newsdiffs.db',
-        'NAME': 'newsdiffs',
+        'NAME': '../newsdiffs.db',
     }
 }
 
