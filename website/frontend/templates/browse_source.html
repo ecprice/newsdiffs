@@ -7,16 +7,15 @@
 {% block content %}
 
       <h1>Changed Articles</h1>
-      <h3>From <a href="{% url browse_source 'nytimes.com' %}">nytimes.com</a>, <a href="{% url browse_source 'cnn.com' %}">cnn.com</a>, <a href="{% url browse_source 'politico.com' %}"> 
-politico.com</a>	
+      <h3>From {{source}}
 <br>Starting June 17, 2012 (with occasional downtime)</h3>
       <p>
-    		
+
     <table class="table table-condensed"  style="width:100%">
       <thead><tr><th text-align:"left";>Article</th><th>Version</th><th>Diff</th></tr></thead>
       {% for url, metadata, nc, changes in articles %}
-      <tr><td rowspan="{{nc}}" valign="top"><a href="{% url article_history %}?url={{url}}">{{metadata.title}}</a> (<a href="{{url}}">{{metadata.publication}}</a>)<br>{{metadata.byline}}</td>
-        {% for difflink, date, metadata in changes %}
+      <tr><td rowspan="{{nc}}" valign="top"><a href="{% url article_history %}?url={{url}}">{{metadata.title}}</a> (<a href="{{url}}">current</a>)<br>{{metadata.byline}}</td>
+        {% for difflink, date in changes %}
         <td>{{date}}</td>
         {% if difflink %}
         <td><a href="{{difflink}}">(Compare)</a></td></tr><tr>

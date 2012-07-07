@@ -11,11 +11,16 @@ import urllib
 
 OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
-def browse(request):
+
+def get_articles(source=None):
     articles = []
     models._refresh_metadata()
+    rx = re.compile(r'^https?://(?:[^/]*\.)%s/' % source if source else '')
     for article in Article.objects.all():
         url = article.url
+        if not rx.match(url):
+            print 'REJECTING', url
+            continue
         if 'blogs.nytimes.com' in url: #XXX temporary
             continue
         elif 'editions.cnn.com' in url:
@@ -27,7 +32,22 @@ def browse(request):
         md = article.metadata()
         articles.append((url, md, len(vs), rowinfo))
     articles.sort(key = lambda x: (x[-2] > 1, x[-1][0][1]), reverse=True)
+    return articles
+
+
+def browse(request):
+    articles = get_articles()
     return render_to_response('browse.html', {'articles': articles})
+
+
+SOURCES = set('nytimes.com cnn.com politico.com'.split())
+
+def browse_source(request, source):
+    if source not in SOURCES:
+        raise Http404
+    articles = get_articles(source=source)
+    return render_to_response('browse_source.html', {
+            'source': source, 'articles': articles})
 
 
 def diffview(request):
