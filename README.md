@@ -8,7 +8,8 @@ Running for yourself
 --------------------
 
 To start the webserver for testing,
-  $ python website/manage.py
+  $ python website/manage.py syncdb  # just once
+  $ python website/manage.py runserver
 
 You will need Django installed.  On a Debian- or Ubuntu-based system,
 it may suffice (untested) to run
