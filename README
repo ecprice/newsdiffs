@@ -1,9 +1,28 @@
-newsdiffs
+NewsDiffs
 ==========
 
 A website and framework that tracks changes in online news articles over time.
 
+Original installation at newsdiffs.org. A product of the Knight Mozilla MIT news hackathon in June 2012. Authors: Eric Price (ecprice@mit.edu), Greg Price (gnprice@gmail.com) and Jennifer 8. Lee (jenny@jennifer8lee.com)
 
+
+Requirements
+------------
+
+You need to have installed on your local machine
+1) git (To clone the Git repository: $ git clone git@github.com:ecprice/newsdiffs.git)
+2) python 2.6 or later
+3) Django. 
+
+For Djanjo, on a Debian- or Ubuntu-based system, it may suffice (untested) to run
+  $ sudo apt-get install python-django python-simplejson
+
+On Mac OS, the easiest way may be to install pip:
+  http://www.pip-installer.org/en/latest/installing.html
+and then
+  $ pip install Django
+
+ 
 Initial setup
 -------------
 
@@ -12,18 +31,9 @@ Initial setup
   $ git init articles
   $ cd articles && touch x && git add x && git commit -m 'Initial commit'
 
-You will need Django installed, and other libraries.  On a Debian- or
-Ubuntu-based system, it may suffice (untested) to run
-  $ sudo apt-get install python-django python-simplejson
 
-On Mac OS, the easiest way may be to install pip:
-  http://www.pip-installer.org/en/latest/installing.html
-and then
-  $ pip install Django
-
-
-Running for yourself
---------------------
+Running NewsDiffs Locally
+-------------------------
 
 Do the initial setup above.  Then to start the webserver for testing:
   $ python website/manage.py runserver

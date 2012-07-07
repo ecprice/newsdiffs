@@ -16,8 +16,8 @@ politico.com</a>
       <thead><tr><th text-align:"left";>Article</th><th>Version</th><th>Diff</th></tr></thead>
       {% for url, metadata, nc, changes in articles %}
       <tr><td rowspan="{{nc}}" valign="top"><a href="{% url article_view %}?url={{url}}">{{metadata.title}}</a> (<a href="{{url}}">{{metadata.publication}}</a>)<br>{{metadata.byline}}</td>
-        {% for link, difflink, date in changes %}
-        <td><a href="{{link}}">{{date}}</a></td>
+        {% for difflink, date in changes %}
+        <td>{{date}}</td>
         {% if difflink %}
         <td><a href="{{difflink}}">(Compare)</a></td></tr><tr>
         {% else %}
