@@ -3,4 +3,4 @@ RewriteRule ^static - [L]
 RewriteRule ^images - [L]
 RewriteRule ^styles - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ /newsdiffs/website/mysite.fcgi/newsdiffer/$1 [QSA,L]
+RewriteRule ^(.*)$ mysite.fcgi/$1 [QSA,L]
