@@ -66,7 +66,6 @@ def diffview(request):
             'date1':date1, 'date2':date2,
             'text1':text1, 'text2':text2,
             'article_url': url, 'v1': v1, 'v2': v2,
-            'form_action': 'upvote',
             })
 
 def view(request):

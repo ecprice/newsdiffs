@@ -41,7 +41,7 @@
       <li>Left: {{date1}}</li>
       <li>Right: {{date2}}</li>
     </ul>
-Are these changes interesting?   <form action="{{form_action}}" method=POST>
+Are these changes interesting?   <form action="{% url upvote %}" method=POST>
       <input type=hidden name=article_url value={{article_url}}>
       <input type=hidden name=diff_v1 value={{v1}}>
       <input type=hidden name=diff_v2 value={{v2}}>
