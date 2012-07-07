@@ -62,7 +62,6 @@ class Article(models.Model):
     def versions(self):
         _refresh_metadata(60*10)
         vs = _all_logs.get(self.filename(), [])
-        print vs
         return vs
 
     def get_version(self, version):

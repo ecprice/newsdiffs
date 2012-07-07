@@ -48,23 +48,38 @@ def diffview(request):
     v1 = request.REQUEST.get('v1')
     v2 = request.REQUEST.get('v2')
     article = Article.objects.get(url=url)
-    text1 = article.get_version(v1)
-    text2 = article.get_version(v2)
     title = article.metadata()['title']
 
-    versions = article.versions()
-    #index1 = [i for i, x in enumerate(versions) if x[1] == v1][0]
-    #index2 = [i for i, x in enumerate(versions) if x[1] == v2][0]
+    versions = dict(enumerate(article.versions()))
 
-    date1 = models.get_commit_date(v1).strftime(OUT_FORMAT)
-    date2 = models.get_commit_date(v2).strftime(OUT_FORMAT)
+    adjacent_versions = []
+    dates = []
+    texts = []
 
-    earlier1 = 1
+    for v in (v1, v2):
+        texts.append(article.get_version(v))
+        dates.append(models.get_commit_date(v).strftime(OUT_FORMAT))
+
+        index = [i for i, x in versions.items() if x[1] == v][0]
+        adjacent_versions.append([versions.get(index+offset, ['']*2)[1]
+                                  for offset in (-1, 1)])
+
+
+    links = []
+    for i in range(2):
+        if all(x[i] for x in adjacent_versions):
+            links.append('%s?%s' % (reverse(diffview),
+                                    urllib.urlencode(dict(url=url,
+                                                          v1=adjacent_versions[0][i],
+                                                          v2=adjacent_versions[1][i],))))
+        else:
+            links.append('')
 
     return render_to_response('diffview.html', {
             'title': title,
-            'date1':date1, 'date2':date2,
-            'text1':text1, 'text2':text2,
+            'date1':dates[0], 'date2':dates[1],
+            'text1':texts[0], 'text2':texts[1],
+            'prev':links[0], 'next':links[1],
             'article_url': url, 'v1': v1, 'v2': v2,
             })
 
