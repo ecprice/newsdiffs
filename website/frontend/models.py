@@ -66,7 +66,7 @@ class Article(models.Model):
 
     def get_version(self, version):
         if version is None:
-            return None
+            version = self.versions()[-1][-1]
         return subprocess.check_output([GIT_PROGRAM, 'show',
                                         version+':'+self.filename()],
                                        cwd=GIT_DIR)
@@ -74,11 +74,9 @@ class Article(models.Model):
     def latest_version(self):
         return open(GIT_DIR+'/'+self.filename()).read()
 
-    def metadata(self):
-        f = open(GIT_DIR+'/'+self.filename())
-        date = f.readline().strip()
-        title = f.readline().strip()
-        byline = f.readline().strip()
+    def metadata(self, version=None):
+        text = self.get_version(version)
+        (date, title, byline) = text.splitlines()[:3]
         publication = PublicationDict.get(self.filename().split('/')[0])
         return dict(date=date, title=title, byline=byline, publication=publication)
 

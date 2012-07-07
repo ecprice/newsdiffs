@@ -4,9 +4,9 @@
 
 {% block content %}
 
-<h1>Changes to: {{metadata.title}} ({{metadata.publication}})</h1>
+<h1>Changes to: {{last_metadata.title}} ({{last_metadata.publication}})</h1>
 <h3><a href="{{url}}">{{url}}</a></h3> 
-<h3>{{metadata.byline}}</h3> 
+<h3>{{last_metadata.byline}}</h3> 
 <p>
 <table class="table table-condensed"  style="width:100%">
      <thead><tr>
@@ -15,9 +15,9 @@
 	<td>Compare</td>
     </tr> </thead>
 
-    {% for difflink, date in versions %}
+    {% for difflink, date, metadata in versions %}
     <tr>
-      <td><a href="{{link}}">HEADLINE GOES HERE</a></td>
+      <td><a href="{{link}}">{{metadata.title}}</a></td>
       <td>{{date}}</td>
       {% if difflink %}
       <td><a href="{{difflink}}">(Compare)</a></td>

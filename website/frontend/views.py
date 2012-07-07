@@ -21,19 +21,9 @@ def browse(request):
         elif 'editions.cnn.com' in url:
             continue
         vs = article.versions()
-        if len(vs) < 2:
+        rowinfo = get_rowinfo(article)
+        if len(rowinfo) < 2:
             continue
-        rowinfo = []
-        lastcommit = None
-        for date, commit in vs:
-            if lastcommit is None:
-                diffl = ''
-            else:
-                diffl = '%s?%s' % (reverse(diffview),
-                                   urllib.urlencode(dict(url=url, v1=lastcommit, v2=commit)))
-            rowinfo.append((diffl, date))
-            lastcommit = commit
-        rowinfo.reverse()
         md = article.metadata()
         articles.append((url, md, len(vs), rowinfo))
     articles.sort(key = lambda x: (x[-2] > 1, x[-1][0][1]), reverse=True)
@@ -80,19 +70,8 @@ def diffview(request):
             'article_url': url, 'v1': v1, 'v2': v2,
             })
 
-def view(request):
-    url = request.REQUEST.get('url')
-    v = request.REQUEST.get('v')
-    article = Article.objects.get(url=url)
-    text = article.get_version(v)
-    return HttpResponse(text, content_type='text/plain;charset=utf-8')
-
-def article_history(request):
-    url = request.REQUEST.get('url')
-    article = Article.objects.get(url=url)
-    metadata = article.metadata()
+def get_rowinfo(article):
     versions = article.versions()
-
 
     rowinfo = []
     lastcommit = None
@@ -101,13 +80,23 @@ def article_history(request):
             diffl = ''
         else:
             diffl = '%s?%s' % (reverse(diffview),
-                               urllib.urlencode(dict(url=url, v1=lastcommit, v2=commit)))
-        rowinfo.append((diffl, date))
+                               urllib.urlencode(dict(url=article.url,
+                                                     v1=lastcommit,
+                                                     v2=commit)))
+        metadata = article.metadata(commit)
+        rowinfo.append((diffl, date, metadata))
         lastcommit = commit
 
     rowinfo.reverse()
+    return rowinfo
+
+def article_history(request):
+    url = request.REQUEST.get('url')
+    article = Article.objects.get(url=url)
+    metadata = article.metadata()
+    rowinfo = get_rowinfo(article)
     return render_to_response('article_history.html', {'url':url,
-                                             'metadata':metadata,
+                                             'last_metadata':metadata,
                                              'versions':rowinfo})
 
 def upvote(request):
