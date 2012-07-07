@@ -18,7 +18,7 @@ WEBAPP_ROOT = os.path.dirname(os.path.abspath(__file__))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '../newsdiffs.db',
+        'NAME': os.path.dirname(WEBAPP_ROOT)+'/newsdiffs.db',
     }
 }
 
