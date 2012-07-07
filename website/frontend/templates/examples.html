@@ -1,61 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>NewsDiffs | Highlights</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NewsDiff tracks changes in online news articles over time>
-    <meta name="author" content="Eric Price, Greg Price, Jennifer 8. Lee">
+{% extends 'template.html' %}
 
-    <!-- Le styles -->
-    <link href="http://www.newsdiffs.org/newsdiffs/website/styles/bootstrap.css" rel="stylesheet">
-    <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-    </style>
+{% block active_examples %}class="active"{% endblock %}
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="../assets/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
-  </head>
-
-  <body>
-
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="http://newsdiffs.org">NewsDiffs</a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li><a href="http://newsdiffs.org">Home</a></li>
-              <li><a href="http://newsdiffs.org/about/">About</a></li>
-              <li><a href="http://newsdiffs.org/browse">Browse</a></li>
-              <li class="active"><a href="http://newsdiffs.org/examples/">Highlights</a></li>
-              <li><a href="http://newsdiffs.org/press/">Press</a></li>
-              <li><a href="http://newsdiffs.org/subscribe/">Subscribe</a></li>
-              <li><a href="http://newsdiffs.org/contact/">Contact</a></li>
-
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
-
-    <div class="container">
+{% block content %}
 		<h1>Examples</h1>
 		<p>These are some highlights of changes that have been handcurated. Do you see a good one? <a 
 href="http://www.newsdiffs.org/contact/">Let us know.</a></p>
@@ -155,29 +102,4 @@ intentions — or, at least, its lack of ill intentions — toward Russia."
 
 </div>
 
-<hr>
-	<footer>
-        <p>&copy; <a href="http://newsdiffs.org/contact/">NewsDiffs</a> 2012</p>
-    </footer>
-
-    </div> <!-- /container -->
-		
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="http://www.newsdiffs.org/static/lib/jquery.js"></script>
-    <script src="http://www.newsdiffs.org/static/lib/bootstrap-transition.js"></script>
-    <script src="http://www.newsdiffs.org/static/lib/bootstrap-alert.js"></script>
-    <script src="http://www.newsdiffs.org/static/lib/bootstrap-modal.js"></script>
-    <script src="http://www.newsdiffs.org/static/lib/bootstrap-dropdown.js"></script>
-    <script src="http://www.newsdiffs.org/static/lib//bootstrap-scrollspy.js"></script>
-    <script src="http://www.newsdiffs.org/static/lib/bootstrap-tab.js"></script>
-    <script src="http://www.newsdiffs.org/static/lib/bootstrap-tooltip.js"></script>
-    <script src="http://www.newsdiffs.org/static/lib/bootstrap-popover.js"></script>
-    <script src="http://www.newsdiffs.org/static/lib/bootstrap-button.js"></script>
-    <script src="http://www.newsdiffs.org/static/lib/bootstrap-collapse.js"></script>
-    <script src="http://www.newsdiffs.org/static/lib/bootstrap-carousel.js"></script>
-    <script src="http://www.newsdiffs.org/static/lib/bootstrap-typeahead.js"></script>
-
-  </body>
-</html>
+{% endblock %}

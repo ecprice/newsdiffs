@@ -11,10 +11,10 @@ ROOT_DIR = os.path.dirname(THIS_DIR)
 
 urlpatterns = patterns('',
     # Example:
-   url(r'^newsdiffer/static/(?P<path>.*)$', 'django.views.static.serve', {
+   url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root': ROOT_DIR+'/website/static',
-        }),
-   (r'^newsdiffer/', include('website.frontend.urls')),
+        }, name='static'),
+   (r'^', include('website.frontend.urls')),
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
