@@ -1,0 +1,1 @@
+location = 'sqlite:///newsdiffs.db'
