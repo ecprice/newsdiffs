@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(THIS_DIR))
 GIT_DIR = ROOT_DIR+'/articles'
+GIT_PROGRAM = 'git'
 
 def strip_prefix(string, prefix):
     if string.startswith(prefix):
@@ -23,7 +24,7 @@ def _refresh_metadata(timeout=300):
     timediff = (datetime.now() - _last_update)
     if timediff < timedelta(seconds=timeout):
         return
-    git_output = subprocess.check_output(['/usr/bin/git', 'log'], cwd=GIT_DIR)
+    git_output = subprocess.check_output([GIT_PROGRAM, 'log'], cwd=GIT_DIR)
     commits = git_output.split('\n\ncommit ')
     commits[0] = commits[0][len('commit '):]
     d = {}
@@ -67,7 +68,7 @@ class Article(models.Model):
     def get_version(self, version):
         if version is None:
             return None
-        return subprocess.check_output(['/usr/bin/git', 'show',
+        return subprocess.check_output([GIT_PROGRAM, 'show',
                                         version+':'+self.filename()],
                                        cwd=GIT_DIR)
 
@@ -97,7 +98,7 @@ class Upvote(models.Model):
 def get_commit_date(commit):
     if commit is None:
         return datetime.now()
-    datestr = subprocess.check_output(['/usr/bin/git', 'show', '-s', '--format=%ci', commit], cwd=GIT_DIR)
+    datestr = subprocess.check_output([GIT_PROGRAM, 'show', '-s', '--format=%ci', commit], cwd=GIT_DIR)
     return datetime.strptime(datestr.strip(), '%Y-%m-%d %H:%M:%S -0400')
 
 
