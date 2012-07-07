@@ -2,6 +2,8 @@
 
 {% block active_browse %}class="active"{% endblock %}
 
+{% block title %}Examples{{title}}{% endblock %}
+
 {% block content %}
 
       <h1>Changed Articles</h1>
@@ -10,7 +12,6 @@ politico.com</a>
 <br>Starting June 17, 2012 (with occasional downtime)</h3>
       <p>
     		
-			
     <table class="table table-condensed"  style="width:100%">
       <thead><tr><th text-align:"left";>Article</th><th>Version</th><th>Diff</th></tr></thead>
       {% for url, metadata, nc, changes in articles %}
