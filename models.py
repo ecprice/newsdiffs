@@ -3,12 +3,16 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
 from sqlalchemy.orm import sessionmaker
+import os
 
-for line in open('/mit/ecprice/.my.cnf').read().split():
-    if line.startswith('password='):
-        pwd = line.split('=')[1]
-engine = create_engine('mysql://ecprice:%s@sql.mit.edu/ecprice+newsdiffs'%pwd, echo=False)
-#engine = create_engine('sqlite:///newsdiffer.db', echo=False)
+try:
+    os.symlink('database_settings_dev.py', 'database_settings.py')
+except OSError:
+    pass
+
+import database_settings
+
+engine = create_engine(database_settings.location, echo=False)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 
