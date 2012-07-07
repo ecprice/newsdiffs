@@ -14,7 +14,7 @@
     <table class="table table-condensed"  style="width:100%">
       <thead><tr><th text-align:"left";>Article</th><th>Version</th><th>Diff</th></tr></thead>
       {% for url, metadata, nc, changes in articles %}
-      <tr><td rowspan="{{nc}}" valign="top"><a href="{% url article_view %}?url={{url}}">{{metadata.title}}</a> (<a href="{{url}}">current</a>)<br>{{metadata.byline}}</td>
+      <tr><td rowspan="{{nc}}" valign="top"><a href="{% url article_history %}?url={{url}}">{{metadata.title}}</a> (<a href="{{url}}">current</a>)<br>{{metadata.byline}}</td>
         {% for difflink, date in changes %}
         <td>{{date}}</td>
         {% if difflink %}
