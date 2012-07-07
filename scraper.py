@@ -286,15 +286,15 @@ def add_to_git_repo(data, filename):
     already_exists = os.path.exists(DIFF_DIR+filename)
     open(DIFF_DIR+filename, 'w').write(data)
     if not already_exists:
-        subprocess.call(['/usr/bin/git', 'add', filename], cwd=DIFF_DIR)
+        subprocess.call(['git', 'add', filename], cwd=DIFF_DIR)
         commit_message = 'Added %s' % filename
         return_value = 2
     else:
-        if not subprocess.check_output(['/usr/bin/git', 'ls-files', '-m', filename], cwd=DIFF_DIR):
+        if not subprocess.check_output(['git', 'ls-files', '-m', filename], cwd=DIFF_DIR):
             return 0
         return_value = 1
         commit_message = 'Change to %s' % filename
-    subprocess.call(['/usr/bin/git', 'commit', filename, '-m', commit_message], cwd=DIFF_DIR)
+    subprocess.call(['git', 'commit', filename, '-m', commit_message], cwd=DIFF_DIR)
     return return_value
 
 #Update url in git
@@ -358,6 +358,7 @@ if __name__ == '__main__':
         except Exception, e:
             print >> sys.stderr, 'Unknown exception when updating', article_row.url
             traceback.print_exc()
+            retcode = -1
         if retcode > 1:
             print 'Updated!'
             article_row.last_update = datetime.now()
