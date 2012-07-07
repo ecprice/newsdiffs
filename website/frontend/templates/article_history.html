@@ -4,14 +4,20 @@
 
 {% block content %}
 
-<h1>Changes to Article</h1>
-<h2>{{metadata.title}} ({{metadata.publication}})</h2>
+<h1>Changes to: {{metadata.title}} ({{metadata.publication}})</h1>
 <h3><a href="{{url}}">{{url}}</a></h3> 
 <h3>{{metadata.byline}}</h3> 
+<p>
+<table class="table table-condensed"  style="width:100%">
+     <thead><tr>
+	<td>Headline</td>
+	<td>Date/Time EST Archived</td>
+	<td>Compare</td>
+    </tr> </thead>
 
-<table>
     {% for link, difflink, date in versions %}
     <tr>
+      <td><a href="{{link}}">HEADLINE GOES HERE</a></td>
       <td><a href="{{link}}">{{date}}</a></td>
       {% if difflink %}
       <td><a href="{{difflink}}">(Compare)</a></td>

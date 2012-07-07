@@ -75,7 +75,7 @@ def view(request):
     text = article.get_version(v)
     return HttpResponse(text, content_type='text/plain;charset=utf-8')
 
-def article_view(request):
+def article_history(request):
     url = request.REQUEST.get('url')
     article = Article.objects.get(url=url)
     metadata = article.metadata()
@@ -97,7 +97,7 @@ def article_view(request):
         lastcommit = commit
         rowinfo.reverse()
 
-    return render_to_response('article_view.html', {'url':url,
+    return render_to_response('article_history.html', {'url':url,
                                              'metadata':metadata,
                                              'versions':rowinfo})
 
