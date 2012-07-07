@@ -1,0 +1,25 @@
+{% extends 'template.html' %}
+
+{% block title %}Article View{% endblock %}
+
+{% block content %}
+
+<h1>Changes to Article</h1>
+<h2>{{metadata.title}} ({{metadata.publication}})</h2>
+<h3><a href="{{url}}">{{url}}</a></h3> 
+<h3>{{metadata.byline}}</h3> 
+
+<table>
+    {% for link, difflink, date in versions %}
+    <tr>
+      <td><a href="{{link}}">{{date}}</a></td>
+      {% if difflink %}
+      <td><a href="{{difflink}}">(Compare)</a></td>
+    {% else %}
+    <td></td>
+    {% endif %}
+    </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

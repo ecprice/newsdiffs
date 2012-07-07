@@ -81,9 +81,26 @@ def article_view(request):
     article = Article.objects.get(url=url)
     metadata = article.metadata()
     versions = article.versions()
-    return render_to_response('about.html', {'url':url,
+
+
+    rowinfo = []
+    lastcommit = None
+    for date, commit in versions:
+        if lastcommit is None:
+            diffl = ''
+        else:
+            diffl = '%s?%s' % (reverse(diffview),
+                               urllib.urlencode(dict(url=url, v1=lastcommit, v2=commit)))
+
+        link = '%s?%s' % (reverse(view),
+                          urllib.urlencode(dict(url=url, v=commit)))
+        rowinfo.append((link, diffl, date))
+        lastcommit = commit
+        rowinfo.reverse()
+
+    return render_to_response('article_view.html', {'url':url,
                                              'metadata':metadata,
-                                             'versions':versions})
+                                             'versions':rowinfo})
 
 def upvote(request):
     article_url = request.REQUEST.get('article_url')
