@@ -31,15 +31,12 @@ def browse(request):
             else:
                 diffl = '%s?%s' % (reverse(diffview),
                                    urllib.urlencode(dict(url=url, v1=lastcommit, v2=commit)))
-
-            link = '%s?%s' % (reverse(view),
-                               urllib.urlencode(dict(url=url, v=commit)))
-            rowinfo.append((link, diffl, date))
+            rowinfo.append((diffl, date))
             lastcommit = commit
         rowinfo.reverse()
         md = article.metadata()
         articles.append((url, md, len(vs), rowinfo))
-    articles.sort(key = lambda x: (x[-2] > 1, x[-1][0][2]), reverse=True)
+    articles.sort(key = lambda x: (x[-2] > 1, x[-1][0][1]), reverse=True)
     return render_to_response('browse.html', {'articles': articles})
 
 
@@ -67,13 +64,6 @@ def diffview(request):
             'text1':text1, 'text2':text2,
             'article_url': url, 'v1': v1, 'v2': v2,
             })
-
-def view(request):
-    url = request.REQUEST.get('url')
-    v = request.REQUEST.get('v')
-    article = Article.objects.get(url=url)
-    text = article.get_version(v)
-    return HttpResponse(text, content_type='text/plain;charset=utf-8')
 
 def article_view(request):
     url = request.REQUEST.get('url')
