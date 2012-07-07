@@ -3,6 +3,13 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
 from sqlalchemy.orm import sessionmaker
+import os
+
+try:
+    os.symlink('database_settings_dev.py', 'database_settings.py')
+except OSError:
+    pass
+
 import database_settings
 
 engine = create_engine(database_settings.location, echo=False)
