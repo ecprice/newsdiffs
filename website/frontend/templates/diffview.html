@@ -41,6 +41,19 @@
       <li>Left: {{date1}}</li>
       <li>Right: {{date2}}</li>
     </ul>
+    <p>
+      {% if prev %}
+      <a href="{{prev}}">Prev</a>
+      {% else %}
+      (no previous diff)
+      {% endif %}
+      {% if next %}
+      <a href="{{next}}">Next</a>
+      {% else %}
+      (no next diff)
+      {% endif %}
+    </p>
+      
 Are these changes interesting?   <form action="{% url upvote %}" method=POST>
       <input type=hidden name=article_url value={{article_url}}>
       <input type=hidden name=diff_v1 value={{v1}}>

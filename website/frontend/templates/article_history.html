@@ -15,10 +15,10 @@
 	<td>Compare</td>
     </tr> </thead>
 
-    {% for link, difflink, date in versions %}
+    {% for difflink, date in versions %}
     <tr>
       <td><a href="{{link}}">HEADLINE GOES HERE</a></td>
-      <td><a href="{{link}}">{{date}}</a></td>
+      <td>{{date}}</td>
       {% if difflink %}
       <td><a href="{{difflink}}">(Compare)</a></td>
     {% else %}

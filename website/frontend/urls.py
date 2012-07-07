@@ -4,7 +4,6 @@ urlpatterns = patterns('',
   #
   url(r'^upvote/$', 'frontend.views.upvote', name='upvote'),
   url(r'^diffview/$', 'frontend.views.diffview', name='diffview'),
-  url(r'^view/$', 'frontend.views.view', name='view'),
   url(r'^about/$', 'frontend.views.about', name='about'),
   url(r'^browse/$', 'frontend.views.browse', name='browse'),
   url(r'^contact/$', 'frontend.views.contact', name='contact'),
