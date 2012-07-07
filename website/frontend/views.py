@@ -81,9 +81,7 @@ def article_view(request):
             diffl = '%s?%s' % (reverse(diffview),
                                urllib.urlencode(dict(url=url, v1=lastcommit, v2=commit)))
 
-        link = '%s?%s' % (reverse(view),
-                          urllib.urlencode(dict(url=url, v=commit)))
-        rowinfo.append((link, diffl, date))
+        rowinfo.append((diffl, date))
         lastcommit = commit
         rowinfo.reverse()
 
