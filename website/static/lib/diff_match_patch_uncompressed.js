@@ -39,7 +39,9 @@ function diff_match_patch() {
   // How eagerly to 'split' an equality, absorbing it into neighboring
   // large changes.  (-infinity => compare equality to min of changes;
   // 0 => geometric mean; 1 => mean; infinity => max)
-  this.Diff_SplitWeight = -0.5;
+  this.Diff_SplitWeight = -2;
+  // How eagerly to 'split' small equalities.
+  this.Diff_SplitSmall = 2;
   // Whether to show &para; at the end of each line.
   this.Diff_ShowPara = true;
 
@@ -729,9 +731,12 @@ diff_match_patch.prototype.diff_halfMatch_ = function(text1, text2) {
   return [text1_a, text1_b, text2_a, text2_b, mid_common];
 };
 
-
-diff_match_patch.prototype.power_mean = function(a, b, p) {
-  return Math.pow((Math.pow(a, p) + Math.pow(b, p))/2, 1/p)
+diff_match_patch.prototype.diff_splitThreshold_ = function(length1, length2) {
+  var p = this.Diff_SplitWeight;
+  var d = this.Diff_SplitSmall;
+  return Math.pow((Math.pow(length1 + d, p)
+                 + Math.pow(length2 + d, p)) / 2,
+                  1/p) - d;
 }
 
 /**
@@ -769,10 +774,9 @@ diff_match_patch.prototype.diff_cleanupSemantic = function(diffs) {
       // Eliminate an equality that is smaller or equal to the edits on both
       // sides of it.
       if (lastequality &&
-          lastequality.length <= this.power_mean(
+          lastequality.length <= this.diff_splitThreshold_(
             Math.max(length_insertions1, length_deletions1),
-            Math.max(length_insertions2, length_deletions2),
-            this.Diff_SplitWeight)) {
+            Math.max(length_insertions2, length_deletions2))) {
         // Duplicate record.
         diffs.splice(equalities[equalitiesLength - 1], 0,
                      [DIFF_DELETE, lastequality]);
