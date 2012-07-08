@@ -118,7 +118,7 @@ def strip_whitespace(text):
 
 
 feeders = [('http://www.nytimes.com/',
-            lambda url: 'nytimes.com/201' in url),
+            lambda url: 'www.nytimes.com/201' in url),
            ('http://edition.cnn.com/',
             lambda url: 'edition.cnn.com/201' in url),
            ('http://www.politico.com/',
@@ -273,10 +273,7 @@ DomainNameToClass = {'www.nytimes.com': Article,
                      }
 
 def get_parser(url):
-    for key in DomainNameToClass:
-        if url_to_filename(url).startswith(key):
-            return DomainNameToClass[key]
-    raise KeyError(url)
+    return DomainNameToClass[url_to_filename(url).split('/')[0]]
 
 
 def add_to_git_repo(data, filename):
@@ -346,7 +343,7 @@ if __name__ == '__main__':
     insert_all_articles(session)
     num_articles = session.query(models.Article).count()
     articles = session.query(models.Article).order_by(models.Article.last_check).all()
-    articles.sort(key = lambda x: get_update_delay(x.minutes_since_update()) - x.minutes_since_check())
+    articles.sort(key = lambda x: -x.minutes_since_check() * 1./get_update_delay(x.minutes_since_update()))
     for i, article_row in enumerate(articles):
         print 'Woo:', article_row.minutes_since_update(), article_row.minutes_since_check(), '(%s/%s)' % (i+1, num_articles)
         delay = get_update_delay(article_row.minutes_since_update())
@@ -356,9 +353,12 @@ if __name__ == '__main__':
         try:
             retcode = update_article(article_row.url)
         except Exception, e:
-            print >> sys.stderr, 'Unknown exception when updating', article_row.url
-            traceback.print_exc()
-            retcode = -1
+            if isinstance(e, urllib2.HTTPError) and e.msg == 'Gone':
+                retcode = 0
+            else:
+                print >> sys.stderr, 'Unknown exception when updating', article_row.url
+                traceback.print_exc()
+                retcode = -1
         if retcode > 1:
             print 'Updated!'
             article_row.last_update = datetime.now()
