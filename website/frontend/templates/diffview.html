@@ -17,25 +17,23 @@
     $('#compare')[0].innerHTML = dmp.diff_prettyHtml(diff);
   });
 </script>
-{% endblock %}
+{% endblock head %}
 
 {% block content %}
     <h2>Comparing: {{title}}</h2>
     <h3>{{article_url}}</h3>
     <ul>
-      <li>Left: {{date1}}</li>
-      <li>Right: {{date2}}</li>
+      <li><del style="background:#ffe6e6;">Pink: Archived {{date1}}</del></li>
+      <li><ins style="background:#e6ffe6;">Green: Archived {{date2}}</ins></li>
     </ul>
     <p>
       {% if prev %}
-      <a href="{{prev}}">Prev</a>
+      <a href="{{prev}}"><= Previous revision</a>
       {% else %}
-      (no previous diff)
       {% endif %}
       {% if next %}
-      <a href="{{next}}">Next</a>
+      <a href="{{next}}">Later revision =></a>
       {% else %}
-      (no next diff)
       {% endif %}
     </p>
       
@@ -45,10 +43,11 @@ Are these changes interesting?   <form action="{% url upvote %}" method=POST>
       <input type=hidden name=diff_v2 value={{v2}}>
       <input type=submit name=submit value="Yes">
     </form>
+<hr>
     <div id="mergely-resizer">
       <div id="compare">
       </div>
     </div>
-{% endblock %}
+{% endblock content%}
 
 {% block title %}Diffing: {{title}}{% endblock %}
