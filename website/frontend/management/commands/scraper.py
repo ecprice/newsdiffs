@@ -100,7 +100,8 @@ def migrate_versions():
             continue
 
         text = subprocess.check_output([GIT_PROGRAM, 'show',
-                                        v+':'+article.filename()])
+                                        v+':'+article.filename()],
+                                       cwd=models.GIT_DIR)
         text = text.decode('utf-8')
         (date2, title, byline) = text.splitlines()[:3]
 
@@ -374,8 +375,9 @@ def get_parser(url):
 
 CHARSET_LIST = 'EUC-JP GB2312 EUC-KR Big5 SHIFT_JIS windows-1252 EUC-TW'.split()
 def is_boring(old, new):
-    for charset in charset:
-        if old.decode('utf8').encode(charset) == new:
+    oldu = old.decode('utf8')
+    for charset in CHARSET_LIST:
+        if oldu.encode(charset) == new:
             print 'Boring!'
             return True
     return False
