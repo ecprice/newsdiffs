@@ -417,12 +417,14 @@ def update_article(article):
         parsed_article = parser(article.url)
         t = datetime.now()
     except (AttributeError, urllib2.HTTPError, httplib.HTTPException), exc:
+        if isinstance(e, urllib2.HTTPError) and e.msg == 'Gone':
+            return
         print >> sys.stderr, 'Exception when parsing', article.url
         traceback.print_exc()
         print >> sys.stderr, 'Continuing'
-        return -1
+        return
     if not parsed_article.real_article:
-        return 0
+        return
     to_store = unicode(parsed_article).encode('utf8')
     (retval, v) = add_to_git_repo(to_store, url_to_filename(article.url))
     if v:
@@ -474,14 +476,10 @@ def update_versions():
         print 'Considering', article.url, datetime.now()
         article.last_check = datetime.now()
         try:
-            retcode = update_article(article)
+            update_article(article)
         except Exception, e:
-            if isinstance(e, urllib2.HTTPError) and e.msg == 'Gone':
-                retcode = 0
-            else:
-                print >> sys.stderr, 'Unknown exception when updating', article.url
-                traceback.print_exc()
-                retcode = -1
+            print >> sys.stderr, 'Unknown exception when updating', article.url
+            traceback.print_exc()
         article.save()
     subprocess.call([GIT_PROGRAM, 'gc'], cwd=models.GIT_DIR)
 
