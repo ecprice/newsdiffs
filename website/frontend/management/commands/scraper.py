@@ -373,13 +373,16 @@ def get_parser(url):
     return DomainNameToClass[url_to_filename(url).split('/')[0]]
 
 
-CHARSET_LIST = 'EUC-JP GB2312 EUC-KR Big5 SHIFT_JIS windows-1252 EUC-TW'.split()
+CHARSET_LIST = 'EUC-JP GB2312 EUC-KR Big5 SHIFT_JIS windows-1252'.split()
 def is_boring(old, new):
     oldu = old.decode('utf8')
     for charset in CHARSET_LIST:
-        if oldu.encode(charset) == new:
-            print 'Boring!'
-            return True
+        try:
+            if oldu.encode(charset) == new:
+                print 'Boring!'
+                return True
+        except UnicodeEncodeError:
+            pass
     return False
 
 def add_to_git_repo(data, filename):
