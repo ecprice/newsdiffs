@@ -37,7 +37,7 @@ def get_articles(source=None):
             continue
         rowinfo = get_rowinfo(article, versions)
         articles.append((article, versions[-1], rowinfo))
-        print 'Queries:', len(django.db.connection.queries), django.db.connection.queries
+        #print 'Queries:', len(django.db.connection.queries), django.db.connection.queries
     articles.sort(key = lambda x: x[-1][0][1].date, reverse=True)
     return articles
 
@@ -69,7 +69,6 @@ def diffview(request):
     assert(v2.article == article)
 
     title = article.latest_version().title
-    print title
 
     versions = dict(enumerate(article.versions()))
 
