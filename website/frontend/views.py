@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from models import Article, Version
 import models
 import simplejson
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 import urllib
 import django.db
@@ -55,9 +55,9 @@ def get_articles(source=None, distance=0):
     return articles
 
 
-SOURCES = set('nytimes.com cnn.com politico.com'.split() + [None])
+SOURCES = set('nytimes.com cnn.com politico.com'.split() + [''])
 
-def browse(request, source=None):
+def browse(request, source=''):
     if source not in SOURCES:
         raise Http404
     page=int(request.REQUEST.get('page', '1'))
