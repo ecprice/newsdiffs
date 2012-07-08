@@ -45,21 +45,6 @@ class Command(BaseCommand):
             update_articles()
             update_versions()
 
-
-
-def migrate_articles():
-    data = subprocess.check_output([GIT_PROGRAM, 'log', '--numstat',
-                                    '--pretty=format:'], cwd=models.GIT_DIR)
-    file_list = set([x.split('\t')[2] for x in data.splitlines() if x])
-    for fname in file_list:
-        url = 'http://'+fname
-        article = models.Article(url=url)
-        try:
-            article.save()
-        except models.IntegrityError:
-            pass
-
-
 def migrate_versions():
     git_output = subprocess.check_output([GIT_PROGRAM, 'log'], cwd=models.GIT_DIR)
     commits = git_output.split('\n\ncommit ')
@@ -92,16 +77,16 @@ def migrate_versions():
 
         if not article.publication(): #blogs aren't actually reasonable
             continue
+        if not os.path.exists(os.path.join(models.GIT_DIR,fname)): #file introduced accidentally
+            continue
 
         text = subprocess.check_output([GIT_PROGRAM, 'show',
-                                        v+':'+article.filename()],
+                                        v+':'+fname],
                                        cwd=models.GIT_DIR)
         text = text.decode('utf-8')
         (date2, title, byline) = text.splitlines()[:3]
 
         boring = False
-        if not os.path.exists(os.path.join(models.GIT_DIR,fname)): #file introduced accidentally
-            boring = True
 
         print '%d/%d' % (i,len(commits)), url, v, date, title, byline, boring
         v = models.Version(article=article, v=v, date=date, title=title,
@@ -382,6 +367,11 @@ windows-1253
 windows-1255""".split()
 def is_boring(old, new):
     oldu = old.decode('utf8')
+    newu = old.decode('utf8')
+
+    if oldu.splitlines()[1:] == newu.splitlines()[1:]:
+        return True
+
     for charset in CHARSET_LIST:
         try:
             if oldu.encode(charset) == new:
@@ -493,6 +483,7 @@ def update_versions():
             traceback.print_exc()
         article.save()
     subprocess.call([GIT_PROGRAM, 'gc'], cwd=models.GIT_DIR)
+    print 'Done!'
 
 
 if __name__ == '__main__':
