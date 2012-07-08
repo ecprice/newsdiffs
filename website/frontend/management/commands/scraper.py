@@ -73,7 +73,7 @@ def migrate_versions():
             url += '/'
             try:
                 article = models.Article.objects.get(url=url)
-            except models.ArticleDoesNotExist:
+            except models.Article.DoesNotExist:
                 url = url[:-1]
                 article = models.Article(url=url,
                                          last_update=date,
@@ -422,7 +422,7 @@ def update_article(article):
     try:
         parsed_article = parser(article.url)
         t = datetime.now()
-    except (AttributeError, urllib2.HTTPError, httplib.HTTPException), exc:
+    except (AttributeError, urllib2.HTTPError, httplib.HTTPException), e:
         if isinstance(e, urllib2.HTTPError) and e.msg == 'Gone':
             return
         print >> sys.stderr, 'Exception when parsing', article.url
