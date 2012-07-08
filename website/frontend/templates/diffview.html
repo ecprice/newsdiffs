@@ -2,36 +2,20 @@
 
 {% block head %}
 
-        <!-- Requires jQuery -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
-        <!-- Optional jquery.corner for rounded buttons -->
-        <!--
-        <script src="{% url static 'lib/jquery.corner.js' %}" type="text/javascript"></script>
-        -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
 
-        <!-- Requires CodeMirror 2.16 -->
-        <script type="text/javascript" src="{% url static 'lib/codemirror.min.js' %}"></script>
-        <link type="text/css" rel="stylesheet" href="{% url static 'lib/codemirror.css' %}" />
-        
-        <!-- Requires Mergely -->
-        <script type="text/javascript" src="{% url static 'lib/mergely.js' %}"></script>
-        <link type="text/css" rel="stylesheet" href="{% url static 'lib/mergely.css' %}" />
+<script src="{% url static 'lib/diff_match_patch.js'%}" type="text/javascript"></script>
 
-
-                <script type="text/javascript">
-
-        $(document).ready(function () {
-                        $('#compare').mergely({
-                                cmsettings: { readOnly: false, lineWrapping: true },
-                                lhs: function(setValue) {
-                                        setValue('{{text1|escapejs}}');
-                                },
-                                rhs: function(setValue) {
-                                        setValue('{{text2|escapejs}}');
-                                }
-                        });
-                });
-        </script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    var dmp = new diff_match_patch();
+    var text1 = '{{text1|escapejs}}';
+    var text2 = '{{text2|escapejs}}';
+    var diff = dmp.diff_main(text1, text2);
+    dmp.diff_cleanupSemantic(diff);
+    $('#compare')[0].innerHTML = dmp.diff_prettyHtml(diff);
+  });
+</script>
 {% endblock %}
 
 {% block content %}
