@@ -62,7 +62,7 @@ def migrate_articles():
     data = subprocess.check_output(['git', 'log', '--numstat',
                                     '--pretty=format:'])
     file_list = set([x.split('\t')[2] for x in data.splitlines() if x])
-    for fname in file_list.split():
+    for fname in file_list:
         url = 'http://'+fname
         article = models.Article(url=url)
         try:
@@ -419,7 +419,6 @@ def update_article(article):
         article.last_update = t
         v_row.save()
         article.save()
-        
 
 def update_articles(session):
     for url in get_all_article_urls():
