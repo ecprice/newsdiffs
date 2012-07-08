@@ -40,6 +40,8 @@ function diff_match_patch() {
   // large changes.  (-infinity => compare equality to min of changes;
   // 0 => geometric mean; 1 => mean; infinity => max)
   this.Diff_SplitWeight = -0.5;
+  // Whether to show &para; at the end of each line.
+  this.Diff_ShowPara = true;
 
   // At what point is no match declared (0.0 = perfection, 1.0 = very loose).
   this.Match_Threshold = 0.5;
@@ -1233,11 +1235,12 @@ diff_match_patch.prototype.diff_prettyHtml = function(diffs) {
   var pattern_lt = /</g;
   var pattern_gt = />/g;
   var pattern_para = /\n/g;
+  var symbol_para = this.Diff_ShowPara ? '&para;<br>' : '<br>';
   for (var x = 0; x < diffs.length; x++) {
     var op = diffs[x][0];    // Operation (insert, delete, equal)
     var data = diffs[x][1];  // Text of change.
     var text = data.replace(pattern_amp, '&amp;').replace(pattern_lt, '&lt;')
-        .replace(pattern_gt, '&gt;').replace(pattern_para, '&para;<br>');
+        .replace(pattern_gt, '&gt;').replace(pattern_para, symbol_para);
     switch (op) {
       case DIFF_INSERT:
         html[x] = '<ins style="background:#e6ffe6;">' + text + '</ins>';
