@@ -408,7 +408,7 @@ def add_to_git_repo(data, filename):
         commit_message = 'Change to %s' % filename
     subprocess.call([GIT_PROGRAM, 'commit', filename, '-m', commit_message],
                     cwd=models.GIT_DIR)
-    v = subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1', filename], cwd=models.GIT_DIR)
+    v = subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1', filename], cwd=models.GIT_DIR).strip()
     return (return_value, v)
 
 #Update url in git
