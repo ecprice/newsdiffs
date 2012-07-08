@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(THIS_DIR))
 GIT_DIR = ROOT_DIR+'/articles'
-GIT_DIR = '/mit/ecprice/web_scripts/newsdiffs/articles/'
 
 GIT_PROGRAM = 'git'
 
@@ -46,15 +45,18 @@ def _refresh_metadata(timeout=300):
     _all_logs = d
     _last_update = datetime.now()
 
-def _move_metadata():
+def _migrate_all_metadata():
     git_output = subprocess.check_output([GIT_PROGRAM, 'log'], cwd=GIT_DIR)
     print 'git output complete'
     commits = git_output.split('\n\ncommit ')
     commits[0] = commits[0][len('commit '):]
     print 'beginning loop'
     d = {}
+    versions = [x.v for x in Version.objects.all()]
     for commit in commits:
         (v, author, datestr, blank, changem) = commit.splitlines()
+        if v in versions:
+            continue
         fname = changem.split()[-1]
         changekind = changem.split()[0]
         if changekind == 'Reformat':
