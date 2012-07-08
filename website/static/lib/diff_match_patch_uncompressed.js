@@ -36,6 +36,13 @@ function diff_match_patch() {
   this.Diff_Timeout = 1.0;
   // Cost of an empty edit operation in terms of edit characters.
   this.Diff_EditCost = 4;
+  // How eagerly to 'split' an equality, absorbing it into neighboring
+  // large changes.  (-infinity => compare equality to min of changes;
+  // 0 => geometric mean; 1 => mean; infinity => max)
+  this.Diff_SplitWeight = -0.5;
+  // Whether to show &para; at the end of each line.
+  this.Diff_ShowPara = true;
+
   // At what point is no match declared (0.0 = perfection, 1.0 = very loose).
   this.Match_Threshold = 0.5;
   // How far to search for a match (0 = exact location, 1000+ = broad match).
@@ -49,6 +56,7 @@ function diff_match_patch() {
   this.Patch_DeleteThreshold = 0.5;
   // Chunk size for context length.
   this.Patch_Margin = 4;
+
 
   // The number of bits in an int.
   this.Match_MaxBits = 32;
@@ -722,6 +730,10 @@ diff_match_patch.prototype.diff_halfMatch_ = function(text1, text2) {
 };
 
 
+diff_match_patch.prototype.power_mean = function(a, b, p) {
+  return Math.pow((Math.pow(a, p) + Math.pow(b, p))/2, 1/p)
+}
+
 /**
  * Reduce the number of edits by eliminating semantically trivial equalities.
  * @param {!Array.<!diff_match_patch.Diff>} diffs Array of diff tuples.
@@ -756,10 +768,11 @@ diff_match_patch.prototype.diff_cleanupSemantic = function(diffs) {
       }
       // Eliminate an equality that is smaller or equal to the edits on both
       // sides of it.
-      if (lastequality && (lastequality.length <=
-          Math.max(length_insertions1, length_deletions1)) &&
-          (lastequality.length <= Math.max(length_insertions2,
-                                           length_deletions2))) {
+      if (lastequality &&
+          lastequality.length <= this.power_mean(
+            Math.max(length_insertions1, length_deletions1),
+            Math.max(length_insertions2, length_deletions2),
+            this.Diff_SplitWeight)) {
         // Duplicate record.
         diffs.splice(equalities[equalitiesLength - 1], 0,
                      [DIFF_DELETE, lastequality]);
@@ -1222,11 +1235,12 @@ diff_match_patch.prototype.diff_prettyHtml = function(diffs) {
   var pattern_lt = /</g;
   var pattern_gt = />/g;
   var pattern_para = /\n/g;
+  var symbol_para = this.Diff_ShowPara ? '&para;<br>' : '<br>';
   for (var x = 0; x < diffs.length; x++) {
     var op = diffs[x][0];    // Operation (insert, delete, equal)
     var data = diffs[x][1];  // Text of change.
     var text = data.replace(pattern_amp, '&amp;').replace(pattern_lt, '&lt;')
-        .replace(pattern_gt, '&gt;').replace(pattern_para, '&para;<br>');
+        .replace(pattern_gt, '&gt;').replace(pattern_para, symbol_para);
     switch (op) {
       case DIFF_INSERT:
         html[x] = '<ins style="background:#e6ffe6;">' + text + '</ins>';

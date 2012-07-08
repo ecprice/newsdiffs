@@ -1,8 +1,14 @@
 {% extends 'template.html' %}
 
 {% block content %}
-	<h3>{% block browse_source_header %}by source  <a href="{% url browse_source 'nytimes.com' %}">nytimes.com</a> | <a href="{% url browse_source 'cnn.com' %}">cnn.com</a> |
-<a href="{% url browse_source 'politico.com' %}">politico.com</a> | <a href="{% url browse %}">all</a> {% endblock %}</h3>
+	<ul id="myTab" class="nav nav-tabs">
+            <li {% if not source  %} class="active" {% endif %} ><a href="{% url browse %}" data-toggle="tab">All</a></li>
+            <li {% ifequal source "nytimes.com" %}class="active"{% endifequal %}><a href="{% url browse_source 'nytimes.com' %}" data-toggle="tab">nytimes.com</a></li>
+            <li {% ifequal source "cnn.com" %}class="active"{% endifequal %}><a href="{% url browse_source 'cnn.com' %}" data-toggle="tab">cnn.com</a></li>
+            <li {% ifequal source "politico.com" %}class="active"{% endifequal %}><a href="{% url browse_source 'politico.com' %}" data-toggle="tab">politico.com</a></li>
+              </ul>
+            </li>
+          </ul>
 
       <h1>Changed Articles {% block browse_fromline %}{% endblock browse_fromline %}</h1>
       <p>Starting June 17, 2012 (with occasional downtime)</p>
