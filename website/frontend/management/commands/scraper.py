@@ -367,7 +367,19 @@ def get_parser(url):
     return DomainNameToClass[url_to_filename(url).split('/')[0]]
 
 
-CHARSET_LIST = 'EUC-JP GB2312 EUC-KR Big5 SHIFT_JIS windows-1252'.split()
+CHARSET_LIST = """EUC-JP GB2312 EUC-KR Big5 SHIFT_JIS windows-1252
+IBM855
+IBM866
+ISO-8859-2
+ISO-8859-5
+ISO-8859-7
+KOI8-R
+MacCyrillic
+TIS-620
+windows-1250
+windows-1251
+windows-1253
+windows-1255""".split()
 def is_boring(old, new):
     oldu = old.decode('utf8')
     for charset in CHARSET_LIST:
