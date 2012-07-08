@@ -59,8 +59,9 @@ class Command(BaseCommand):
 
 
 def migrate_articles():
-    file_list = subprocess.check_output([GIT_PROGRAM, 'ls-files'],
-                                        cwd=models.GIT_DIR)
+    data = subprocess.check_output(['git', 'log', '--numstat',
+                                    '--pretty=format:'])
+    file_list = set([x.split('\t')[2] for x in data.splitlines() if x])
     for fname in file_list.split():
         url = 'http://'+fname
         article = models.Article(url=url)
