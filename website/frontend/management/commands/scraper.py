@@ -179,11 +179,14 @@ def strip_prefix(string, prefix):
 def url_to_filename(url):
     return strip_prefix(url, 'http://').rstrip('/')
 
-def grab_url(url):
+def grab_url(url, max_depth=5):
     text = urllib2.urlopen(url).read()
     # Occasionally need to retry
     if '<title>NY Times Advertisement</title>' in text:
-        return grab_url(url)
+        if max_depth == 0:
+            raise Exception('Too many NY Times ads')
+        time.sleep(0.5)
+        return grab_url(url, max_depth-1)
     return text
 
 def strip_whitespace(text):
