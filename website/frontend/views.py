@@ -8,6 +8,7 @@ import simplejson
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 import urllib
+import django.db
 
 OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
@@ -15,7 +16,14 @@ OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 def get_articles(source=None):
     articles = []
     rx = re.compile(r'^https?://(?:[^/]*\.)%s/' % source if source else '')
-    for article in Article.objects.all():
+
+    all_versions = models.Version.objects.annotate(num_vs=models.models.Count('article__version')).filter(num_vs__gt=1, boring=False).order_by('date').select_related()
+    article_dict = {}
+    for version in all_versions:
+        article_dict.setdefault(version.article, []).append(version)
+
+    #print 'Queries:', len(django.db.connection.queries), django.db.connection.queries
+    for article, versions in article_dict.items():
         url = article.url
         if not rx.match(url):
             print 'REJECTING', url
@@ -24,10 +32,12 @@ def get_articles(source=None):
             continue
         elif 'editions.cnn.com' in url:
             continue
-        if article.versions().count() < 2:
+
+        if len(versions) < 2:
             continue
-        rowinfo = get_rowinfo(article)
-        articles.append((article, rowinfo))
+        rowinfo = get_rowinfo(article, versions)
+        articles.append((article, versions[-1], rowinfo))
+        print 'Queries:', len(django.db.connection.queries), django.db.connection.queries
     articles.sort(key = lambda x: x[-1][0][1].date, reverse=True)
     return articles
 
@@ -94,10 +104,12 @@ def diffview(request):
             'article_url': url, 'v1': v1, 'v2': v2,
             })
 
-def get_rowinfo(article):
+def get_rowinfo(article, version_lst=None):
+    if version_lst is None:
+        version_lst = article.versions()
     rowinfo = []
     lastcommit = None
-    for version in article.versions():
+    for version in version_lst:
         date = version.date
         commit = version.v
         if lastcommit is None:

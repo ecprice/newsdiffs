@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, IntegrityError
 import re
 import subprocess
 import os
@@ -7,6 +7,8 @@ from datetime import datetime, timedelta
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(THIS_DIR))
 GIT_DIR = ROOT_DIR+'/articles'
+GIT_DIR = '/mit/ecprice/web_scripts/newsdiffs/articles/'
+
 GIT_PROGRAM = 'git'
 
 def strip_prefix(string, prefix):
@@ -60,6 +62,7 @@ def _move_metadata():
         date = datetime.strptime(' '.join(datestr.split()[1:-1]),
                                  '%a %b %d %H:%M:%S %Y')
 
+        print 'Running', fname, v, changem
         url = 'http://%s' % fname
         print url
         try:
@@ -71,7 +74,7 @@ def _move_metadata():
         if not article.publication(): #blogs aren't actually reasonable
             continue
 
-        mdict = article.__metadata(v)
+        mdict = article._metadata(v)
         byline = None
 
         boring = False
@@ -81,7 +84,10 @@ def _move_metadata():
         print url, v, date, mdict['title'], mdict['byline'], boring
         v = Version(article=article, v=v, date=date, title=mdict['title'],
                     byline=mdict['byline'], boring=boring)
-        v.save()
+        try:
+            v.save()
+        except IntegrityError:
+            pass
 
     print 'loop through commits complete'
 
@@ -116,9 +122,12 @@ class Article(models.Model):
     def first_version(self):
         return self.versions()[0]
 
-    def __metadata(self, version=None):
-        text = self.get_version(version)
+    def _metadata(self, version=None):
+        text= subprocess.check_output([GIT_PROGRAM, 'show',
+                                       version+':'+self.filename()],
+                                      cwd=GIT_DIR)
         try:
+            text = text.decode('utf-8')
             (date, title, byline) = text.splitlines()[:3]
         except:
             print self.url

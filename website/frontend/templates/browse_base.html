@@ -10,8 +10,8 @@
 
     <table class="table table-condensed"  style="width:100%">
       <thead><tr><th text-align:"left";>Article</th><th>Version</th><th>Diff</th></tr></thead>
-      {% for article, versions in articles %}
-      <tr><td rowspan="{{versions|length}}" valign="top"><a href="{% url article_history %}?url={{article.url}}">{{article.latest_version.title}}</a> (<a href="{{article.url}}">{% block browse_current_anchor %}{% endblock %}</a>)<br>{{article.latest_version.byline}}</td>
+      {% for article, last_version, versions in articles %}
+      <tr><td rowspan="{{versions|length}}" valign="top"><a href="{% url article_history %}?url={{article.url}}">{{last_version.title}}</a> (<a href="{{article.url}}">{% block browse_current_anchor %}{% endblock %}</a>)<br>{{last_version.byline}}</td>
         {% for difflink, version in versions %}
         <td>{{version.date}}</td>
         {% if difflink %}
