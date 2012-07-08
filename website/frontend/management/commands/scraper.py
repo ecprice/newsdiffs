@@ -371,7 +371,7 @@ windows-1253
 windows-1255""".split()
 def is_boring(old, new):
     oldu = old.decode('utf8')
-    newu = old.decode('utf8')
+    newu = new.decode('utf8')
 
     if oldu.splitlines()[1:] == newu.splitlines()[1:]:
         return True
