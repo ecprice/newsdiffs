@@ -12,8 +12,11 @@ import django.db
 
 OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
-def num_browse_pages():
-    first_update = models.Article.objects.order_by('last_update').filter(last_update__gt=datetime.datetime(1990, 1, 1, 0, 0))[0].last_update
+def num_browse_pages(source):
+    if source is None:
+        source = ''
+    first_update = models.Article.objects.order_by('last_update').filter(last_update__gt=datetime.datetime(1990, 1, 1, 0, 0),
+                                                                         url__contains=source)[0].last_update
     num_pages = (datetime.datetime.now() - first_update).days + 1
     return num_pages
 
@@ -52,23 +55,18 @@ def get_articles(source=None, distance=0):
     return articles
 
 
-def browse(request):
-    page=int(request.REQUEST.get('page', 1))
-    articles = get_articles(distance=page-1)
-    page_list=range(1, 1+num_browse_pages())
-    return render_to_response('browse.html', {'articles': articles,
-                                              'page': page,
-                                              'page_list': page_list})
+SOURCES = set('nytimes.com cnn.com politico.com'.split() + [None])
 
-
-SOURCES = set('nytimes.com cnn.com politico.com'.split())
-
-def browse_source(request, source):
+def browse(request, source=None):
     if source not in SOURCES:
         raise Http404
-    articles = get_articles(source=source)
+    page=int(request.REQUEST.get('page', '1'))
+    page_list=range(1, 1+num_browse_pages(source))
+    articles = get_articles(source=source, distance=page-1)
     return render_to_response('browse_source.html', {
-            'source': source, 'articles': articles})
+            'source': source, 'articles': articles,
+            'page':page,
+            'page_list': page_list,})
 
 
 def diffview(request):

@@ -2,10 +2,10 @@
 
 {% block content %}
 	<ul id="myTab" class="nav nav-tabs">
-            <li {% if not source  %} class="active" {% endif %} ><a href="{% url browse %}" data-toggle="tab">All</a></li>
-            <li {% ifequal source "nytimes.com" %}class="active"{% endifequal %}><a href="{% url browse_source 'nytimes.com' %}" data-toggle="tab">nytimes.com</a></li>
-            <li {% ifequal source "cnn.com" %}class="active"{% endifequal %}><a href="{% url browse_source 'cnn.com' %}" data-toggle="tab">cnn.com</a></li>
-            <li {% ifequal source "politico.com" %}class="active"{% endifequal %}><a href="{% url browse_source 'politico.com' %}" data-toggle="tab">politico.com</a></li>
+            <li {% if not source  %} class="active" {% endif %} ><a href="{% url browse '' %}" data-toggle="tab">All</a></li>
+            <li {% ifequal source "nytimes.com" %}class="active"{% endifequal %}><a href="{% url browse 'nytimes.com' %}" data-toggle="tab">nytimes.com</a></li>
+            <li {% ifequal source "cnn.com" %}class="active"{% endifequal %}><a href="{% url browse 'cnn.com' %}" data-toggle="tab">cnn.com</a></li>
+            <li {% ifequal source "politico.com" %}class="active"{% endifequal %}><a href="{% url browse 'politico.com' %}" data-toggle="tab">politico.com</a></li>
               </ul>
             </li>
           </ul>
@@ -32,7 +32,7 @@
     {% if i == page %}
     {{i}}
     {% else %}
-    <a href="{% url browse %}?page={{i}}">{{i}}</a>
+    <a href="{% url browse source %}?page={{i}}">{{i}}</a>
     {% endif %}
     {% endfor %}
 
