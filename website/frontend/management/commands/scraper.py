@@ -60,7 +60,7 @@ class Command(BaseCommand):
 
 def migrate_articles():
     data = subprocess.check_output(['git', 'log', '--numstat',
-                                    '--pretty=format:'])
+                                    '--pretty=format:'], cwd=models.GIT_DIR)
     file_list = set([x.split('\t')[2] for x in data.splitlines() if x])
     for fname in file_list:
         url = 'http://'+fname
