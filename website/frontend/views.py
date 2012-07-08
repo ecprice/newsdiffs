@@ -2,7 +2,7 @@ import datetime
 import re
 
 from django.shortcuts import render_to_response, get_object_or_404
-from models import Article
+from models import Article, Version
 import models
 import simplejson
 from django.http import HttpResponse, HttpResponseRedirect
@@ -14,7 +14,6 @@ OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
 def get_articles(source=None):
     articles = []
-    models._refresh_metadata()
     rx = re.compile(r'^https?://(?:[^/]*\.)%s/' % source if source else '')
     for article in Article.objects.all():
         url = article.url
@@ -25,13 +24,11 @@ def get_articles(source=None):
             continue
         elif 'editions.cnn.com' in url:
             continue
-        vs = article.versions()
-        rowinfo = get_rowinfo(article)
-        if len(rowinfo) < 2:
+        if article.versions().count() < 2:
             continue
-        md = article.metadata()
-        articles.append((url, md, len(vs), rowinfo))
-    articles.sort(key = lambda x: (x[-2] > 1, x[-1][0][1]), reverse=True)
+        rowinfo = get_rowinfo(article)
+        articles.append((article, rowinfo))
+    articles.sort(key = lambda x: x[-1][0][1].date, reverse=True)
     return articles
 
 
@@ -52,10 +49,17 @@ def browse_source(request, source):
 
 def diffview(request):
     url = request.REQUEST.get('url')
-    v1 = request.REQUEST.get('v1')
-    v2 = request.REQUEST.get('v2')
+    v1tag = request.REQUEST.get('v1')
+    v2tag = request.REQUEST.get('v2')
+
+    v1 = Version.objects.get(v=v1tag)
+    v2 = Version.objects.get(v=v2tag)
     article = Article.objects.get(url=url)
-    title = article.metadata()['title']
+    assert(v1.article == article)
+    assert(v2.article == article)
+
+    title = article.latest_version().title
+    print title
 
     versions = dict(enumerate(article.versions()))
 
@@ -64,11 +68,11 @@ def diffview(request):
     texts = []
 
     for v in (v1, v2):
-        texts.append(article.get_version(v))
-        dates.append(models.get_commit_date(v).strftime(OUT_FORMAT))
+        texts.append(v.text())
+        dates.append(v.date.strftime(OUT_FORMAT))
 
-        index = [i for i, x in versions.items() if x[1] == v][0]
-        adjacent_versions.append([versions.get(index+offset, ['']*2)[1]
+        index = [i for i, x in versions.items() if x == v][0]
+        adjacent_versions.append([versions.get(index+offset)
                                   for offset in (-1, 1)])
 
 
@@ -77,8 +81,8 @@ def diffview(request):
         if all(x[i] for x in adjacent_versions):
             links.append('%s?%s' % (reverse(diffview),
                                     urllib.urlencode(dict(url=url,
-                                                          v1=adjacent_versions[0][i],
-                                                          v2=adjacent_versions[1][i],))))
+                                                          v1=adjacent_versions[0][i].v,
+                                                          v2=adjacent_versions[1][i].v,))))
         else:
             links.append('')
 
@@ -91,11 +95,11 @@ def diffview(request):
             })
 
 def get_rowinfo(article):
-    versions = article.versions()
-
     rowinfo = []
     lastcommit = None
-    for date, commit in versions:
+    for version in article.versions():
+        date = version.date
+        commit = version.v
         if lastcommit is None:
             diffl = ''
         else:
@@ -103,21 +107,17 @@ def get_rowinfo(article):
                                urllib.urlencode(dict(url=article.url,
                                                      v1=lastcommit,
                                                      v2=commit)))
-        metadata = article.metadata(commit)
-        rowinfo.append((diffl, date, metadata))
+        rowinfo.append((diffl, version))
         lastcommit = commit
-
     rowinfo.reverse()
     return rowinfo
 
 def article_history(request):
     url = request.REQUEST.get('url')
     article = Article.objects.get(url=url)
-    metadata = article.metadata()
     rowinfo = get_rowinfo(article)
-    return render_to_response('article_history.html', {'url':url,
-                                             'last_metadata':metadata,
-                                             'versions':rowinfo})
+    return render_to_response('article_history.html', {'article':article,
+                                                       'versions':rowinfo})
 
 def upvote(request):
     article_url = request.REQUEST.get('article_url')

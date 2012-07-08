@@ -44,6 +44,47 @@ def _refresh_metadata(timeout=300):
     _all_logs = d
     _last_update = datetime.now()
 
+def _move_metadata():
+    git_output = subprocess.check_output([GIT_PROGRAM, 'log'], cwd=GIT_DIR)
+    print 'git output complete'
+    commits = git_output.split('\n\ncommit ')
+    commits[0] = commits[0][len('commit '):]
+    print 'beginning loop'
+    d = {}
+    for commit in commits:
+        (v, author, datestr, blank, changem) = commit.splitlines()
+        fname = changem.split()[-1]
+        changekind = changem.split()[0]
+        if changekind == 'Reformat':
+            continue
+        date = datetime.strptime(' '.join(datestr.split()[1:-1]),
+                                 '%a %b %d %H:%M:%S %Y')
+
+        url = 'http://%s' % fname
+        print url
+        try:
+            article = Article.objects.get(url=url)
+        except Article.DoesNotExist:
+            url += '/'
+            article = Article.objects.get(url=url)
+
+        if not article.publication(): #blogs aren't actually reasonable
+            continue
+
+        mdict = article.__metadata(v)
+        byline = None
+
+        boring = False
+        if not os.path.exists(os.path.join(GIT_DIR,fname)): #file introduced accidentally
+            boring = True
+
+        print url, v, date, mdict['title'], mdict['byline'], boring
+        v = Version(article=article, v=v, date=date, title=mdict['title'],
+                    byline=mdict['byline'], boring=boring)
+        v.save()
+
+    print 'loop through commits complete'
+
 PublicationDict = {'www.nytimes.com': 'NYT',
                    'edition.cnn.com': 'CNN',
                    'www.politico.com': 'Politico',
@@ -54,31 +95,56 @@ class Article(models.Model):
     class Meta:
         db_table = 'Articles'
 
-    url = models.CharField(max_length=255, blank=False, unique=True, db_index=True)
+    url = models.CharField(max_length=255, blank=False, unique=True,
+                           db_index=True)
+    initial_date = models.DateTimeField()
+    last_update = models.DateTimeField()
+    last_check = models.DateTimeField()
 
     def filename(self):
         return strip_prefix(self.url, 'http://').rstrip('/')
 
-    def versions(self):
-        _refresh_metadata(60*10)
-        vs = _all_logs.get(self.filename(), [])
-        return vs
+    def publication(self):
+        return PublicationDict.get(self.url.split('/')[2])
 
-    def get_version(self, version):
-        if version is None:
-            version = self.versions()[-1][-1]
-        return subprocess.check_output([GIT_PROGRAM, 'show',
-                                        version+':'+self.filename()],
-                                       cwd=GIT_DIR)
+    def versions(self):
+        return self.version_set.filter(boring=False).order_by('date')
 
     def latest_version(self):
-        return open(GIT_DIR+'/'+self.filename()).read()
+        return self.versions().latest()
 
-    def metadata(self, version=None):
+    def first_version(self):
+        return self.versions()[0]
+
+    def __metadata(self, version=None):
         text = self.get_version(version)
-        (date, title, byline) = text.splitlines()[:3]
-        publication = PublicationDict.get(self.filename().split('/')[0])
+        try:
+            (date, title, byline) = text.splitlines()[:3]
+        except:
+            print self.url
+            print version
+            print repr(text)
+            raise
+        publication = self.publication()
         return dict(date=date, title=title, byline=byline, publication=publication)
+
+
+class Version(models.Model):
+    class Meta:
+        db_table = 'version'
+        get_latest_by = 'date'
+
+    article = models.ForeignKey('Article', null=False)
+    v = models.CharField(max_length=255, blank=False, unique=True)
+    title = models.CharField(max_length=255, blank=False)
+    byline = models.CharField(max_length=255,blank=False)
+    date = models.DateTimeField(blank=False)
+    boring = models.BooleanField(blank=False)
+
+    def text(self):
+        return subprocess.check_output([GIT_PROGRAM, 'show',
+                                        self.v+':'+self.article.filename()],
+                                       cwd=GIT_DIR)
 
 
 class Upvote(models.Model):

@@ -4,9 +4,9 @@
 
 {% block content %}
 
-<h1>{{last_metadata.title}} ({{last_metadata.publication}}), Change Log</h1>
-<h3><a href="{{url}}">{{url}}</a></h3> 
-<h3>{{last_metadata.byline}} | First archived on {{versions.0.2.date}}</h3> 
+<h1>{{article.latest_version.title}} ({{article.publication}}), Change Log</h1>
+<h3><a href="{{article.url}}">{{article.url}}</a></h3> 
+<h3>{{article.latest_version.byline}} | First archived on {{articles.first_version.date}}</h3> 
 <p>
 <table class="table table-condensed"  style="width:100%">
      <thead><tr>
@@ -15,10 +15,10 @@
 	<td>Compare</td>
     </tr> </thead>
 
-    {% for difflink, date, metadata in versions %}
+    {% for difflink, version in versions %}
     <tr>
-      <td><a href="{{link}}">{{metadata.title}}</a></td>
-      <td>{{date}}</td>
+      <td><a href="{{link}}">{{version.title}}</a></td>
+      <td>{{version.date}}</td>
       {% if difflink %}
       <td><a href="{{difflink}}">(Compare)</a></td>
     {% else %}
