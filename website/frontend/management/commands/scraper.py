@@ -460,7 +460,12 @@ def get_update_delay(minutes_since_update):
 def update_versions():
     num_articles = models.Article.objects.count()
     articles = list(models.Article.objects.all())
-    articles.sort(key = lambda x: -x.minutes_since_check() * 1. / get_update_delay(x.minutes_since_update()))
+    total_articles = len(articles)
+
+    update_priority = lambda x: x.minutes_since_check() * 1. / get_update_delay(x.minutes_since_update())
+    articles = sorted([a for a in articles if update_priority(a) > 1], key=update_priority, reverse=True)
+
+    print 'Checking %s of %s articles' % (len(articles), total_articles)
     for i, article in enumerate(articles):
         print 'Woo:', article.minutes_since_update(), article.minutes_since_check(), '(%s/%s)' % (i+1, num_articles)
         delay = get_update_delay(article.minutes_since_update())
@@ -478,6 +483,7 @@ def update_versions():
                 traceback.print_exc()
                 retcode = -1
         article.save()
+    subprocess.call([GIT_PROGRAM, 'gc'], cwd=models.GIT_DIR)
 
 
 if __name__ == '__main__':
