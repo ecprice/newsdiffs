@@ -66,7 +66,7 @@ class Version(models.Model):
     title = models.CharField(max_length=255, blank=False)
     byline = models.CharField(max_length=255,blank=False)
     date = models.DateTimeField(blank=False)
-    boring = models.BooleanField(blank=False)
+    boring = models.BooleanField(blank=False, default=False)
 
     def text(self):
         return subprocess.check_output([GIT_PROGRAM, 'show',

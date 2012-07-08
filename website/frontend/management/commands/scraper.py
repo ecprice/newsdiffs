@@ -59,7 +59,7 @@ class Command(BaseCommand):
 
 
 def migrate_articles():
-    data = subprocess.check_output(['git', 'log', '--numstat',
+    data = subprocess.check_output([GIT_PROGRAM, 'log', '--numstat',
                                     '--pretty=format:'], cwd=models.GIT_DIR)
     file_list = set([x.split('\t')[2] for x in data.splitlines() if x])
     for fname in file_list:
@@ -100,8 +100,7 @@ def migrate_versions():
             continue
 
         text = subprocess.check_output([GIT_PROGRAM, 'show',
-                                        v+':'+article.filename()],
-                                       cwd=models.GIT_DIR)
+                                        v+':'+article.filename()])
         text = text.decode('utf-8')
         (date2, title, byline) = text.splitlines()[:3]
 
@@ -289,7 +288,10 @@ class CNNArticle(Article):
     SUFFIX = ''
 
     def _parse(self, html):
-        soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES)
+        print 'got html'
+        soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
+                             fromEncoding='utf-8')
+        print 'parsed'
         p_tags = soup.findAll('p', attrs={'class':re.compile(r'\bcnn_storypgraphtxt\b')})
         if not p_tags:
             self.real_article = False
@@ -370,23 +372,38 @@ def get_parser(url):
     return DomainNameToClass[url_to_filename(url).split('/')[0]]
 
 
+CHARSET_LIST = 'EUC-JP GB2312 EUC-KR Big5 SHIFT_JIS windows-1252 EUC-TW'.split()
+def is_boring(old, new):
+    for charset in charset:
+        if old.decode('utf8').encode(charset) == new:
+            print 'Boring!'
+            return True
+    return False
+
 def add_to_git_repo(data, filename):
+    full_path = os.path.join(models.GIT_DIR, filename)
+    mkdir_p(os.path.dirname(full_path))
 
-    mkdir_p(os.path.dirname(DIFF_DIR+filename))
+    boring = False
+    already_exists = os.path.exists(full_path)
+    if already_exists:
+        previous = open(full_path).read()
+        if previous == data:
+            return (0, '')
+        if is_boring(previous, data):
+            boring = True
 
-    already_exists = os.path.exists(DIFF_DIR+filename)
-    open(DIFF_DIR+filename, 'w').write(data)
+    open(full_path, 'w').write(data)
     if not already_exists:
-        subprocess.call(['git', 'add', filename], cwd=DIFF_DIR)
-        commit_message = 'Added %s' % filename
+        subprocess.call([GIT_PROGRAM, 'add', filename], cwd=models.GIT_DIR)
+        commit_message = 'Adding file %s' % filename
         return_value = 2
     else:
-        if not subprocess.check_output(['git', 'ls-files', '-m', filename], cwd=DIFF_DIR):
-            return (0, '')
-        return_value = 1
+        return_value = 1 if not boring else 3
         commit_message = 'Change to %s' % filename
-    subprocess.call(['git', 'commit', filename, '-m', commit_message], cwd=DIFF_DIR)
-    v = subprocess.check_output(['git', 'rev-list', 'HEAD', '-n1', filename])
+    subprocess.call([GIT_PROGRAM, 'commit', filename, '-m', commit_message],
+                    cwd=models.GIT_DIR)
+    v = subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1', filename], cwd=models.GIT_DIR)
     return (return_value, v)
 
 #Update url in git
@@ -410,20 +427,23 @@ def update_article(article):
     to_store = unicode(parsed_article).encode('utf8')
     (retval, v) = add_to_git_repo(to_store, url_to_filename(article.url))
     if v:
+        print 'Modifying! new blob: %s' % v
         v_row = models.Version(v=v,
                                title=parsed_article.title,
                                byline=parsed_article.byline,
                                date=t,
                                article=article,
                                )
+        if retval == 3:
+            v_row.boring = True
         article.last_update = t
         v_row.save()
         article.save()
 
-def update_articles(session):
+def update_articles():
     for url in get_all_article_urls():
         if not models.Article.objects.filter(url=url).count():
-            models.Article(url).save()
+            models.Article(url=url).save()
 
 def get_update_delay(minutes_since_update):
     days_since_update = minutes_since_update // (24 * 60)
@@ -440,7 +460,7 @@ def get_update_delay(minutes_since_update):
 
 def update_versions():
     num_articles = models.Article.objects.count()
-    articles = models.Article.objects.all()
+    articles = list(models.Article.objects.all())
     articles.sort(key = lambda x: -x.minutes_since_check() * 1. / get_update_delay(x.minutes_since_update()))
     for i, article in enumerate(articles):
         print 'Woo:', article.minutes_since_update(), article.minutes_since_check(), '(%s/%s)' % (i+1, num_articles)
