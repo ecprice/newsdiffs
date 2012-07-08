@@ -15,88 +15,12 @@ def strip_prefix(string, prefix):
         string = string[len(prefix):]
     return string
 
-_all_logs = {}
-_last_update = datetime.min
-
-def _refresh_metadata(timeout=300):
-    global _all_logs
-    global _last_update
-
-    timediff = (datetime.now() - _last_update)
-    if timediff < timedelta(seconds=timeout):
-        return
-    git_output = subprocess.check_output([GIT_PROGRAM, 'log'], cwd=GIT_DIR)
-    commits = git_output.split('\n\ncommit ')
-    commits[0] = commits[0][len('commit '):]
-    d = {}
-    for commit in commits:
-        (v, author, datestr, blank, changem) = commit.splitlines()
-        fname = changem.split()[-1]
-        changekind = changem.split()[0]
-        if changekind == 'Reformat':
-            continue
-        if not os.path.exists(os.path.join(models.GIT_DIR,fname)): #file introduced accidentally
-            continue
-        date = datetime.strptime(' '.join(datestr.split()[1:-1]),
-                                 '%a %b %d %H:%M:%S %Y')
-        d.setdefault(fname, []).append((date, v))
-    for key in d:
-        d[key].sort()
-    _all_logs = d
-    _last_update = datetime.now()
-
-def _migrate_all_metadata():
-    git_output = subprocess.check_output([GIT_PROGRAM, 'log'], cwd=GIT_DIR)
-    print 'git output complete'
-    commits = git_output.split('\n\ncommit ')
-    commits[0] = commits[0][len('commit '):]
-    print 'beginning loop'
-    d = {}
-    versions = [x.v for x in Version.objects.all()]
-    for commit in commits:
-        (v, author, datestr, blank, changem) = commit.splitlines()
-        if v in versions:
-            continue
-        fname = changem.split()[-1]
-        changekind = changem.split()[0]
-        if changekind == 'Reformat':
-            continue
-        date = datetime.strptime(' '.join(datestr.split()[1:-1]),
-                                 '%a %b %d %H:%M:%S %Y')
-
-        print 'Running', fname, v, changem
-        url = 'http://%s' % fname
-        print url
-        try:
-            article = Article.objects.get(url=url)
-        except Article.DoesNotExist:
-            url += '/'
-            article = Article.objects.get(url=url)
-
-        if not article.publication(): #blogs aren't actually reasonable
-            continue
-
-        mdict = article._metadata(v)
-        byline = None
-
-        boring = False
-        if not os.path.exists(os.path.join(GIT_DIR,fname)): #file introduced accidentally
-            boring = True
-
-        print url, v, date, mdict['title'], mdict['byline'], boring
-        v = Version(article=article, v=v, date=date, title=mdict['title'],
-                    byline=mdict['byline'], boring=boring)
-        try:
-            v.save()
-        except IntegrityError:
-            pass
-
-    print 'loop through commits complete'
-
 PublicationDict = {'www.nytimes.com': 'NYT',
                    'edition.cnn.com': 'CNN',
                    'www.politico.com': 'Politico',
                    }
+
+ancient = datetime(1901, 1, 1)
 
 # Create your models here.
 class Article(models.Model):
@@ -105,12 +29,12 @@ class Article(models.Model):
 
     url = models.CharField(max_length=255, blank=False, unique=True,
                            db_index=True)
-    initial_date = models.DateTimeField()
-    last_update = models.DateTimeField()
-    last_check = models.DateTimeField()
+    initial_date = models.DateTimeField(auto_now_add=True)
+    last_update = models.DateTimeField(default=ancient)
+    last_check = models.DateTimeField(default=ancient)
 
     def filename(self):
-        return strip_prefix(self.url, 'http://').rstrip('/')
+        return self.url[len('http://'):].rstrip('/')
 
     def publication(self):
         return PublicationDict.get(self.url.split('/')[2])
@@ -124,21 +48,13 @@ class Article(models.Model):
     def first_version(self):
         return self.versions()[0]
 
-    def _metadata(self, version=None):
-        text= subprocess.check_output([GIT_PROGRAM, 'show',
-                                       version+':'+self.filename()],
-                                      cwd=GIT_DIR)
-        try:
-            text = text.decode('utf-8')
-            (date, title, byline) = text.splitlines()[:3]
-        except:
-            print self.url
-            print version
-            print repr(text)
-            raise
-        publication = self.publication()
-        return dict(date=date, title=title, byline=byline, publication=publication)
+    def minutes_since_update(self):
+        delta = datetime.now() - self.last_update
+        return delta.seconds // 60 + 24*60*delta.days
 
+    def minutes_since_check(self):
+        delta = datetime.now() - self.last_check
+        return delta.seconds // 60 + 24*60*delta.days
 
 class Version(models.Model):
     class Meta:

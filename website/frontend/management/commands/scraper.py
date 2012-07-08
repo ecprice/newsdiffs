@@ -27,22 +27,50 @@ from optparse import make_option
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-        make_option('--migrate-from-git',
+        make_option('--migrate-articles',
             action='store_true',
-            dest='migrate',
             default=False,
-            help='Recreate entire database from git repo'),
+            help='Recreate articles database from git repo'),
+        make_option('--migrate-versions',
+            action='store_true',
+            default=False,
+            help='Recreate version database from git repo'),
+        make_option('--update-articles',
+            action='store_true',
+            default=False,
+            help='Update article list from homepages'),
+        make_option('--update-versions',
+            action='store_true',
+            default=False,
+            help='Update version list'),
         )
     help = 'Scrape websites'
 
     def handle(self, *args, **options):
-        if options['migrate']:
-            print models.GIT_DIR
-            migrate_all_metadata()
+        if options['migrate_articles']:
+            migrate_articles()
+        if options['migrate_versions']:
+            migrate_versions()
+        if options['update_articles']:
+            update_articles()
+        if options['update_versions']:
+            update_versions()
 
 
 
-def migrate_all_metadata():
+def migrate_articles():
+    file_list = subprocess.check_output([GIT_PROGRAM, 'ls-files'],
+                                        cwd=models.GIT_DIR)
+    for fname in file_list.split():
+        url = 'http://'+fname
+        article = models.Article(url=url)
+        try:
+            article.save()
+        except models.IntegrityError:
+            pass
+
+
+def migrate_versions():
     git_output = subprocess.check_output([GIT_PROGRAM, 'log'], cwd=models.GIT_DIR)
     commits = git_output.split('\n\ncommit ')
     commits[0] = commits[0][len('commit '):]
@@ -70,26 +98,23 @@ def migrate_all_metadata():
         if not article.publication(): #blogs aren't actually reasonable
             continue
 
-        mdict = article._metadata(v)
-        byline = None
+        text = subprocess.check_output([GIT_PROGRAM, 'show',
+                                        v+':'+article.filename()],
+                                       cwd=models.GIT_DIR)
+        text = text.decode('utf-8')
+        (date2, title, byline) = text.splitlines()[:3]
 
         boring = False
-        if not os.path.exists(os.path.join(GIT_DIR,fname)): #file introduced accidentally
+        if not os.path.exists(os.path.join(models.GIT_DIR,fname)): #file introduced accidentally
             boring = True
 
-        print '%d/%d' % (i,len(commits)), url, v, date, mdict['title'], mdict['byline'], boring
-        v = models.Version(article=article, v=v, date=date, title=mdict['title'],
-                    byline=mdict['byline'], boring=boring)
+        print '%d/%d' % (i,len(commits)), url, v, date, title, byline, boring
+        v = models.Version(article=article, v=v, date=date, title=title,
+                           byline=byline, boring=boring)
         try:
             v.save()
-        except IntegrityError:
+        except models.IntegrityError:
             pass
-
-    print 'loop through commits complete'
-
-
-DIFF_DIR = 'articles/'
-GIT_DIR = DIFF_DIR + '.git'
 
 DATE_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
@@ -356,39 +381,49 @@ def add_to_git_repo(data, filename):
         return_value = 2
     else:
         if not subprocess.check_output(['git', 'ls-files', '-m', filename], cwd=DIFF_DIR):
-            return 0
+            return (0, '')
         return_value = 1
         commit_message = 'Change to %s' % filename
     subprocess.call(['git', 'commit', filename, '-m', commit_message], cwd=DIFF_DIR)
-    return return_value
+    v = subprocess.check_output(['git', 'rev-list', 'HEAD', '-n1', filename])
+    return (return_value, v)
 
 #Update url in git
 #Return whether it changed
-def update_article(url):
+def update_article(article):
     try:
-        parser = get_parser(url)
+        parser = get_parser(article.url)
     except KeyError:
-        print 'Unable to parse domain, skipping'
+        print >> sys.stderr, 'Unable to parse domain, skipping'
         return
     try:
-        article = parser(url)
+        parsed_article = parser(article.url)
+        t = datetime.now()
     except (AttributeError, urllib2.HTTPError, httplib.HTTPException), exc:
-        print >> sys.stderr, 'Exception when parsing', url
+        print >> sys.stderr, 'Exception when parsing', article.url
         traceback.print_exc()
-        print 'Continuing'
+        print >> sys.stderr, 'Continuing'
         return -1
-    if not article.real_article:
+    if not parsed_article.real_article:
         return 0
-    to_store = unicode(article).encode('utf8')
-    return add_to_git_repo(to_store, url_to_filename(url))
+    to_store = unicode(parsed_article).encode('utf8')
+    (retval, v) = add_to_git_repo(to_store, url_to_filename(article.url))
+    if v:
+        v_row = models.Version(v=v,
+                               title=parsed_article.title,
+                               byline=parsed_article.byline,
+                               date=t,
+                               article=article,
+                               )
+        article.last_update = t
+        v_row.save()
+        article.save()
+        
 
-
-def insert_all_articles(session):
+def update_articles(session):
     for url in get_all_article_urls():
-        if session.query(models.Article).filter_by(url=url).first() is None:
-            session.add(models.Article(url))
-    session.commit()
-
+        if not models.Article.objects.filter(url=url).count():
+            models.Article(url).save()
 
 def get_update_delay(minutes_since_update):
     days_since_update = minutes_since_update // (24 * 60)
@@ -403,39 +438,31 @@ def get_update_delay(minutes_since_update):
     else:
         return 60*24*7
 
-
-if __name__ == '__main__':
-    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
-    sys.stderr = os.fdopen(sys.stderr.fileno(), 'w', 0)
-    session = models.Session()
-    insert_all_articles(session)
-    num_articles = session.query(models.Article).count()
-    articles = session.query(models.Article).order_by(models.Article.last_check).all()
+def update_versions():
+    num_articles = models.Article.objects.count()
+    articles = models.Article.objects.all()
     articles.sort(key = lambda x: -x.minutes_since_check() * 1. / get_update_delay(x.minutes_since_update()))
-    for i, article_row in enumerate(articles):
-        print 'Woo:', article_row.minutes_since_update(), article_row.minutes_since_check(), '(%s/%s)' % (i+1, num_articles)
-        delay = get_update_delay(article_row.minutes_since_update())
-        if article_row.minutes_since_check() < delay:
+    for i, article in enumerate(articles):
+        print 'Woo:', article.minutes_since_update(), article.minutes_since_check(), '(%s/%s)' % (i+1, num_articles)
+        delay = get_update_delay(article.minutes_since_update())
+        if article.minutes_since_check() < delay:
             continue
-        print 'Considering', article_row.url, datetime.now()
+        print 'Considering', article.url, datetime.now()
+        article.last_check = datetime.now()
         try:
-            retcode = update_article(article_row.url)
+            retcode = update_article(article)
         except Exception, e:
             if isinstance(e, urllib2.HTTPError) and e.msg == 'Gone':
                 retcode = 0
             else:
-                print >> sys.stderr, 'Unknown exception when updating', article_row.url
+                print >> sys.stderr, 'Unknown exception when updating', article.url
                 traceback.print_exc()
                 retcode = -1
-        if retcode > 1:
-            print 'Updated!'
-            article_row.last_update = datetime.now()
-        if retcode >= 0:
-            article_row.last_check = datetime.now()
-        try:
-            session.commit()
-        except sqlalchemy.exc.OperationalError, e:
-            print >> sys.stderr, 'Exception when committing', url
-            traceback.print_exc()
-            print 'Continuing'
-            
+        article.save()
+
+
+if __name__ == '__main__':
+    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+    sys.stderr = os.fdopen(sys.stderr.fileno(), 'w', 0)
+    update_articles()
+    update_versions()
