@@ -29,7 +29,7 @@ def get_articles(source=None, distance=0):
     start_date = end_date - pagelength
 
 
-    all_versions = models.Version.objects.annotate(num_vs=models.models.Count('article__version')).filter(num_vs__gt=1, article__version__boring=False, article__last_update__gt=start_date, article__last_update__lt=end_date).order_by('date').select_related()
+    all_versions = models.Version.objects.annotate(num_vs=models.models.Count('article__version')).filter(num_vs__gt=1, boring=False, article__last_update__gt=start_date, article__last_update__lt=end_date).order_by('date').select_related()
     print 'Queries:', len(django.db.connection.queries), django.db.connection.queries
     print 'sql responded'
     article_dict = {}
