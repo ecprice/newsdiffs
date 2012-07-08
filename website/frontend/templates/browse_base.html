@@ -28,5 +28,12 @@
         {% endfor %}
       {% endfor %}
     </table>
+    {% for i in page_list %}
+    {% if i == page %}
+    {{i}}
+    {% else %}
+    <a href="{% url browse %}?page={{i}}">{{i}}</a>
+    {% endif %}
+    {% endfor %}
 
 {% endblock %}

@@ -12,17 +12,27 @@ import django.db
 
 OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
+def num_browse_pages():
+    first_update = models.Article.objects.order_by('last_update').filter(last_update__gt=datetime.datetime(1990, 1, 1, 0, 0))[0].last_update
+    num_pages = (datetime.datetime.now() - first_update).days + 1
+    return num_pages
 
-def get_articles(source=None):
+def get_articles(source=None, distance=0):
     articles = []
     rx = re.compile(r'^https?://(?:[^/]*\.)%s/' % source if source else '')
 
-    all_versions = models.Version.objects.annotate(num_vs=models.models.Count('article__version')).filter(num_vs__gt=1, boring=False).order_by('date').select_related()
+    pagelength = datetime.timedelta(days=1)
+    end_date = datetime.datetime.now() - distance * pagelength
+    start_date = end_date - pagelength
+
+
+    all_versions = models.Version.objects.annotate(num_vs=models.models.Count('article__version')).filter(num_vs__gt=1, article__version__boring=False, article__last_update__gt=start_date, article__last_update__lt=end_date).order_by('date').select_related()
+    print 'Queries:', len(django.db.connection.queries), django.db.connection.queries
+    print 'sql responded'
     article_dict = {}
     for version in all_versions:
         article_dict.setdefault(version.article, []).append(version)
 
-    #print 'Queries:', len(django.db.connection.queries), django.db.connection.queries
     for article, versions in article_dict.items():
         url = article.url
         if not rx.match(url):
@@ -37,14 +47,18 @@ def get_articles(source=None):
             continue
         rowinfo = get_rowinfo(article, versions)
         articles.append((article, versions[-1], rowinfo))
-        #print 'Queries:', len(django.db.connection.queries), django.db.connection.queries
+    print 'Queries:', len(django.db.connection.queries), django.db.connection.queries
     articles.sort(key = lambda x: x[-1][0][1].date, reverse=True)
     return articles
 
 
 def browse(request):
-    articles = get_articles()
-    return render_to_response('browse.html', {'articles': articles})
+    page=int(request.REQUEST.get('page', 1))
+    articles = get_articles(distance=page-1)
+    page_list=range(1, 1+num_browse_pages())
+    return render_to_response('browse.html', {'articles': articles,
+                                              'page': page,
+                                              'page_list': page_list})
 
 
 SOURCES = set('nytimes.com cnn.com politico.com'.split())
