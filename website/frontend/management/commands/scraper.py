@@ -472,7 +472,6 @@ def get_update_delay(minutes_since_update):
         return 60*24*7
 
 def update_versions():
-    num_articles = models.Article.objects.count()
     articles = list(models.Article.objects.all())
     total_articles = len(articles)
 
@@ -481,7 +480,7 @@ def update_versions():
 
     print 'Checking %s of %s articles' % (len(articles), total_articles)
     for i, article in enumerate(articles):
-        print 'Woo:', article.minutes_since_update(), article.minutes_since_check(), '(%s/%s)' % (i+1, num_articles)
+        print 'Woo:', article.minutes_since_update(), article.minutes_since_check(), '(%s/%s)' % (i+1, len(articles))
         delay = get_update_delay(article.minutes_since_update())
         if article.minutes_since_check() < delay:
             continue
