@@ -27,19 +27,11 @@ from optparse import make_option
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-        make_option('--migrate-articles',
+        make_option('--migrate',
             action='store_true',
             default=False,
-            help='Recreate articles database from git repo'),
-        make_option('--migrate-versions',
-            action='store_true',
-            default=False,
-            help='Recreate version database from git repo'),
-        make_option('--update-articles',
-            action='store_true',
-            default=False,
-            help='Update article list from homepages'),
-        make_option('--update-versions',
+            help='Recreate version + article database from git repo'),
+        make_option('--update',
             action='store_true',
             default=False,
             help='Update version list'),
@@ -47,13 +39,10 @@ class Command(BaseCommand):
     help = 'Scrape websites'
 
     def handle(self, *args, **options):
-        if options['migrate_articles']:
-            migrate_articles()
-        if options['migrate_versions']:
+        if options['migrate']:
             migrate_versions()
-        if options['update_articles']:
+        if options['update']:
             update_articles()
-        if options['update_versions']:
             update_versions()
 
 
@@ -94,7 +83,12 @@ def migrate_versions():
             article = models.Article.objects.get(url=url)
         except models.Article.DoesNotExist:
             url += '/'
-            article = models.Article.objects.get(url=url)
+            try:
+                article = models.Article.objects.get(url=url)
+            except models.ArticleDoesNotExist:
+                url = url[:-1]
+                article = models.Article(url=url)
+                article.save()
 
         if not article.publication(): #blogs aren't actually reasonable
             continue
