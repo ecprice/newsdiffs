@@ -35,7 +35,7 @@ def _refresh_metadata(timeout=300):
         changekind = changem.split()[0]
         if changekind == 'Reformat':
             continue
-        if not os.path.exists(os.path.join(GIT_DIR,fname)): #file introduced accidentally
+        if not os.path.exists(os.path.join(models.GIT_DIR,fname)): #file introduced accidentally
             continue
         date = datetime.strptime(' '.join(datestr.split()[1:-1]),
                                  '%a %b %d %H:%M:%S %Y')
