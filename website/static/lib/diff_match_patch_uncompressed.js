@@ -1234,30 +1234,39 @@ diff_match_patch.prototype.diff_xIndex = function(diffs, loc) {
  * @return {string} HTML representation.
  */
 diff_match_patch.prototype.diff_prettyHtml = function(diffs) {
-  var html = [];
+  var fragments = [];
   var pattern_amp = /&/g;
   var pattern_lt = /</g;
   var pattern_gt = />/g;
   var pattern_para = /\n/g;
   var symbol_para = this.Diff_ShowPara ? '&para;<br>' : '<br>';
+  var pattern_context = /(\n\n.*)\n\n(?:.|\n)*\n\n(.*\n\n)/
+  var pattern_context_end = /(\n\n.*)\n\n(?:.|\n)*/
   for (var x = 0; x < diffs.length; x++) {
     var op = diffs[x][0];    // Operation (insert, delete, equal)
     var data = diffs[x][1];  // Text of change.
-    var text = data.replace(pattern_amp, '&amp;').replace(pattern_lt, '&lt;')
-        .replace(pattern_gt, '&gt;').replace(pattern_para, symbol_para);
+    var html = data.replace(pattern_amp, '&amp;').replace(pattern_lt, '&lt;')
+      .replace(pattern_gt, '&gt;');  // Change as HTML
+    if (op == DIFF_EQUAL) {
+      if (x + 1 < diffs.length)
+        html = html.replace(pattern_context, "$1\n\n[...]\n\n$2");
+      else
+        html = html.replace(pattern_context_end, "$1\n\n[...]");
+    }
+    var text = html.replace(pattern_para, symbol_para);
     switch (op) {
       case DIFF_INSERT:
-        html[x] = '<ins style="background:#e6ffe6;">' + text + '</ins>';
+        fragments[x] = '<ins style="background:#e6ffe6;">' + text + '</ins>';
         break;
       case DIFF_DELETE:
-        html[x] = '<del style="background:#ffe6e6;">' + text + '</del>';
+        fragments[x] = '<del style="background:#ffe6e6;">' + text + '</del>';
         break;
       case DIFF_EQUAL:
-        html[x] = '<span>' + text + '</span>';
+        fragments[x] = '<span>' + text + '</span>';
         break;
     }
   }
-  return html.join('');
+  return fragments.join('');
 };
 
 
