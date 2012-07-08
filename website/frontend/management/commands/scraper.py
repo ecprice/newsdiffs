@@ -63,6 +63,9 @@ def migrate_versions():
         date = datetime.strptime(' '.join(datestr.split()[1:-1]),
                                  '%a %b %d %H:%M:%S %Y')
 
+        if not os.path.exists(os.path.join(models.GIT_DIR,fname)): #file introduced accidentally
+            continue
+
         url = 'http://%s' % fname
         try:
             article = models.Article.objects.get(url=url)
@@ -72,13 +75,14 @@ def migrate_versions():
                 article = models.Article.objects.get(url=url)
             except models.ArticleDoesNotExist:
                 url = url[:-1]
-                article = models.Article(url=url)
+                article = models.Article(url=url,
+                                         last_update=date,
+                                         last_check=date)
+                if not article.publication(): #blogs aren't actually reasonable
+                    continue
+
                 article.save()
 
-        if not article.publication(): #blogs aren't actually reasonable
-            continue
-        if not os.path.exists(os.path.join(models.GIT_DIR,fname)): #file introduced accidentally
-            continue
 
         text = subprocess.check_output([GIT_PROGRAM, 'show',
                                         v+':'+fname],
