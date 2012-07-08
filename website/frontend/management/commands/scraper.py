@@ -477,7 +477,7 @@ def update_versions():
 
     print 'Checking %s of %s articles' % (len(articles), total_articles)
     for i, article in enumerate(articles):
-        print 'Woo:', article.minutes_since_update(), article.minutes_since_check(), '(%s/%s)' % (i+1, len(articles))
+        print 'Woo:', article.minutes_since_update(), article.minutes_since_check(), update_priority(article), '(%s/%s)' % (i+1, len(articles))
         delay = get_update_delay(article.minutes_since_update())
         if article.minutes_since_check() < delay:
             continue
@@ -492,6 +492,19 @@ def update_versions():
     subprocess.call([GIT_PROGRAM, 'gc'], cwd=models.GIT_DIR)
     print 'Done!'
 
+legacy_bad_commit_range = (datetime(2012, 7, 8, 4, 0),
+                           datetime(2012, 7, 8, 8, 0))
+legacy_bad_commit_exceptions = """
+828670ebb99e3422a203534b867c390f71d253d2
+4681bf53fccbfd460b7b3e444f602f2e92f41ff0
+795719cbee655c62f8554d79a89a999fd8ca5a9a
+2acb2377130989bf7723bea283f1af146ae6ee6b
+3955bf25ac01038cb49416292185857b717d2367
+dda84ac629f96bfd4cb792dc4db1829e76ad94e5
+64cfe3c10b03f9e854f2c24ed358f2cac4990e14
+0ac04be3af54962dc7f8bb28550267543692ec28
+2611043df5a4bfe28a050f474b1a96afbae2edb1
+""".split()
 
 if __name__ == '__main__':
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
