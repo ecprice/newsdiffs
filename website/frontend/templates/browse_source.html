@@ -1,29 +1,9 @@
-{% extends 'template.html' %}
+{% extends 'browse_base.html' %}
 
 {% block active_browse %}class="active"{% endblock %}
 
 {% block title %}Examples{{title}}{% endblock %}
 
-{% block content %}
+{% block browse_fromline %}From {{source}}{% endblock %}
 
-      <h1>Changed Articles</h1>
-      <h3>From {{source}}
-<br>Starting June 17, 2012 (with occasional downtime)</h3>
-      <p>
-
-    <table class="table table-condensed"  style="width:100%">
-      <thead><tr><th text-align:"left";>Article</th><th>Version</th><th>Diff</th></tr></thead>
-      {% for url, metadata, nc, changes in articles %}
-      <tr><td rowspan="{{nc}}" valign="top"><a href="{% url article_history %}?url={{url}}">{{metadata.title}}</a> (<a href="{{url}}">current</a>)<br>{{metadata.byline}}</td>
-        {% for difflink, date in changes %}
-        <td>{{date}}</td>
-        {% if difflink %}
-        <td><a href="{{difflink}}">(Compare)</a></td></tr><tr>
-        {% else %}
-        <td></td></tr>
-        {% endif %}
-        {% endfor %}
-      {% endfor %}
-    </table>
-
-{% endblock %}
+{% block browse_current_anchor %}current{% endblock %}
