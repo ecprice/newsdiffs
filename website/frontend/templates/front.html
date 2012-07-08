@@ -8,40 +8,22 @@
     		
 <a href="http://newsdiffs.org/browse"><img 
 src="http://getfile5.posterous.com/getfile/files.posterous.com/jenny8lee/qdqTAGAXu0ju59x5O76uLGVi5h15UDvs92UNmtrJoiUpLvZLmC8E5M02Pl4t/Screen_shot_2012-06-18_at_5.10.png" 
-style="padding:10px; margin-left:25px; margin-top:10px; float:right" width="500"></a>	
+style="padding:10px; margin-left:25px; margin-top:10px; float:right" width="400"></a>	
 		
-<h3>	
-NewsDiffs allows you to <a href="http://newsdiffs.org/browse">compare evolving versions</a> of online news 
-articles after they are published. Currently, we track <a href="http://nytimes.com">The New York Times</a>, <a 
-href="http://cnn.com">CNN</a>, and <a href="http://www.politico.com">Politico.</a> It's inspired by and built on version control software, Git, 
-used in computer programming.</h3>
-<p>
-<p>The New York Times Public Editor, who has <a href="http://nyti.ms/N0VvMq">discussed the importance of tracking major revisions 
-and changes</a> in the digital age, recently <a href="https://www.nytimes.com/2012/07/01/opinion/sunday/article-changes-are-shown-in-a-tool-created-by-outsiders.html?_r=1">highlighted NewsDiffs</a> in a column.
-  		
-<p>Sometimes the changes are minor small edits in language or correction of spelling mistakes. Other times, the stories change and evolve rapidly, as a result of breaking news. 
-			Occasionally, the lede and substance of an article change as more reporting comes in on a fast breaking 
-situation. Sometimes those changes <a href="https://blogs.villagevoice.com/runninscared/2011/10/why_did_the_new_1.php">provoke  
-criticism</a>. 
-<p>
+<h2>	NewsDiffs <a href="http://newsdiffs.org/browse">archives changes</a> in online news 
+articles after publication. Currently, we track <a href="{% url browse_source 'nytimes.com' %}">nytimes.com</a>, <a href="{% url browse_source 'cnn.com' %}">cnn.com</a>, and <a href="{% url browse_source 'politico.com' %}">politico.com</a>.</h2>
 
  		
-			<p>NewsDiffs tracking began on June 17, 2012, as the project was inspired by the <a href="http://opennews-mit.eventbrite.com/">Knight 
-Mozilla MIT Hackathon.</a> What you see here was done in 38 hours (including sleep). It was <a 
-href="http://www.newsdiffs.org/about/">inspired by a variety of 
-reasons</a>
 
-			<p>You can <a href="http://newsdiffs.org/browse/">browse</a> our repository of articles.
-			<p>Or you can take a look at <a href="http://newsdiffs.org/examples/">some of the examples</a> of articles that have changed.
+<p>The New York Times recently <a href="https://www.nytimes.com/2012/07/01/opinion/sunday/article-changes-are-shown-in-a-tool-created-by-outsiders.html?_r=1">highlighted NewsDiffs</a> in the public 
+editors column (which had <a href="http://nyti.ms/N0VvMq">previously discussed the difficulties of revisions</a> in the digital age)
+ 
+
+			<p>You can <a href="http://newsdiffs.org/browse/">browse</a> our repository of articles. Or you can take a look at <a href="http://newsdiffs.org/examples/">some of the examples</a> of articles that have changed.
 			<p>If you are so inclined, you can <a href="http://newsdiffs.org/subscribe/">subscribe</a> to whatever it is that we may eventually send 
-out some time in the future. Or you can follow <a href="http://twitter.com/newsdiffs">NewsDiffs</a> on Twitter, which is probably easier for everyone 
-involved.</a> 
-<p> And no, the site is not really mobile-friendly (scrolling in article view doesn't work).       
+out some time in the future. Or you can follow <a href="http://twitter.com/newsdiffs">NewsDiffs</a> on Twitter.
+<p> And no, the site is not really mobile-friendly (scrolling in article view doesn't work right).       
 
 <p>	
-<em>The frontpage originally hosted a well known image that showed how the New York Times shifted its lead in the arrests of the 
-Occupy Wall Street protestors on the Brooklyn Bridge. After some deliberation and discussion we decided 
-to take it down since we didn't agree with the aggressive commentary text, even though the virality of that image partially 
-inspired this project.</em>
 
 {% endblock %}
