@@ -1,10 +1,12 @@
 {% extends 'template.html' %}
 
 {% block content %}
+	<h3>{% block browse_source_header %}by source  <a href="{% url browse_source 'nytimes.com' %}">nytimes.com</a> | <a href="{% url browse_source 'cnn.com' %}">cnn.com</a> |
+<a href="{% url browse_source 'politico.com' %}">politico.com</a> | <a href="{% url browse %}">all</a> {% endblock %}</h3>
 
-      <h1>Changed Articles {% block browse_fromline %}{% endblock %}<h1>
-      <h3>Starting June 17, 2012 (with occasional downtime)</h3>
-      <p>
+      <h1>Changed Articles {% block browse_fromline %}{% endblock browse_fromline %}</h1>
+      <p>Starting June 17, 2012 (with occasional downtime)</p>
+      <p>  
 
     <table class="table table-condensed"  style="width:100%">
       <thead><tr><th text-align:"left";>Article</th><th>Version</th><th>Diff</th></tr></thead>

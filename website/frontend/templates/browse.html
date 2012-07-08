@@ -2,8 +2,9 @@
 
 {% block active_browse %}class="active"{% endblock %}
 
-{% block title %}Examples{{title}}{% endblock %}
+{% block title %}Changes | All {{title}}{% endblock %}
 
-{% block browse_fromline %}Or browse by source: <a href="{% url browse_source 'nytimes.com' %}">nytimes.com</a>, <a href="{% url browse_source 'cnn.com' %}">cnn.com</a>, <a href="{% url browse_source 'politico.com' %}">politico.com</a>{% endblock %}
+{% block browse_fromline %} | All Sources{% endblock browse_fromline %}
+
 
 {% block browse_current_anchor %}{{metadata.publication}}{% endblock %}
