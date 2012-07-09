@@ -9,6 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 import urllib
 import django.db
+import time
 
 OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
@@ -27,10 +28,12 @@ def get_articles(source=None, distance=0):
     end_date = datetime.datetime.now() - distance * pagelength
     start_date = end_date - pagelength
 
-
-    all_versions = models.Version.objects.annotate(num_vs=models.models.Count('article__version')).filter(num_vs__gt=1, boring=False, article__last_update__gt=start_date, article__last_update__lt=end_date).order_by('date').select_related()
-    print 'Queries:', len(django.db.connection.queries), django.db.connection.queries
-    print 'sql responded'
+    print 'Asking query'
+    all_versions = models.Version.objects.annotate(
+        num_vs=models.models.Count('article__version'),
+        age=models.models.Max('article__version__date')).filter(
+        num_vs__gt=1, boring=False, age__gt=start_date, age__lt=end_date
+        ).extra(where=['T3.boring=False']).order_by('date').select_related()
     article_dict = {}
     for version in all_versions:
         article_dict.setdefault(version.article, []).append(version)
