@@ -6,5 +6,4 @@
 
 {% block browse_fromline %}|  {% if source %}<a href="http://{{source}}">{{source}}</a>{% else %}All Sources{% endif %}{% endblock %}
 
-
-{% block browse_current_anchor %}current{% endblock %}
+{% block browse_current_anchor %}{{source}}{% endblock %}
