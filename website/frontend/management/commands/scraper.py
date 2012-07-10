@@ -12,6 +12,8 @@ from datetime import datetime, timedelta
 import traceback
 import sqlalchemy
 import time
+import socket
+import cookielib
 
 # Different versions of BeautifulSoup have different properties.
 # Some work with one site, some with another.
@@ -36,6 +38,10 @@ class Command(BaseCommand):
             action='store_true',
             default=False,
             help='Update version list'),
+        make_option('--all',
+            action='store_true',
+            default=False,
+            help='Update _all_ stored articles'),
         )
     help = 'Scrape websites'
 
@@ -44,7 +50,7 @@ class Command(BaseCommand):
             migrate_versions()
         if options['update']:
             update_articles()
-            update_versions()
+            update_versions(options['all'])
 
 def migrate_versions():
     git_output = subprocess.check_output([GIT_PROGRAM, 'log'], cwd=models.GIT_DIR)
@@ -180,14 +186,22 @@ def strip_prefix(string, prefix):
 def url_to_filename(url):
     return strip_prefix(url, 'http://').rstrip('/')
 
-def grab_url(url, max_depth=5):
-    text = urllib2.urlopen(url).read()
-    # Occasionally need to retry
-    if '<title>NY Times Advertisement</title>' in text:
+def grab_url(url, max_depth=5, opener=None):
+    if opener is None:
+        cj = cookielib.CookieJar()
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+    retry = False
+    try:
+        text = opener.open(url, timeout=5).read()
+        if '<title>NY Times Advertisement</title>' in text:
+            retry = True
+    except socket.timeout:
+        retry = True
+    if retry:
         if max_depth == 0:
-            raise Exception('Too many NY Times ads')
+            raise Exception('Too many attempts to download %s' % url)
         time.sleep(0.5)
-        return grab_url(url, max_depth-1)
+        return grab_url(url, max_depth-1, opener)
     return text
 
 def strip_whitespace(text):
@@ -469,18 +483,18 @@ def get_update_delay(minutes_since_update):
     else:
         return 60*24*7
 
-def update_versions():
+def update_versions(do_all=False):
     articles = list(models.Article.objects.all())
     total_articles = len(articles)
 
     update_priority = lambda x: x.minutes_since_check() * 1. / get_update_delay(x.minutes_since_update())
-    articles = sorted([a for a in articles if update_priority(a) > 1], key=update_priority, reverse=True)
+    articles = sorted([a for a in articles if (update_priority(a) > 1 or do_all)], key=update_priority, reverse=True)
 
     print 'Checking %s of %s articles' % (len(articles), total_articles)
     for i, article in enumerate(articles):
         print 'Woo:', article.minutes_since_update(), article.minutes_since_check(), update_priority(article), '(%s/%s)' % (i+1, len(articles))
         delay = get_update_delay(article.minutes_since_update())
-        if article.minutes_since_check() < delay:
+        if article.minutes_since_check() < delay and not do_all:
             continue
         print 'Considering', article.url, datetime.now()
         article.last_check = datetime.now()
