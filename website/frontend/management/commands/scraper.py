@@ -385,7 +385,7 @@ feeders = [('http://www.nytimes.com/',
            ('http://www.politico.com/',
             lambda url: 'www.politico.com/news/stories' in url,
             bs4.BeautifulSoup),
-           ('http://www.bbc.co.uk/',
+           ('http://www.bbc.co.uk/news/',
             lambda url: 'www.bbc.co.uk/news' in url),
            ]
 
