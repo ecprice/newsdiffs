@@ -70,9 +70,12 @@ class Version(models.Model):
     boring = models.BooleanField(blank=False, default=False)
 
     def text(self):
-        return subprocess.check_output([GIT_PROGRAM, 'show',
-                                        self.v+':'+self.article.filename()],
-                                       cwd=GIT_DIR)
+        try:
+            return subprocess.check_output([GIT_PROGRAM, 'show',
+                                            self.v+':'+self.article.filename()],
+                                           cwd=GIT_DIR)
+        except subprocess.CalledProcessError as e:
+            return None
 
 
 class Upvote(models.Model):

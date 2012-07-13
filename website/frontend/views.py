@@ -10,8 +10,13 @@ from django.core.urlresolvers import reverse
 import urllib
 import django.db
 import time
+from django.template import Context, loader
 
 OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
+
+def Http400():
+    t = loader.get_template('404.html')
+    return HttpResponse(t.render(Context()), status=400)
 
 def get_first_update(source):
     if source is None:
@@ -83,10 +88,19 @@ def diffview(request):
     url = request.REQUEST.get('url')
     v1tag = request.REQUEST.get('v1')
     v2tag = request.REQUEST.get('v2')
+    if url is None or v1tag is None or v2tag is None:
+        return HttpResponseRedirect(reverse(front))
 
-    v1 = Version.objects.get(v=v1tag)
-    v2 = Version.objects.get(v=v2tag)
-    article = Article.objects.get(url=url)
+    try:
+        v1 = Version.objects.get(v=v1tag)
+        v2 = Version.objects.get(v=v2tag)
+    except Version.DoesNotExist:
+        return Http400()
+
+    try:
+        article = Article.objects.get(url=url)
+    except Article.DoesNotExist:
+        return Http400()
     assert(v1.article == article)
     assert(v2.article == article)
 
@@ -106,6 +120,9 @@ def diffview(request):
         adjacent_versions.append([versions.get(index+offset)
                                   for offset in (-1, 1)])
 
+
+    if any(x is None for x in texts):
+        return Http400()
 
     links = []
     for i in range(2):
@@ -147,7 +164,13 @@ def get_rowinfo(article, version_lst=None):
 
 def article_history(request):
     url = request.REQUEST.get('url')
-    article = Article.objects.get(url=url)
+    if url is None:
+        return HttpResponseRedirect(reverse(front))
+    try:
+        article = Article.objects.get(url=url)
+    except Article.DoesNotExist:
+        return Http400()
+
     rowinfo = get_rowinfo(article)
     return render_to_response('article_history.html', {'article':article,
                                                        'versions':rowinfo})
