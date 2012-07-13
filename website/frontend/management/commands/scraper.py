@@ -220,7 +220,7 @@ def find_article_urls(feeder_url, filter_article, SoupVersion=BeautifulSoup):
     # "or ''" to make None into str
     urls = [a.get('href') or '' for a in soup.findAll('a')]
 
-    domain = os.path.dirname(feeder_url)
+    domain = '/'.join(feeder_url.split('/')[:3])
     urls = [url if '://' in url else domain + url for url in urls]
     return [url for url in urls if filter_article(url)]
 
