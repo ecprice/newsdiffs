@@ -16,9 +16,12 @@ OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 def get_first_update(source):
     if source is None:
         source = ''
-    first_update = models.Article.objects.order_by('last_update').filter(last_update__gt=datetime.datetime(1990, 1, 1, 0, 0),
-                                                                         url__contains=source)[0].last_update
-    return first_update
+    updates = models.Article.objects.order_by('last_update').filter(last_update__gt=datetime.datetime(1990, 1, 1, 0, 0),
+                                                                    url__contains=source)
+    try:
+        return updates[0].last_update
+    except IndexError:
+        return datetime.datetime.now()
 
 def get_articles(source=None, distance=0):
     articles = []
@@ -33,7 +36,7 @@ def get_articles(source=None, distance=0):
         num_vs=models.models.Count('article__version'),
         age=models.models.Max('article__version__date')).filter(
         num_vs__gt=1, boring=False, age__gt=start_date, age__lt=end_date
-        ).extra(where=['T3.boring=False']).order_by('date').select_related()
+        ).extra(where=['T3.boring=0']).order_by('date').select_related()
     article_dict = {}
     for version in all_versions:
         article_dict.setdefault(version.article, []).append(version)
@@ -45,8 +48,6 @@ def get_articles(source=None, distance=0):
             continue
         if 'blogs.nytimes.com' in url: #XXX temporary
             continue
-        elif 'editions.cnn.com' in url:
-            continue
 
         if len(versions) < 2:
             continue
@@ -57,7 +58,7 @@ def get_articles(source=None, distance=0):
     return articles
 
 
-SOURCES = set('nytimes.com cnn.com politico.com'.split() + [''])
+SOURCES = 'nytimes.com cnn.com politico.com bbc.co.uk'.split() + ['']
 
 def browse(request, source=''):
     if source not in SOURCES:
@@ -74,6 +75,7 @@ def browse(request, source=''):
             'page':page,
             'page_list': page_list,
             'first_update': first_update,
+            'sources': SOURCES[:-1]
             })
 
 

@@ -18,7 +18,7 @@ import cookielib
 # Different versions of BeautifulSoup have different properties.
 # Some work with one site, some with another.
 # This is BeautifulSoup 3.2.
-from BeautifulSoup import BeautifulSoup
+from BeautifulSoup import BeautifulSoup, Tag
 # This is BeautifulSoup 4
 import bs4
 
@@ -212,15 +212,6 @@ def strip_whitespace(text):
 
 
 
-feeders = [('http://www.nytimes.com/',
-            lambda url: 'www.nytimes.com/201' in url),
-           ('http://edition.cnn.com/',
-            lambda url: 'edition.cnn.com/201' in url),
-           ('http://www.politico.com/',
-            lambda url: 'www.politico.com/news/stories' in url,
-            bs4.BeautifulSoup),
-               ]
-
 #Article urls for a single website
 def find_article_urls(feeder_url, filter_article, SoupVersion=BeautifulSoup):
     html = grab_url(feeder_url)
@@ -285,7 +276,6 @@ class Article(object):
                                             self.authorid,
                                             self.bottom_correction,)))
 
-# XXX CNN might have an issue with unicode
 class CNNArticle(Article):
     SUFFIX = ''
 
@@ -349,6 +339,31 @@ class PoliticoArticle(Article):
                                             self.body,)))
 
 
+class BBCArticle(Article):
+    SUFFIX = '?print=true'
+
+    def _parse(self, html):
+        print 'got html'
+        soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
+                             fromEncoding='utf-8')
+        print 'parsed'
+
+        self.meta = soup.findAll('meta')
+        self.title = soup.find('h1', 'story-header').getText()
+        self.byline = ''
+
+        div = soup.find('div', 'story-body')
+        self.body = '\n'+'\n\n'.join([x.getText() for x in div.childGenerator() if
+                                 isinstance(x, Tag) and x.name == 'p'])
+
+        self.date = soup.find('span', 'date').getText()
+
+    def __unicode__(self):
+        return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
+                                            self.body,)))
+
+
+
 # NYT blogs
 # currently broken
 class BlogArticle(Article):
@@ -363,11 +378,23 @@ class BlogArticle(Article):
     def __unicode__(self):
         return strip_whitespace(self.document.getText())
 
+feeders = [('http://www.nytimes.com/',
+            lambda url: 'www.nytimes.com/201' in url),
+           ('http://edition.cnn.com/',
+            lambda url: 'edition.cnn.com/201' in url),
+           ('http://www.politico.com/',
+            lambda url: 'www.politico.com/news/stories' in url,
+            bs4.BeautifulSoup),
+           ('http://www.bbc.co.uk/',
+            lambda url: 'www.bbc.co.uk/news' in url),
+           ]
+
 DomainNameToClass = {'www.nytimes.com': Article,
 #                     'opinionator.blogs.nytimes.com': BlogArticle,
 #                     'krugman.blogs.nytimes.com': BlogArticle,
                      'edition.cnn.com': CNNArticle,
                      'www.politico.com': PoliticoArticle,
+                     'www.bbc.co.uk': BBCArticle,
                      }
 
 def get_parser(url):

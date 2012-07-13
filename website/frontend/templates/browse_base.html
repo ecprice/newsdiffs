@@ -3,9 +3,9 @@
 {% block content %}
 	<ul id="myTab" class="nav nav-tabs">
             <li {% if not source  %} class="active" {% endif %} ><a href="{% url browse '' %}" data-toggle="tab">All</a></li>
-            <li {% ifequal source "nytimes.com" %}class="active"{% endifequal %}><a href="{% url browse 'nytimes.com' %}" data-toggle="tab">nytimes.com</a></li>
-            <li {% ifequal source "cnn.com" %}class="active"{% endifequal %}><a href="{% url browse 'cnn.com' %}" data-toggle="tab">cnn.com</a></li>
-            <li {% ifequal source "politico.com" %}class="active"{% endifequal %}><a href="{% url browse 'politico.com' %}" data-toggle="tab">politico.com</a></li>
+            {% for sourceopt in sources %}
+            <li {% ifequal source sourceopt %}class="active"{% endifequal %}><a href="{% url browse sourceopt %}" data-toggle="tab">{{sourceopt}}</a></li>
+            {% endfor %}
               </ul>
             </li>
           </ul>

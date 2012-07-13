@@ -17,6 +17,7 @@ def strip_prefix(string, prefix):
 
 PublicationDict = {'www.nytimes.com': 'NYT',
                    'edition.cnn.com': 'CNN',
+                   'www.bbc.co.uk': 'BBC',
                    'www.politico.com': 'Politico',
                    }
 
