@@ -208,6 +208,15 @@ def strip_whitespace(text):
     lines = text.split('\n')
     return '\n'.join(x.strip().rstrip(u'\xa0') for x in lines).strip() + '\n'
 
+# XXX a bug in bs4 that tag.descendants isnt working when .extract is called??
+# TODO investigate and report
+def descendants(tag): 
+    x = tag.next_element
+    while x:
+        next = x.next_element or x.parent and x.parent != tag and x.parent.next_sibling
+        yield x
+        x = next
+
 # End utility functions
 
 
@@ -223,6 +232,12 @@ def find_article_urls(feeder_url, filter_article, SoupVersion=BeautifulSoup):
     domain = '/'.join(feeder_url.split('/')[:3])
     urls = [url if '://' in url else domain + url for url in urls]
     return [url for url in urls if filter_article(url)]
+def find_article_urls(feed_url):
+    ''' Article urls for a single website. '''
+    import feedparser
+    feed = feedparser.parse(feed_url)
+    return [e.link for e in feed.entries]
+
 
 def get_all_article_urls():
     ans = set()
@@ -378,6 +393,59 @@ class BlogArticle(Article):
     def __unicode__(self):
         return strip_whitespace(self.document.getText())
 
+
+class TagesschauArticle(Article):
+    SUFFIX = ''
+
+    def _parse(self, html):
+        soup = bs4.BeautifulSoup(html)
+
+        # extract the important text of the article into self.document #
+        # select the one article
+        article = soup.select('div.article')[0]
+        # removing comments
+        for x in descendants(article):
+            if isinstance(x, bs4.Comment):
+                x.extract()
+        # removing elements which don't provide content
+        for selector in ('.inv .teaserImg #seitenanfang .spacer .clearMe '+
+            '.boxMoreLinks .metaBlock .weltatlas .fPlayer .zitatBox .flashaudio').split(' '):
+            for x in article.select(selector):
+                x.extract()
+        # put hrefs into text form cause hrefs are important content
+        for x in article.select('a'):
+            x.append(" ["+x.get('href','')+"]")
+        # ensure proper formating for later use of get_text()
+        for x in article.select('li'):
+            x.append("\n")
+        for tag in 'p h1 h2 h3 h4 h5 ul div'.split(' '):
+            for x in article.select(tag):
+                x.append("\n\n")
+        # strip multiple newlines away
+        import re
+        article = re.subn('\n\n+', '\n\n', article.get_text())[0]
+        # important text is now extracted into self.document
+        self.document = article
+
+        self.title = soup.find('h1').get_text()
+
+        # a by-line is not always there, but when it is, it is em-tag and
+        # begins with the word 'Von'
+        byline = soup.find('em')
+        if byline:
+            byline = byline.get_text()
+            if 'Von ' not in byline: byline = None
+        if not byline: byline = "nicht genannt"
+        self.byline = byline
+
+        # TODO self.date is unused, isn't it? but i still fill it here
+        date = soup.select("div.standDatum")
+        self.date = date and date[0].get_text() or ''
+
+    def __unicode__(self):
+        return self.document
+
+
 feeders = [('http://www.nytimes.com/',
             lambda url: 'www.nytimes.com/201' in url),
            ('http://edition.cnn.com/',
@@ -388,6 +456,7 @@ feeders = [('http://www.nytimes.com/',
            ('http://www.bbc.co.uk/news/',
             lambda url: 'www.bbc.co.uk/news' in url),
            ]
+feeders = [('http://www.tagesschau.de/newsticker.rdf',)]
 
 DomainNameToClass = {'www.nytimes.com': Article,
 #                     'opinionator.blogs.nytimes.com': BlogArticle,
@@ -395,6 +464,7 @@ DomainNameToClass = {'www.nytimes.com': Article,
                      'edition.cnn.com': CNNArticle,
                      'www.politico.com': PoliticoArticle,
                      'www.bbc.co.uk': BBCArticle,
+                     'www.tagesschau.de': TagesschauArticle,
                      }
 
 def get_parser(url):
@@ -548,8 +618,15 @@ dda84ac629f96bfd4cb792dc4db1829e76ad94e5
 2611043df5a4bfe28a050f474b1a96afbae2edb1
 """.split()
 
-if __name__ == '__main__':
+def main(*args, **options):
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
     sys.stderr = os.fdopen(sys.stderr.fileno(), 'w', 0)
     update_articles()
-    update_versions()
+    update_versions(do_all = True)
+
+if __name__ == '__main__': main()
+
+from django.core.management.base import BaseCommand
+class Command(BaseCommand):
+    def handle(self, *args, **options):
+        main(*args, **options)
