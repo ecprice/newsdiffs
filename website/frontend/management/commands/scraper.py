@@ -37,20 +37,28 @@ class Command(BaseCommand):
         make_option('--update',
             action='store_true',
             default=False,
-            help='Update version list'),
+            help='DEPRECATED; this is the default'),
         make_option('--all',
             action='store_true',
             default=False,
             help='Update _all_ stored articles'),
         )
-    help = 'Scrape websites'
+    help = '''Scrape websites.
+
+By default, scan front pages for new articles, and scan
+existing and new articles to archive their current contents.
+
+Articles that haven't changed in a while are skipped if we've
+scanned them recently, unless --all is passed.
+'''.strip()
 
     def handle(self, *args, **options):
         if options['migrate']:
             migrate_versions()
-        if options['update']:
+        else:
             update_articles()
             update_versions(options['all'])
+
 
 def migrate_versions():
     git_output = subprocess.check_output([GIT_PROGRAM, 'log'], cwd=models.GIT_DIR)
@@ -612,15 +620,5 @@ dda84ac629f96bfd4cb792dc4db1829e76ad94e5
 2611043df5a4bfe28a050f474b1a96afbae2edb1
 """.split()
 
-def main(*args, **options):
-    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
-    sys.stderr = os.fdopen(sys.stderr.fileno(), 'w', 0)
-    update_articles()
-    update_versions()
-
-class Command(BaseCommand):
-    def handle(self, *args, **options):
-        main(*args, **options)
-
 if __name__ == '__main__':
-    main()
+    print >>sys.stderr, "Try `python website/manage.py scraper`."
