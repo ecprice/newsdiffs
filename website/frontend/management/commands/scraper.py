@@ -612,8 +612,15 @@ dda84ac629f96bfd4cb792dc4db1829e76ad94e5
 2611043df5a4bfe28a050f474b1a96afbae2edb1
 """.split()
 
-if __name__ == '__main__':
+def main(*args, **options):
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
     sys.stderr = os.fdopen(sys.stderr.fileno(), 'w', 0)
     update_articles()
     update_versions()
+
+class Command(BaseCommand):
+    def handle(self, *args, **options):
+        main(*args, **options)
+
+if __name__ == '__main__':
+    main()
