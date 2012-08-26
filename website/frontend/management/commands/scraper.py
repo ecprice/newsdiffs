@@ -112,8 +112,6 @@ def migrate_versions():
         except models.IntegrityError:
             pass
 
-DATE_FORMAT = '%B %d, %Y at %l:%M%P EDT'
-
 #Article urls for a single website
 def find_article_urls(feeder_url, filter_article, SoupVersion=BeautifulSoup):
     html = grab_url(feeder_url)
@@ -178,38 +176,6 @@ class Article(object):
                                             self.authorid,
                                             self.bottom_correction,)))
 
-class CNNArticle(Article):
-    SUFFIX = ''
-
-    def _parse(self, html):
-        print 'got html'
-        soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
-                             fromEncoding='utf-8')
-        print 'parsed'
-        p_tags = soup.findAll('p', attrs={'class':re.compile(r'\bcnn_storypgraphtxt\b')})
-        if not p_tags:
-            self.real_article = False
-            return
-
-        self.meta = soup.findAll('meta')
-        self.title = soup.find('meta', attrs={'itemprop':'headline'}).get('content')
-        datestr = soup.find('meta', attrs={'itemprop':'dateModified'}).get('content')
-        date = datetime.strptime(datestr, '%Y-%m-%dT%H:%M:%SZ') - timedelta(hours=4)
-        self.date = date.strftime(DATE_FORMAT)
-        self.byline = soup.find('meta', attrs={'itemprop':'author'}).get('content')
-        lede = p_tags[0].previousSibling.previousSibling
-
-        editornotes = soup.findAll('p', attrs={'class':'cnnEditorialNote'})
-        contributors = soup.findAll('p', attrs={'class':'cnn_strycbftrtxt'})
-        
-
-        self.body = '\n'+'\n\n'.join([p.getText() for p in
-                                      editornotes + [lede] + p_tags + contributors])
-        authorids = soup.find('div', attrs={'class':'authorIdentification'})
-
-    def __unicode__(self):
-        return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
-                                            self.body,)))
 
 
 class PoliticoArticle(Article):
@@ -343,10 +309,11 @@ class TagesschauArticle(Article):
         return self.document
 
 
-feeders = [('http://www.nytimes.com/',
-            lambda url: 'www.nytimes.com/201' in url),
-#           ('http://edition.cnn.com/',
-#            lambda url: 'edition.cnn.com/201' in url),
+feeders = [
+#            ('http://www.nytimes.com/',
+#            lambda url: 'www.nytimes.com/201' in url),
+           ('http://edition.cnn.com/',
+            lambda url: 'edition.cnn.com/201' in url),
 #           ('http://www.politico.com/',
 #            lambda url: 'www.politico.com/news/stories' in url,
 #            bs4.BeautifulSoup),
@@ -354,18 +321,38 @@ feeders = [('http://www.nytimes.com/',
 #            lambda url: 'www.bbc.co.uk/news' in url),
            ]
 
-DomainNameToClass = {'www.nytimes.com': Article,
+#DomainNameToClass = {'www.nytimes.com': Article,
 #                     'opinionator.blogs.nytimes.com': BlogArticle,
 #                     'krugman.blogs.nytimes.com': BlogArticle,
-                     'edition.cnn.com': CNNArticle,
-                     'www.politico.com': PoliticoArticle,
-                     'www.bbc.co.uk': BBCArticle,
-                     'www.tagesschau.de': TagesschauArticle,
-                     }
+#                     'edition.cnn.com': CNNArticle,
+#                     'www.politico.com': PoliticoArticle,
+#                     'www.bbc.co.uk': BBCArticle,
+#                     'www.tagesschau.de': TagesschauArticle,
+#                     }
 
-def get_parser(url):
-    return DomainNameToClass[url_to_filename(url).split('/')[0]]
+###
+domain_to_class = {}
 
+def get_scrapers():
+    import os, importlib, scrapers
+    pkg = 'scrapers'
+    module_names = set(os.path.splitext(name)[0]
+        for name in os.listdir(pkg))
+    values = sum([importlib.import_module(pkg+'.'+name).__dict__.values()
+        for name in module_names], [])
+    scrapers = set(article
+        for article in values
+        if type(article) is type
+        and issubclass(article, scrapers.Article))
+    for scraper in scrapers:
+        domain_to_class[scraper.domain] = scraper
+
+get_scrapers()
+
+def get_scraper(url):
+    domain = url_to_filename(url).split('/')[0]
+    return domain_to_class[domain]
+### 
 
 CHARSET_LIST = """EUC-JP GB2312 EUC-KR Big5 SHIFT_JIS windows-1252
 IBM855
@@ -436,7 +423,7 @@ def add_to_git_repo(data, filename):
 #Return whether it changed
 def update_article(article):
     try:
-        parser = get_parser(article.url)
+        parser = get_scraper(article.url)
     except KeyError:
         print >> sys.stderr, 'Unable to parse domain, skipping'
         return
