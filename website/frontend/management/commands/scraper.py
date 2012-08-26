@@ -39,6 +39,14 @@ class Command(BaseCommand):
             action='store_true',
             default=False,
             help='Update _all_ stored articles'),
+        make_option('--fetch',
+            action='append',
+            dest='fetch',
+            help='Only fetch new articles from specific sites. '+
+                 'If a scraper is available for a domain containing '+
+                 'the argument to fetch, it will be used. Multiple '+
+                 'use of this options adds up. Spaces split the '+
+                 'argument in multiple usages of this option.'),
         )
     help = '''Scrape websites.
 
@@ -53,8 +61,15 @@ scanned them recently, unless --all is passed.
         if options['migrate']:
             migrate_versions()
         else:
+            print "load scrapers"
+            to_fetch = sum([x.split(' ') for x in options['fetch']], [])
+            print "fetch", ", ".join(to_fetch)
+            load_scrapers(to_fetch)
+            print "update articles"
             update_articles()
+            print "update versions"
             update_versions(options['all'])
+        print "done"
 
 
 def migrate_versions():
@@ -113,10 +128,16 @@ def migrate_versions():
             pass
 
 ###
-domain_to_class = {}
-url_fetchers = []
-# checked with 'in scraper.fetcher_url', simple and stupid
-urls_to_fetch = 'tagesschau'.split(' ')
+domain_to_class = {} # used from get_scraper
+url_fetchers = [] # used from get_all_article_urls
+
+def load_scrapers(to_fetch):
+    scrapers = get_scrapers()
+    for scraper in scrapers:
+        domain_to_class[scraper.domain] = scraper
+        ###
+        if any(pattern in scraper.domain for pattern in to_fetch):
+            url_fetchers.append(scraper.fetch_urls)
 
 def get_scrapers():
     import os, importlib, scrapers
@@ -130,12 +151,7 @@ def get_scrapers():
         if type(article) is type
         and article is not scrapers.Article
         and issubclass(article, scrapers.Article))
-    for scraper in scrapers:
-        domain_to_class[scraper.domain] = scraper
-        if any(pattern in scraper.fetcher_url for pattern in urls_to_fetch):
-            url_fetchers.append(scraper.fetch_urls)
-
-get_scrapers()
+    return scrapers
 
 def get_scraper(url):
     domain = url_to_filename(url).split('/')[0]
