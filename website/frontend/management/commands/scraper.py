@@ -46,6 +46,7 @@ class Command(BaseCommand):
     help = 'Scrape websites'
 
     def handle(self, *args, **options):
+        cleanup_git_repo()
         if options['migrate']:
             migrate_versions()
         if options['update']:
@@ -451,9 +452,12 @@ def add_to_git_repo(data, filename):
     else:
         return_value = 1 if not boring else 3
         commit_message = 'Change to %s' % filename
+    print >> sys.stderr, 'Running git commit...'
     subprocess.call([GIT_PROGRAM, 'commit', filename, '-m', commit_message],
                     cwd=models.GIT_DIR)
+    print >> sys.stderr, 'git revlist...'
     v = subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1', filename], cwd=models.GIT_DIR).strip()
+    print >> sys.stderr, 'done'
     return (return_value, v)
 
 #Update url in git
@@ -547,6 +551,17 @@ dda84ac629f96bfd4cb792dc4db1829e76ad94e5
 0ac04be3af54962dc7f8bb28550267543692ec28
 2611043df5a4bfe28a050f474b1a96afbae2edb1
 """.split()
+
+#Remove index.lock if 5 minutes old
+def cleanup_git_repo():
+    fname = os.path.join(models.GIT_DIR, '.git/index.lock')
+    try:
+        stat = os.stat(fname)
+    except OSError:
+        return
+    age = time.time() - stat.st_ctime
+    if age > 60*5:
+        os.remove(fname)
 
 if __name__ == '__main__':
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
