@@ -113,31 +113,6 @@ def migrate_versions():
             pass
 
 '''
-class BBCArticle(Article):
-    SUFFIX = '?print=true'
-
-    def _parse(self, html):
-        print 'got html'
-        soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
-                             fromEncoding='utf-8')
-        print 'parsed'
-
-        self.meta = soup.findAll('meta')
-        self.title = soup.find('h1', 'story-header').getText()
-        self.byline = ''
-
-        div = soup.find('div', 'story-body')
-        self.body = '\n'+'\n\n'.join([x.getText() for x in div.childGenerator() if
-                                 isinstance(x, Tag) and x.name == 'p'])
-
-        self.date = soup.find('span', 'date').getText()
-
-    def __unicode__(self):
-        return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
-                                            self.body,)))
-
-
-
 # NYT blogs
 # currently broken
 class BlogArticle(Article):
@@ -216,8 +191,7 @@ class TagesschauArticle(Article):
 '''
 
 #feeders = [
-#           ('http://www.bbc.co.uk/news/',
-#            lambda url: 'www.bbc.co.uk/news' in url),
+
 #           ]
 
 #DomainNameToClass = {'www.nytimes.com': Article,
@@ -233,7 +207,7 @@ class TagesschauArticle(Article):
 domain_to_class = {}
 url_fetchers = []
 # checked with 'in scraper.fetcher_url', simple and stupid
-urls_to_fetch = 'cnn nyt politico'.split(' ')
+urls_to_fetch = 'cnn nyt politico bbc'.split(' ')
 
 def get_scrapers():
     import os, importlib, scrapers
