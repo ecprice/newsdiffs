@@ -112,19 +112,6 @@ def migrate_versions():
         except models.IntegrityError:
             pass
 
-#feeders = [
-
-#           ]
-
-#DomainNameToClass = {'www.nytimes.com': Article,
-#                     'opinionator.blogs.nytimes.com': BlogArticle,
-#                     'krugman.blogs.nytimes.com': BlogArticle,
-#                     'edition.cnn.com': CNNArticle,
-#                     'www.politico.com': PoliticoArticle,
-#                     'www.bbc.co.uk': BBCArticle,
-#                     'www.tagesschau.de': TagesschauArticle,
-#                     }
-
 ###
 domain_to_class = {}
 url_fetchers = []
