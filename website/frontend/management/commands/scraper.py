@@ -62,21 +62,22 @@ scanned them recently, unless --all is passed.
             migrate_versions()
         else:
             print "load scrapers"
-            to_fetch = options['fetch']
-            if not to_fetch:
-                to_fetch = ['']
-                print "fetch all"
-            else:
-                to_fetch = [x.split(' ') for x in to_fetch]
-                to_fetch = set(filter(bool, sum(to_fetch, [])))
-                print "fetch", ", ".join(to_fetch)
-            load_scrapers(to_fetch)
+            load_scrapers(get_to_fetch(options['fetch']))
             print "update articles"
             update_articles()
             print "update versions"
             update_versions(options['all'])
         print "done"
 
+def get_to_fetch(to_fetch):
+    if not to_fetch:
+        to_fetch = ['']
+        print "fetch all"
+    else:
+        to_fetch = [x.split(' ') for x in to_fetch]
+        to_fetch = set(filter(bool, sum(to_fetch, [])))
+        print "fetch", ", ".join(to_fetch)
+    return to_fetch
 
 def migrate_versions():
     git_output = subprocess.check_output([GIT_PROGRAM, 'log'], cwd=models.GIT_DIR)
@@ -143,7 +144,7 @@ def load_scrapers(to_fetch):
         domain_to_class[scraper.domain] = scraper
         ###
         if any(p in scraper.domain for p in to_fetch):
-            url_fetchers.append(scraper.fetch_urls)
+            url_fetchers.append((scraper.fetcher_url, scraper.fetch_urls))
 
 def get_scrapers():
     import os, importlib, scrapers
@@ -265,13 +266,25 @@ def update_article(article):
         v_row.save()
         article.save()
 
+###
+def fetch_urls():
+    for url, fetch in url_fetchers:
+        print "fetching", url, "...",
+        sys.stdout.flush()
+        urls = list(map(canonicalize_url, fetch()))
+        print len(urls), "urls"
+        if len(urls) is 0:
+            print >> sys.stderr, "fetching of urls of {0} seams not to work".format(fetch.im_self)
+        yield urls
+
 def get_all_article_urls():
-    return set(sum([map(canonicalize_url, x()) for x in url_fetchers], []))
+    return set(sum(fetch_urls(), []))
 
 def update_articles():
     for url in get_all_article_urls():
         if not models.Article.objects.filter(url=url).count():
             models.Article(url=url).save()
+###
 
 def get_update_delay(minutes_since_update):
     days_since_update = minutes_since_update // (24 * 60)
