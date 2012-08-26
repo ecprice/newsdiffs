@@ -15,6 +15,8 @@ import time
 import socket
 import cookielib
 
+import diff_match_patch
+
 # Different versions of BeautifulSoup have different properties.
 # Some work with one site, some with another.
 # This is BeautifulSoup 3.2.
@@ -503,26 +505,36 @@ def is_boring(old, new):
             pass
     return False
 
+def get_diff_info(old, new):
+    dmp = diff_match_patch.diff_match_patch()
+    dmp.Diff_Timeout = 3 # seconds; default of 1 is too little
+    diff = dmp.diff_main(old, new)
+    dmp.diff_cleanupSemantic(diff)
+    chars_added   = sum(len(text) for (sign, text) in diff if sign == 1)
+    chars_removed = sum(len(text) for (sign, text) in diff if sign == -1)
+    return dict(chars_added=chars_added, chars_removed=chars_removed)
+
 def add_to_git_repo(data, filename):
     full_path = os.path.join(models.GIT_DIR, filename)
     mkdir_p(os.path.dirname(full_path))
 
     boring = False
+    diff_info = None
     already_exists = os.path.exists(full_path)
     if already_exists:
         previous = open(full_path).read()
         if previous == data:
-            return (0, '')
+            return None, None, None
         if is_boring(previous, data):
             boring = True
+        else:
+            diff_info = get_diff_info(previous, data)
 
     open(full_path, 'w').write(data)
     if not already_exists:
         subprocess.call([GIT_PROGRAM, 'add', filename], cwd=models.GIT_DIR)
         commit_message = 'Adding file %s' % filename
-        return_value = 2
     else:
-        return_value = 1 if not boring else 3
         commit_message = 'Change to %s' % filename
     print >> sys.stderr, 'Running git commit...'
     subprocess.call([GIT_PROGRAM, 'commit', filename, '-m', commit_message],
@@ -530,7 +542,7 @@ def add_to_git_repo(data, filename):
     print >> sys.stderr, 'git revlist...'
     v = subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1', filename], cwd=models.GIT_DIR).strip()
     print >> sys.stderr, 'done'
-    return (return_value, v)
+    return v, boring, diff_info
 
 #Update url in git
 #Return whether it changed
@@ -553,17 +565,17 @@ def update_article(article):
     if not parsed_article.real_article:
         return
     to_store = unicode(parsed_article).encode('utf8')
-    (retval, v) = add_to_git_repo(to_store, url_to_filename(article.url))
+    v, boring, diff_info = add_to_git_repo(to_store, url_to_filename(article.url))
     if v:
         print 'Modifying! new blob: %s' % v
         v_row = models.Version(v=v,
+                               boring=boring,
                                title=parsed_article.title,
                                byline=parsed_article.byline,
                                date=t,
                                article=article,
                                )
-        if retval == 3:
-            v_row.boring = True
+        v_row.diff_info = diff_info
         article.last_update = t
         v_row.save()
         article.save()

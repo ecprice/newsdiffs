@@ -9,18 +9,19 @@ Authors: Eric Price (ecprice@mit.edu), Greg Price (gnprice@gmail.com),
  and Jennifer 8. Lee (jenny@jennifer8lee.com)
 
 This is free software under the MIT/Expat license; see LICENSE.
+The project's source code lives at http://github.com/ecprice/newsdiffs .
 
 
 Requirements
 ------------
 
 You need to have installed on your local machine
-1) git (To clone the Git repository: $ git clone git@github.com:ecprice/newsdiffs.git)
-2) python 2.6 or later
-3) Django. 
+* Git
+* Python 2.6 or later
+* Django and other Python libraries
 
-For Djanjo, on a Debian- or Ubuntu-based system, it may suffice (untested) to run
-  $ sudo apt-get install python-django python-simplejson
+On a Debian- or Ubuntu-based system, it may suffice (untested) to run
+  $ sudo apt-get install git-core python-django python-django-south python-simplejson
 
 On Mac OS, the easiest way may be to install pip:
   http://www.pip-installer.org/en/latest/installing.html
