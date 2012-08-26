@@ -62,8 +62,14 @@ scanned them recently, unless --all is passed.
             migrate_versions()
         else:
             print "load scrapers"
-            to_fetch = sum([x.split(' ') for x in options['fetch']], [])
-            print "fetch", ", ".join(to_fetch)
+            to_fetch = options['fetch']
+            if not to_fetch:
+                to_fetch = ['']
+                print "fetch all"
+            else:
+                to_fetch = [x.split(' ') for x in to_fetch]
+                to_fetch = set(filter(bool, sum(to_fetch, [])))
+                print "fetch", ", ".join(to_fetch)
             load_scrapers(to_fetch)
             print "update articles"
             update_articles()
@@ -136,7 +142,7 @@ def load_scrapers(to_fetch):
     for scraper in scrapers:
         domain_to_class[scraper.domain] = scraper
         ###
-        if any(pattern in scraper.domain for pattern in to_fetch):
+        if any(p in scraper.domain for p in to_fetch):
             url_fetchers.append(scraper.fetch_urls)
 
 def get_scrapers():
