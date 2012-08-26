@@ -9,7 +9,6 @@ from frontend import models
 import re
 from datetime import datetime, timedelta
 import traceback
-import sqlalchemy
 
 import diff_match_patch
 
