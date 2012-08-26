@@ -235,7 +235,7 @@ def update_article(article):
         parser = get_scraper(article.url)
     except KeyError:
         print 'no scraper'
-        print >> sys.stderr, 'unable to parse domain, skipping'
+        print >> sys.stderr, 'no scraper for', article.url
         return
 
     try:
