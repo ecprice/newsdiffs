@@ -264,6 +264,8 @@ class TagesschauArticle(Article):
 ###
 domain_to_class = {}
 url_fetchers = []
+# checked with 'in scraper.fetcher_url', simple and stupid
+urls_to_fetch = ['cnn', 'nyt'] 
 
 def get_scrapers():
     import os, importlib, scrapers
@@ -279,7 +281,8 @@ def get_scrapers():
         and issubclass(article, scrapers.Article))
     for scraper in scrapers:
         domain_to_class[scraper.domain] = scraper
-        url_fetchers.append(scraper.fetch_urls)
+        if any(pattern in scraper.fetcher_url for pattern in urls_to_fetch):
+            url_fetchers.append(scraper.fetch_urls)
 
 get_scrapers()
 
