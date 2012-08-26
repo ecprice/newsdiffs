@@ -53,6 +53,8 @@ class diff_match_patch:
     # large changes.  (-infinity => compare equality to min of changes;
     # 0 => geometric mean; 1 => mean; infinity => max)
     self.Diff_SplitWeight = -0.5
+    # Whether to show &para; at the end of each line.
+    self.Diff_ShowPara = True
 
     # At what point is no match declared (0.0 = perfection, 1.0 = very loose).
     self.Match_Threshold = 0.5
@@ -1080,8 +1082,9 @@ class diff_match_patch:
     """
     html = []
     for (op, data) in diffs:
+      symbol_para = "&para;<br>" if self.Diff_ShowPara else "<br>"
       text = (data.replace("&", "&amp;").replace("<", "&lt;")
-                 .replace(">", "&gt;").replace("\n", "&para;<br>"))
+                 .replace(">", "&gt;").replace("\n", symbol_para))
       if op == self.DIFF_INSERT:
         html.append("<ins style=\"background:#e6ffe6;\">%s</ins>" % text)
       elif op == self.DIFF_DELETE:
