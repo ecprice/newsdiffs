@@ -188,7 +188,6 @@ def is_boring(old, new):
     for charset in CHARSET_LIST:
         try:
             if oldu.encode(charset) == new:
-                print 'Boring!'
                 return True
         except UnicodeEncodeError:
             pass
@@ -225,8 +224,7 @@ def add_to_git_repo(data, filename):
         commit_message = 'Adding file %s' % filename
     else:
         commit_message = 'Change to %s' % filename
-    subprocess.call([GIT_PROGRAM, 'commit', '-q', filename, '-m', commit_message],
-                    cwd=models.GIT_DIR)
+    subprocess.call([GIT_PROGRAM, 'commit', '-q', filename, '-m', commit_message], cwd=models.GIT_DIR)
     v = subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1', filename], cwd=models.GIT_DIR).strip()
     return v, boring, diff_info
 
@@ -236,6 +234,7 @@ def update_article(article):
     try:
         parser = get_scraper(article.url)
     except KeyError:
+        print 'no scraper'
         print >> sys.stderr, 'unable to parse domain, skipping'
         return
 
@@ -246,16 +245,22 @@ def update_article(article):
         date = datetime.now()
     except (AttributeError, urllib2.HTTPError, httplib.HTTPException), e:
         if isinstance(e, urllib2.HTTPError) and e.msg == 'Gone':
+            print 'gone'
             return
+        print 'error'
         print >> sys.stderr, 'exception when parsing', article.url
         traceback.print_exc()
         return
     if not parsed_article.real_article:
+        print 'no article'
         return
     to_store = unicode(parsed_article).encode('utf8')
     v, boring, diff_info = add_to_git_repo(to_store, url_to_filename(article.url))
     if v:
-        print 'modifying! new blob: %s' % v
+        if diff_info and not boring:
+            print '+{0} -{1}'.format(diff_info.chars_added, diff_info.chars_removed)
+        elif boring:
+            print 'boring'
         v_row = models.Version(v=v,
                                boring=boring,
                                title=parsed_article.title,
@@ -316,15 +321,13 @@ def update_versions(do_all=False):
     print 'checking {0} of {1} articles'.format(len(articles), total_articles)
 
     for i, article in enumerate(articles):
-        print '{0}/{1} priority {2}'.format(i+1, len(articles), get_update_priority(article))
-
+        print '{0}/{1}'.format(i+1, len(articles)),
         delay = get_update_delay(article.minutes_since_update())
         if article.minutes_since_check() < delay and not do_all:
+            print
             continue
-
-        now = datetime.now()
-        print 'considering', article.url
-        
+        print ' '+article.url,
+        sys.stdout.flush()
         try:
             update_article(article)
         except:
