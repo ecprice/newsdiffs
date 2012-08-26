@@ -113,21 +113,6 @@ def migrate_versions():
             pass
 
 '''
-# NYT blogs
-# currently broken
-class BlogArticle(Article):
-    SUFFIX = '?pagemode=print'
-
-
-    def _parse(self, html):
-        div_id = url_to_filename(self.url).split('.')
-        soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        self.document = soup.find('div', attrs={'id':div_id})
-
-    def __unicode__(self):
-        return strip_whitespace(self.document.getText())
-
-
 class TagesschauArticle(Article):
     SUFFIX = ''
 
