@@ -1,7 +1,7 @@
 GIT_PROGRAM = 'git'
 
-import os, errno
 def mkdir_p(path):
+    import os, errno
     try:
         os.makedirs(path)
     except OSError as exc: # Python >2.5
@@ -21,8 +21,8 @@ def strip_prefix(string, prefix):
 def url_to_filename(url):
     return strip_prefix(url, 'http://').rstrip('/')
 
-import cookielib, urllib2, socket, time
 def grab_url(url, max_depth=5, opener=None):
+    import cookielib, urllib2, socket, time
     if opener is None:
         cj = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
