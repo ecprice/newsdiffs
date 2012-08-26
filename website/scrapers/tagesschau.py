@@ -10,7 +10,10 @@ class TagesschauArticle(Article):
         ''' Article urls for a single website. '''
         import feedparser
         feed = feedparser.parse(self.fetcher_url)
-        return [e.link for e in feed.entries]
+        no_article = ['www.tagesschau.de/multimedia/bilder/']
+        urls = [e.link for e in feed.entries
+                if not any(no in e.link for no in no_article)]
+        return urls
 
 
     def _parse(self, html):
@@ -19,7 +22,12 @@ class TagesschauArticle(Article):
 
         # extract the important text of the article into self.document #
         # select the one article
-        article = soup.select('div.article')[0]
+        article = soup.select('div.article')
+        # this
+        if not article:
+            self.real_article = False
+            return
+        article = article[0]
         # removing comments
         for x in self.descendants(article):
             if isinstance(x, bs4.Comment):
