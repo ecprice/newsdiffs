@@ -52,7 +52,9 @@ class diff_match_patch:
     # How eagerly to 'split' an equality, absorbing it into neighboring
     # large changes.  (-infinity => compare equality to min of changes;
     # 0 => geometric mean; 1 => mean; infinity => max)
-    self.Diff_SplitWeight = -0.5
+    self.Diff_SplitWeight = -2
+    # How eagerly to 'split' small equalities.
+    self.Diff_SplitSmall = 2
     # Whether to show &para; at the end of each line.
     self.Diff_ShowPara = True
 
@@ -642,8 +644,10 @@ class diff_match_patch:
       (text2_a, text2_b, text1_a, text1_b, mid_common) = hm
     return (text1_a, text1_b, text2_a, text2_b, mid_common)
 
-  def power_mean(self, a, b, p):
-    return (((a**p) + (b**p)) / 2) ** (1/p)
+  def diff_splitThreshold_(self, length1, length2):
+    p = self.Diff_SplitWeight;
+    d = self.Diff_SplitSmall;
+    return (((length1 + d) ** p + (length2 + d) ** p) / 2) ** (1/p) - d
 
   def diff_cleanupSemantic(self, diffs):
     """Reduce the number of edits by eliminating semantically trivial
@@ -674,10 +678,9 @@ class diff_match_patch:
         # Eliminate an equality that is smaller or equal to the edits on both
         # sides of it.
         if (lastequality and
-            len(lastequality) <= self.power_mean(
+            len(lastequality) <= self.diff_splitThreshold_(
               max(length_insertions1, length_deletions1),
-              max(length_insertions2, length_deletions2),
-              self.Diff_SplitWeight)):
+              max(length_insertions2, length_deletions2))):
           # Duplicate record.
           diffs.insert(equalities[-1], (self.DIFF_DELETE, lastequality))
           # Change second copy to insert.
