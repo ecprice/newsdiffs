@@ -113,35 +113,6 @@ def migrate_versions():
             pass
 
 '''
-class PoliticoArticle(Article):
-    SUFFIX = ''
-
-    def _parse(self, html):
-        soup = bs4.BeautifulSoup(html)
-        print_link = soup.findAll('a', text='Print')[0].get('href')
-        html2 = grab_url(print_link)
-        # Now we have to switch back to bs3.  Hilarious.
-        # and the labeled encoding is wrong, so force utf-8.
-        soup = BeautifulSoup(html2, convertEntities=BeautifulSoup.HTML_ENTITIES,
-                             fromEncoding='utf-8')
-
-        self.meta = soup.findAll('meta')
-        p_tags = soup.findAll('p')[1:]
-
-        self.title = soup.find('strong').getText()
-        entity = soup.find('span', attrs={'class':'author'})
-        children = list(entity.childGenerator())
-        self.byline = 'By ' + children[1].getText()
-        datestr = children[-1].strip()
-        self.date = datestr
-
-        self.body = '\n'+'\n\n'.join([p.getText() for p in p_tags])
-
-    def __unicode__(self):
-        return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
-                                            self.body,)))
-
-
 class BBCArticle(Article):
     SUFFIX = '?print=true'
 
@@ -245,9 +216,6 @@ class TagesschauArticle(Article):
 '''
 
 #feeders = [
-#           ('http://www.politico.com/',
-#            lambda url: 'www.politico.com/news/stories' in url,
-#            bs4.BeautifulSoup),
 #           ('http://www.bbc.co.uk/news/',
 #            lambda url: 'www.bbc.co.uk/news' in url),
 #           ]
@@ -265,7 +233,7 @@ class TagesschauArticle(Article):
 domain_to_class = {}
 url_fetchers = []
 # checked with 'in scraper.fetcher_url', simple and stupid
-urls_to_fetch = ['cnn', 'nyt'] 
+urls_to_fetch = 'cnn nyt politico'.split(' ')
 
 def get_scrapers():
     import os, importlib, scrapers
