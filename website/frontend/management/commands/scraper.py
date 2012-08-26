@@ -112,25 +112,6 @@ def migrate_versions():
         except models.IntegrityError:
             pass
 
-#Article urls for a single website
-def find_article_urls(feeder_url, filter_article, SoupVersion=BeautifulSoup):
-    html = grab_url(feeder_url)
-    soup = SoupVersion(html)
-
-    # "or ''" to make None into str
-    urls = [a.get('href') or '' for a in soup.findAll('a')]
-
-    domain = '/'.join(feeder_url.split('/')[:3])
-    urls = [url if '://' in url else domain + url for url in urls]
-    return [url for url in urls if filter_article(url)]
-
-def get_all_article_urls():
-    ans = set()
-    for feeder in feeders:
-        urls = find_article_urls(*feeder)
-        ans = ans.union(map(canonicalize_url, urls))
-    return ans
-
 '''
 class PoliticoArticle(Article):
     SUFFIX = ''
@@ -263,17 +244,13 @@ class TagesschauArticle(Article):
         return self.document
 '''
 
-feeders = [
-           ('http://www.nytimes.com/',
-            lambda url: 'www.nytimes.com/201' in url),
-           ('http://edition.cnn.com/',
-            lambda url: 'edition.cnn.com/201' in url),
+#feeders = [
 #           ('http://www.politico.com/',
 #            lambda url: 'www.politico.com/news/stories' in url,
 #            bs4.BeautifulSoup),
 #           ('http://www.bbc.co.uk/news/',
 #            lambda url: 'www.bbc.co.uk/news' in url),
-           ]
+#           ]
 
 #DomainNameToClass = {'www.nytimes.com': Article,
 #                     'opinionator.blogs.nytimes.com': BlogArticle,
@@ -286,6 +263,7 @@ feeders = [
 
 ###
 domain_to_class = {}
+url_fetchers = []
 
 def get_scrapers():
     import os, importlib, scrapers
@@ -297,9 +275,11 @@ def get_scrapers():
     scrapers = set(article
         for article in values
         if type(article) is type
+        and article is not scrapers.Article
         and issubclass(article, scrapers.Article))
     for scraper in scrapers:
         domain_to_class[scraper.domain] = scraper
+        url_fetchers.append(scraper.fetch_urls)
 
 get_scrapers()
 
@@ -408,6 +388,9 @@ def update_article(article):
         article.last_update = t
         v_row.save()
         article.save()
+
+def get_all_article_urls():
+    return set(sum([map(canonicalize_url, x()) for x in url_fetchers], []))
 
 def update_articles():
     for url in get_all_article_urls():

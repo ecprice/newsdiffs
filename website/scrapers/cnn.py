@@ -3,6 +3,9 @@ from . import *
 class CNNArticle(Article):
     SUFFIX = ''
     domain = 'edition.cnn.com'
+    fetcher_url = 'http://edition.cnn.com/'
+    @staticmethod
+    def article_url_filter(url): return 'edition.cnn.com/201' in url
 
     def _parse(self, html):
         from BeautifulSoup import BeautifulSoup

@@ -4,6 +4,9 @@ from . import *
 class NytArticle(Article):
     SUFFIX = '?pagewanted=all'
     domain = 'www.nytimes.com'
+    fetcher_url = 'http://www.nytimes.com/'
+    @staticmethod
+    def article_url_filter(url): return 'www.nytimes.com/201' in url
 
     def _parse(self, html):
         from BeautifulSoup import BeautifulSoup
