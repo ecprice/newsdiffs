@@ -5,15 +5,11 @@ import subprocess
 import urllib2
 import httplib
 import os
-import errno
 from frontend import models
 import re
 from datetime import datetime, timedelta
 import traceback
 import sqlalchemy
-import time
-import socket
-import cookielib
 
 import diff_match_patch
 
@@ -24,8 +20,8 @@ from BeautifulSoup import BeautifulSoup, Tag
 # This is BeautifulSoup 4
 import bs4
 
-GIT_PROGRAM='git'
-
+import _monkeypatches
+from _utils import *
 
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
@@ -118,109 +114,6 @@ def migrate_versions():
             pass
 
 DATE_FORMAT = '%B %d, %Y at %l:%M%P EDT'
-
-# Begin utility functions
-
-# subprocess.check_output appeared in python 2.7.
-# Linerva only has 2.6
-def check_output(*popenargs, **kwargs):
-    r"""Run command with arguments and return its output as a byte string.
-
-    If the exit code was non-zero it raises a CalledProcessError.  The
-    CalledProcessError object will have the return code in the returncode
-    attribute and output in the output attribute.
-
-    The arguments are the same as for the Popen constructor.  Example:
-
-    >>> check_output(["ls", "-l", "/dev/null"])
-    'crw-rw-rw- 1 root root 1, 3 Oct 18  2007 /dev/null\n'
-
-    The stdout argument is not allowed as it is used internally.
-    To capture standard error in the result, use stderr=STDOUT.
-
-    >>> check_output(["/bin/sh", "-c",
-    ...               "ls -l non_existent_file ; exit 0"],
-    ...              stderr=STDOUT)
-    'ls: non_existent_file: No such file or directory\n'
-    """
-    from subprocess import PIPE, CalledProcessError, Popen
-    if 'stdout' in kwargs:
-        raise ValueError('stdout argument not allowed, it will be overridden.')
-    process = Popen(stdout=PIPE, *popenargs, **kwargs)
-    output, unused_err = process.communicate()
-    retcode = process.poll()
-    if retcode:
-        cmd = kwargs.get("args")
-        if cmd is None:
-            cmd = popenargs[0]
-        raise CalledProcessError(retcode, cmd, output=output)
-    return output
-
-if not hasattr(subprocess, 'check_output'):
-    subprocess.check_output = check_output
-
-def mkdir_p(path):
-    try:
-        os.makedirs(path)
-    except OSError as exc: # Python >2.5
-        if exc.errno == errno.EEXIST:
-            pass
-        else:
-            raise
-
-# Begin hot patch for https://bugs.launchpad.net/bugs/788986
-# Ick.
-def bs_fixed_getText(self, separator=u""):
-    bsmod = sys.modules[BeautifulSoup.__module__]
-    if not len(self.contents):
-        return u""
-    stopNode = self._lastRecursiveChild().next
-    strings = []
-    current = self.contents[0]
-    while current is not stopNode:
-        if isinstance(current, bsmod.NavigableString):
-            strings.append(current)
-        current = current.next
-    return separator.join(strings)
-sys.modules[BeautifulSoup.__module__].Tag.getText = bs_fixed_getText
-# End fix
-
-def canonicalize_url(url):
-    return url.split('?')[0].split('#')[0].strip()
-
-def strip_prefix(string, prefix):
-    if string.startswith(prefix):
-        string = string[len(prefix):]
-    return string
-
-def url_to_filename(url):
-    return strip_prefix(url, 'http://').rstrip('/')
-
-def grab_url(url, max_depth=5, opener=None):
-    if opener is None:
-        cj = cookielib.CookieJar()
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-    retry = False
-    try:
-        text = opener.open(url, timeout=5).read()
-        if '<title>NY Times Advertisement</title>' in text:
-            retry = True
-    except socket.timeout:
-        retry = True
-    if retry:
-        if max_depth == 0:
-            raise Exception('Too many attempts to download %s' % url)
-        time.sleep(0.5)
-        return grab_url(url, max_depth-1, opener)
-    return text
-
-def strip_whitespace(text):
-    lines = text.split('\n')
-    return '\n'.join(x.strip().rstrip(u'\xa0') for x in lines).strip() + '\n'
-
-# End utility functions
-
-
 
 #Article urls for a single website
 def find_article_urls(feeder_url, filter_article, SoupVersion=BeautifulSoup):
@@ -453,13 +346,13 @@ class TagesschauArticle(Article):
 
 feeders = [('http://www.nytimes.com/',
             lambda url: 'www.nytimes.com/201' in url),
-           ('http://edition.cnn.com/',
-            lambda url: 'edition.cnn.com/201' in url),
-           ('http://www.politico.com/',
-            lambda url: 'www.politico.com/news/stories' in url,
-            bs4.BeautifulSoup),
-           ('http://www.bbc.co.uk/news/',
-            lambda url: 'www.bbc.co.uk/news' in url),
+#           ('http://edition.cnn.com/',
+#            lambda url: 'edition.cnn.com/201' in url),
+#           ('http://www.politico.com/',
+#            lambda url: 'www.politico.com/news/stories' in url,
+#            bs4.BeautifulSoup),
+#           ('http://www.bbc.co.uk/news/',
+#            lambda url: 'www.bbc.co.uk/news' in url),
            ]
 
 DomainNameToClass = {'www.nytimes.com': Article,
