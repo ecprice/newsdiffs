@@ -519,14 +519,12 @@ def add_to_git_repo(data, filename):
     if not already_exists:
         subprocess.call([GIT_PROGRAM, 'add', filename], cwd=models.GIT_DIR)
         commit_message = 'Adding file %s' % filename
-        return_value = 2
     else:
-        return_value = 1 if not boring else 3
         commit_message = 'Change to %s' % filename
     subprocess.call([GIT_PROGRAM, 'commit', filename, '-m', commit_message],
                     cwd=models.GIT_DIR)
     v = subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1', filename], cwd=models.GIT_DIR).strip()
-    return (return_value, v)
+    return v, boring
 
 #Update url in git
 #Return whether it changed
@@ -549,17 +547,16 @@ def update_article(article):
     if not parsed_article.real_article:
         return
     to_store = unicode(parsed_article).encode('utf8')
-    (retval, v) = add_to_git_repo(to_store, url_to_filename(article.url))
+    v, boring = add_to_git_repo(to_store, url_to_filename(article.url))
     if v:
         print 'Modifying! new blob: %s' % v
         v_row = models.Version(v=v,
+                               boring=boring,
                                title=parsed_article.title,
                                byline=parsed_article.byline,
                                date=t,
                                article=article,
                                )
-        if retval == 3:
-            v_row.boring = True
         article.last_update = t
         v_row.save()
         article.save()
