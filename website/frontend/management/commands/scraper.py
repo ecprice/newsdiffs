@@ -531,11 +531,11 @@ def add_to_git_repo(data, filename):
 
     open(full_path, 'w').write(data)
     if not already_exists:
-        subprocess.call([GIT_PROGRAM, 'add', filename], cwd=models.GIT_DIR)
+        subprocess.call([GIT_PROGRAM, 'add', '-f', filename], cwd=models.GIT_DIR)
         commit_message = 'Adding file %s' % filename
     else:
         commit_message = 'Change to %s' % filename
-    subprocess.call([GIT_PROGRAM, 'commit', filename, '-m', commit_message],
+    subprocess.call([GIT_PROGRAM, 'commit', '-q', filename, '-m', commit_message],
                     cwd=models.GIT_DIR)
     v = subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1', filename], cwd=models.GIT_DIR).strip()
     return v, boring, diff_info
@@ -546,35 +546,38 @@ def update_article(article):
     try:
         parser = get_parser(article.url)
     except KeyError:
-        print >> sys.stderr, 'Unable to parse domain, skipping'
+        print >> sys.stderr, 'unable to parse domain, skipping'
         return
+
     try:
         parsed_article = parser(article.url)
-        t = datetime.now()
+        article.last_check = datetime.now()
+        # XXX should be parsed and read from parsed_article, right?
+        date = datetime.now()
     except (AttributeError, urllib2.HTTPError, httplib.HTTPException), e:
         if isinstance(e, urllib2.HTTPError) and e.msg == 'Gone':
             return
-        print >> sys.stderr, 'Exception when parsing', article.url
+        print >> sys.stderr, 'exception when parsing', article.url
         traceback.print_exc()
-        print >> sys.stderr, 'Continuing'
         return
     if not parsed_article.real_article:
         return
     to_store = unicode(parsed_article).encode('utf8')
     v, boring, diff_info = add_to_git_repo(to_store, url_to_filename(article.url))
     if v:
-        print 'Modifying! new blob: %s' % v
+        print 'modifying! new blob: %s' % v
         v_row = models.Version(v=v,
                                boring=boring,
                                title=parsed_article.title,
                                byline=parsed_article.byline,
-                               date=t,
+                               date=date,
                                article=article,
                                )
         v_row.diff_info = diff_info
-        article.last_update = t
+        article.last_update = date
+
         v_row.save()
-        article.save()
+    article.save()
 
 def update_articles():
     for url in get_all_article_urls():
@@ -594,29 +597,36 @@ def get_update_delay(minutes_since_update):
     else:
         return 60*24*7
 
+def get_update_priority(article):
+    return (article.minutes_since_check() * 1.
+            / get_update_delay(article.minutes_since_update()))
+
 def update_versions(do_all=False):
     articles = list(models.Article.objects.all())
     total_articles = len(articles)
 
-    update_priority = lambda x: x.minutes_since_check() * 1. / get_update_delay(x.minutes_since_update())
-    articles = sorted([a for a in articles if (update_priority(a) > 1 or do_all)], key=update_priority, reverse=True)
+    articles = [a for a in articles if (get_update_priority(a) > 1 or do_all)]
+    articles = sorted(articles, key=get_update_priority, reverse=True)
 
-    print 'Checking %s of %s articles' % (len(articles), total_articles)
+    print 'checking {0} of {1} articles'.format(len(articles), total_articles)
+
     for i, article in enumerate(articles):
-        print 'Woo:', article.minutes_since_update(), article.minutes_since_check(), update_priority(article), '(%s/%s)' % (i+1, len(articles))
+        print '{0}/{1} priority {2}'.format(i+1, len(articles), get_update_priority(article))
+
         delay = get_update_delay(article.minutes_since_update())
         if article.minutes_since_check() < delay and not do_all:
             continue
-        print 'Considering', article.url, datetime.now()
-        article.last_check = datetime.now()
+
+        now = datetime.now()
+        print 'considering', article.url
+        
         try:
             update_article(article)
-        except Exception, e:
-            print >> sys.stderr, 'Unknown exception when updating', article.url
+        except:
+            print >> sys.stderr, 'unknown exception when updating', article.url
             traceback.print_exc()
-        article.save()
-    subprocess.call([GIT_PROGRAM, 'gc'], cwd=models.GIT_DIR)
-    print 'Done!'
+
+    subprocess.call([GIT_PROGRAM, 'gc', '--quiet'], cwd=models.GIT_DIR)
 
 legacy_bad_commit_range = (datetime(2012, 7, 8, 4, 0),
                            datetime(2012, 7, 8, 8, 0))
