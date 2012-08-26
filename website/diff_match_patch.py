@@ -49,6 +49,11 @@ class diff_match_patch:
     self.Diff_Timeout = 1.0
     # Cost of an empty edit operation in terms of edit characters.
     self.Diff_EditCost = 4
+    # How eagerly to 'split' an equality, absorbing it into neighboring
+    # large changes.  (-infinity => compare equality to min of changes;
+    # 0 => geometric mean; 1 => mean; infinity => max)
+    self.Diff_SplitWeight = -0.5
+
     # At what point is no match declared (0.0 = perfection, 1.0 = very loose).
     self.Match_Threshold = 0.5
     # How far to search for a match (0 = exact location, 1000+ = broad match).
@@ -635,6 +640,9 @@ class diff_match_patch:
       (text2_a, text2_b, text1_a, text1_b, mid_common) = hm
     return (text1_a, text1_b, text2_a, text2_b, mid_common)
 
+  def power_mean(self, a, b, p):
+    return (((a**p) + (b**p)) / 2) ** (1/p)
+
   def diff_cleanupSemantic(self, diffs):
     """Reduce the number of edits by eliminating semantically trivial
     equalities.
@@ -663,9 +671,11 @@ class diff_match_patch:
           length_deletions2 += len(diffs[pointer][1])
         # Eliminate an equality that is smaller or equal to the edits on both
         # sides of it.
-        if (lastequality and (len(lastequality) <=
-            max(length_insertions1, length_deletions1)) and
-            (len(lastequality) <= max(length_insertions2, length_deletions2))):
+        if (lastequality and
+            len(lastequality) <= self.power_mean(
+              max(length_insertions1, length_deletions1),
+              max(length_insertions2, length_deletions2),
+              self.Diff_SplitWeight)):
           # Duplicate record.
           diffs.insert(equalities[-1], (self.DIFF_DELETE, lastequality))
           # Change second copy to insert.
