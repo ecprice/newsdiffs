@@ -191,6 +191,8 @@ def is_boring(old, new):
                 return True
         except UnicodeEncodeError:
             pass
+        except:
+            print "NOT OKAY"
     return False
 
 def get_diff_info(old, new):
@@ -200,33 +202,48 @@ def get_diff_info(old, new):
     dmp.diff_cleanupSemantic(diff)
     chars_added   = sum(len(text) for (sign, text) in diff if sign == 1)
     chars_removed = sum(len(text) for (sign, text) in diff if sign == -1)
-    return dict(chars_added=chars_added, chars_removed=chars_removed)
+    return chars_added, chars_removed
 
 def add_to_git_repo(data, filename):
     full_path = os.path.join(models.GIT_DIR, filename)
     mkdir_p(os.path.dirname(full_path))
-
-    boring = False
-    diff_info = None
     already_exists = os.path.exists(full_path)
-    if already_exists:
-        previous = open(full_path).read()
-        if previous == data:
-            return None, None, None
-        if is_boring(previous, data):
-            boring = True
-        else:
-            diff_info = get_diff_info(previous, data)
-
-    open(full_path, 'w').write(data)
+    def write_file():
+        with open(full_path, 'w') as f: f.write(data)
+        
     if not already_exists:
-        subprocess.call([GIT_PROGRAM, 'add', '-f', filename], cwd=models.GIT_DIR)
-        commit_message = 'Adding file %s' % filename
+        write_file()
+        msg = git_add(filename)
+        version = git_commit(filename, msg)
+        return 'new', version, (None, None)
     else:
-        commit_message = 'Change to %s' % filename
-    subprocess.call([GIT_PROGRAM, 'commit', '-q', filename, '-m', commit_message], cwd=models.GIT_DIR)
-    v = subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1', filename], cwd=models.GIT_DIR).strip()
-    return v, boring, diff_info
+        with open(full_path) as f:
+            previous = f.read()
+        if previous == data:
+            return 'no change', None, (None, None)
+        elif is_boring(previous, data):
+            write_file()
+            msg = 'Boring change to %s' % filename
+            version = git_commit(filename, msg)
+            return 'changed', version, (None, None)
+        else:
+            write_file()
+            diff = get_diff_info(previous, data)
+            msg = 'Change to %s' % filename
+            version = git_commit(filename, msg)
+            return 'changed', version, diff
+
+def git_commit(filename, msg):
+    'returns version'
+    subprocess.call([GIT_PROGRAM, 'commit', '-q', filename, '-m', msg],
+        cwd=models.GIT_DIR)
+    return subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1', filename],
+        cwd=models.GIT_DIR).strip()
+
+def git_add(filename):
+    'returns commit message'
+    subprocess.call([GIT_PROGRAM, 'add', '-f', filename], cwd=models.GIT_DIR)
+    return 'Adding file %s' % filename
 
 #Update url in git
 #Return whether it changed
@@ -235,7 +252,6 @@ def update_article(article):
         parser = get_scraper(article.url)
     except KeyError:
         print 'no scraper'
-        print >> sys.stderr, 'no scraper for', article.url
         return
 
     try:
@@ -255,29 +271,28 @@ def update_article(article):
         print 'no article'
         return
     to_store = unicode(parsed_article).encode('utf8')
-    v, boring, diff_info = add_to_git_repo(to_store, url_to_filename(article.url))
-    if v:
-        if diff_info and not boring:
-            print '+{0} -{1}'.format(diff_info.chars_added, diff_info.chars_removed)
-        elif boring:
-            print 'boring'
-        v_row = models.Version(v=v,
-                               boring=boring,
-                               title=parsed_article.title,
-                               byline=parsed_article.byline,
-                               date=date,
-                               article=article,
+    what, version, diff = add_to_git_repo(to_store, url_to_filename(article.url))
+    print what,
+    if diff[0]:
+        print '+{0} -{1}'.format(*diff),
+    if what != 'no change':
+        v_row = models.Version(v             = version,
+                               boring        = 'boring' in what,
+                               title         = parsed_article.title,
+                               byline        = parsed_article.byline,
+                               date          = date,
+                               article       = article,
+                               chars_added   = diff[0],
+                               chars_removed = diff[1],
                                )
-        v_row.diff_info = diff_info
         article.last_update = date
-
         v_row.save()
     article.save()
+    print
 
 ###
 def fetch_urls():
     for url, fetch in url_fetchers:
-        print "fetching", url, "...",
         sys.stdout.flush()
         urls = list(map(canonicalize_url, fetch()))
         print len(urls), "urls"
@@ -321,17 +336,17 @@ def update_versions(do_all=False):
     print 'checking {0} of {1} articles'.format(len(articles), total_articles)
 
     for i, article in enumerate(articles):
+        print '    '+article.filename()
         print '{0}/{1}'.format(i+1, len(articles)),
         delay = get_update_delay(article.minutes_since_update())
         if article.minutes_since_check() < delay and not do_all:
-            print
+            print 'skip'
             continue
-        print ' '+article.url,
         sys.stdout.flush()
         try:
             update_article(article)
-        except:
-            print >> sys.stderr, 'unknown exception when updating', article.url
+        except Exception as e:
+            print >> sys.stderr, '\nERROR', article.url
             traceback.print_exc()
 
     subprocess.call([GIT_PROGRAM, 'gc', '--quiet'], cwd=models.GIT_DIR)
