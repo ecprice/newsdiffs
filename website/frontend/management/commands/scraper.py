@@ -363,6 +363,9 @@ class BBCArticle(Article):
         self.byline = ''
 
         div = soup.find('div', 'story-body')
+        if not div:
+            # Hack for video articles
+            div = soup.find('div', 'emp-decription') # Not a typo
         self.body = '\n'+'\n\n'.join([x.getText() for x in div.childGenerator() if
                                  isinstance(x, Tag) and x.name == 'p'])
 
