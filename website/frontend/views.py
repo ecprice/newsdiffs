@@ -183,10 +183,11 @@ def article_history(request):
     url = request.REQUEST.get('url')
     if url is None:
         return HttpResponseRedirect(reverse(front))
+
     try:
         article = Article.objects.get(url=url)
     except Article.DoesNotExist:
-        return Http400()
+        return render_to_response('article_history_missing.html', {'url': url})
 
     rowinfo = get_rowinfo(article)
     return render_to_response('article_history.html', {'article':article,
