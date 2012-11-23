@@ -50,7 +50,7 @@ def get_articles(source=None, distance=0):
       HAVING (age > %s  AND age < %s  AND num_vs > 1 )) T, Articles
     WHERE (version.article_id = Articles.id) and
           (version.article_id = T.article_id) and
-          version.boring = False
+          NOT version.boring
     ORDER BY date'''
 
     all_versions = models.Version.objects.raw(version_query,
