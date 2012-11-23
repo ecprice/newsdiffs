@@ -1,6 +1,9 @@
 {% extends 'template.html' %}
 
 {% block content %}
+
+{% include "find_by_uri.html" %}
+
 	<ul id="myTab" class="nav nav-tabs">
             <li {% if not source  %} class="active" {% endif %} ><a href="{% url browse '' %}" data-toggle="tab">All</a></li>
             {% for sourceopt in sources %}
