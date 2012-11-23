@@ -1,8 +1,10 @@
-from django.db import models, IntegrityError
 import re
 import subprocess
 import os
 from datetime import datetime, timedelta
+
+import simplejson as json
+from django.db import models, IntegrityError
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(THIS_DIR))
@@ -68,6 +70,7 @@ class Version(models.Model):
     byline = models.CharField(max_length=255,blank=False)
     date = models.DateTimeField(blank=False)
     boring = models.BooleanField(blank=False, default=False)
+    diff_json = models.CharField(max_length=255, null=True)
 
     def text(self):
         try:
@@ -76,6 +79,17 @@ class Version(models.Model):
                                            cwd=GIT_DIR)
         except subprocess.CalledProcessError as e:
             return None
+
+    def get_diff_info(self):
+        if self.diff_json is None:
+            return {}
+        return json.loads(self.diff_json)
+    def set_diff_info(self, val=None):
+        if val is None:
+            self.diff_json = None
+        else:
+            self.diff_json = json.dumps(val)
+    diff_info = property(get_diff_info, set_diff_info)
 
 
 class Upvote(models.Model):

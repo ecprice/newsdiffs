@@ -20,6 +20,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'HOST': 'sql.mit.edu',
         'NAME': 'ecprice+newsdiffs',
+        'USER': 'ecprice',
         'PASSWORD': pwd,
         'OPTIONS': {
 # This doesn't seem to work.
@@ -96,5 +97,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'south',
     'frontend',
 )

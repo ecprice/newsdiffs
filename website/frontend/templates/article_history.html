@@ -4,6 +4,8 @@
 
 {% block content %}
 
+{% include "find_by_uri.html" %}
+
 <h1>{{article.latest_version.title}} ({{article.publication}}), Change Log</h1>
 <h3><a href="{{article.url}}">{{article.url}}</a></h3> 
 <h3>{{article.latest_version.byline}} | First archived on {{articles.first_version.date}}</h3> 
