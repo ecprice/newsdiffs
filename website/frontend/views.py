@@ -133,7 +133,11 @@ def diffview(request):
         texts.append(v.text())
         dates.append(v.date.strftime(OUT_FORMAT))
 
-        index = [i for i, x in versions.items() if x == v][0]
+        indices = [i for i, x in versions.items() if x == v]
+        if not indices:
+            #One of these versions doesn't exist / is boring
+            return Http400()
+        index = indices[0]
         adjacent_versions.append([versions.get(index+offset)
                                   for offset in (-1, 1)])
 

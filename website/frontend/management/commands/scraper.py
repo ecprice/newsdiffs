@@ -1,19 +1,20 @@
 #!/usr/bin/python
 
-import sys
-import subprocess
-import urllib2
-import httplib
-import os
+import cookielib
+from datetime import datetime, timedelta
 import errno
 from frontend import models
+import httplib
+import logging
+import os
 import re
-from datetime import datetime, timedelta
-import traceback
-import sqlalchemy
-import time
 import socket
-import cookielib
+import sqlalchemy
+import subprocess
+import sys
+import time
+import traceback
+import urllib2
 
 import diff_match_patch
 
@@ -26,16 +27,27 @@ import bs4
 
 GIT_PROGRAM='git'
 
+# This formatter is like the default but uses a period rather than a comma
+# to separate the milliseconds
+class MyFormatter(logging.Formatter):
+    def formatTime(self, record, datefmt=None):
+        return logging.Formatter.formatTime(self, record,
+                                            datefmt).replace(',', '.')
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+formatter = MyFormatter('%(asctime)s:%(levelname)s:%(message)s')
+ch = logging.StreamHandler()
+ch.setLevel(logging.WARNING)
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
 
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-        make_option('--migrate',
-            action='store_true',
-            default=False,
-            help='Recreate version + article database from git repo'),
         make_option('--update',
             action='store_true',
             default=False,
@@ -55,68 +67,19 @@ scanned them recently, unless --all is passed.
 '''.strip()
 
     def handle(self, *args, **options):
+        ch = logging.FileHandler('/tmp/newsdiffs_logging', mode='w')
+        ch.setLevel(logging.DEBUG)
+        ch.setFormatter(formatter)
+        logger.addHandler(ch)
+
+        ch = logging.FileHandler('/tmp/newsdiffs_logging_errs', mode='a')
+        ch.setLevel(logging.WARNING)
+        ch.setFormatter(formatter)
+        logger.addHandler(ch)
+
         cleanup_git_repo()
-        if options['migrate']:
-            migrate_versions()
-        else:
-            update_articles()
-            update_versions(options['all'])
-
-
-def migrate_versions():
-    git_output = subprocess.check_output([GIT_PROGRAM, 'log'], cwd=models.GIT_DIR)
-    commits = git_output.split('\n\ncommit ')
-    commits[0] = commits[0][len('commit '):]
-    print 'beginning loop'
-    d = {}
-    versions = [x.v for x in models.Version.objects.all()]
-    for i, commit in enumerate(commits):
-        (v, author, datestr, blank, changem) = commit.splitlines()
-        if v in versions:
-            continue
-        fname = changem.split()[-1]
-        changekind = changem.split()[0]
-        if changekind == 'Reformat':
-            continue
-        date = datetime.strptime(' '.join(datestr.split()[1:-1]),
-                                 '%a %b %d %H:%M:%S %Y')
-
-        if not os.path.exists(os.path.join(models.GIT_DIR,fname)): #file introduced accidentally
-            continue
-
-        url = 'http://%s' % fname
-        try:
-            article = models.Article.objects.get(url=url)
-        except models.Article.DoesNotExist:
-            url += '/'
-            try:
-                article = models.Article.objects.get(url=url)
-            except models.Article.DoesNotExist:
-                url = url[:-1]
-                article = models.Article(url=url,
-                                         last_update=date,
-                                         last_check=date)
-                if not article.publication(): #blogs aren't actually reasonable
-                    continue
-
-                article.save()
-
-
-        text = subprocess.check_output([GIT_PROGRAM, 'show',
-                                        v+':'+fname],
-                                       cwd=models.GIT_DIR)
-        text = text.decode('utf-8')
-        (date2, title, byline) = text.splitlines()[:3]
-
-        boring = False
-
-        print '%d/%d' % (i,len(commits)), url, v, date, title, byline, boring
-        v = models.Version(article=article, v=v, date=date, title=title,
-                           byline=byline, boring=boring)
-        try:
-            v.save()
-        except models.IntegrityError:
-            pass
+        update_articles()
+        update_versions(options['all'])
 
 DATE_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
@@ -154,7 +117,9 @@ def check_output(*popenargs, **kwargs):
         cmd = kwargs.get("args")
         if cmd is None:
             cmd = popenargs[0]
-        raise CalledProcessError(retcode, cmd, output=output)
+        err = CalledProcessError(retcode, cmd)
+        err.output = output
+        raise err
     return output
 
 if not hasattr(subprocess, 'check_output'):
@@ -219,6 +184,19 @@ def strip_whitespace(text):
     lines = text.split('\n')
     return '\n'.join(x.strip().rstrip(u'\xa0') for x in lines).strip() + '\n'
 
+# from http://stackoverflow.com/questions/5842115/converting-a-string-which-contains-both-utf-8-encoded-bytestrings-and-codepoints
+# Translate a unicode string containing utf8
+def parse_double_utf8(txt):
+    def parse(m):
+        try:
+            return m.group(0).encode('latin1').decode('utf8')
+        except UnicodeDecodeError:
+            return m.group(0)
+    return re.sub(ur'[\xc2-\xf4][\x80-\xbf]+', parse, txt)
+
+def canonicalize(text):
+    return strip_whitespace(parse_double_utf8(text))
+
 # End utility functions
 
 
@@ -249,18 +227,26 @@ class Article(object):
     title = None
     date = None
     body = None
+    byline = None
     real_article = True
     meta = []
     SUFFIX = '?pagewanted=all'
 
     def __init__(self, url):
         self.url = url
-        self.html = grab_url(url + self.SUFFIX)
+        try:
+            self.html = grab_url(url + self.SUFFIX)
+        except urllib2.HTTPError as e:
+            if e.code == 404:
+                self.real_article = False
+                return
+            raise
         open('/tmp/moo', 'w').write(self.html)
         open('/tmp/moo3', 'w').write(url+self.SUFFIX)
         self._parse(self.html)
 
     def _parse(self, html):
+        logger.debug('got html')
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES)
         self.meta = soup.findAll('meta')
         self.seo_title = soup.find('meta', attrs={'name':'hdl'}).get('content')
@@ -282,7 +268,7 @@ class Article(object):
                                    soup.findAll('nyt_correction_bottom')) or '\n'
 
     def __unicode__(self):
-        return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
+        return canonicalize(u'\n'.join((self.date, self.title, self.byline,
                                             self.top_correction, self.body,
                                             self.authorid,
                                             self.bottom_correction,)))
@@ -291,10 +277,10 @@ class CNNArticle(Article):
     SUFFIX = ''
 
     def _parse(self, html):
-        print 'got html'
+        logger.debug('got html')
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
                              fromEncoding='utf-8')
-        print 'parsed'
+        logger.debug('parsed')
         p_tags = soup.findAll('p', attrs={'class':re.compile(r'\bcnn_storypgraphtxt\b')})
         if not p_tags:
             self.real_article = False
@@ -317,7 +303,7 @@ class CNNArticle(Article):
         authorids = soup.find('div', attrs={'class':'authorIdentification'})
 
     def __unicode__(self):
-        return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
+        return canonicalize(u'\n'.join((self.date, self.title, self.byline,
                                             self.body,)))
 
 
@@ -325,9 +311,11 @@ class PoliticoArticle(Article):
     SUFFIX = ''
 
     def _parse(self, html):
+        logger.debug('got html 1')
         soup = bs4.BeautifulSoup(html)
         print_link = soup.findAll('a', text='Print')[0].get('href')
         html2 = grab_url(print_link)
+        logger.debug('got html 2')
         # Now we have to switch back to bs3.  Hilarious.
         # and the labeled encoding is wrong, so force utf-8.
         soup = BeautifulSoup(html2, convertEntities=BeautifulSoup.HTML_ENTITIES,
@@ -346,7 +334,7 @@ class PoliticoArticle(Article):
         self.body = '\n'+'\n\n'.join([p.getText() for p in p_tags])
 
     def __unicode__(self):
-        return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
+        return canonicalize(u'\n'.join((self.date, self.title, self.byline,
                                             self.body,)))
 
 
@@ -354,23 +342,26 @@ class BBCArticle(Article):
     SUFFIX = '?print=true'
 
     def _parse(self, html):
-        print 'got html'
+        logger.debug('got html')
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
                              fromEncoding='utf-8')
-        print 'parsed'
+        logger.debug('parsed')
 
         self.meta = soup.findAll('meta')
         self.title = soup.find('h1', 'story-header').getText()
         self.byline = ''
 
         div = soup.find('div', 'story-body')
+        if div is None:
+            self.real_article = False
+            return
         self.body = '\n'+'\n\n'.join([x.getText() for x in div.childGenerator() if
                                  isinstance(x, Tag) and x.name == 'p'])
 
         self.date = soup.find('span', 'date').getText()
 
     def __unicode__(self):
-        return strip_whitespace(u'\n'.join((self.date, self.title, self.byline,
+        return canonicalize(u'\n'.join((self.date, self.title, self.byline,
                                             self.body,)))
 
 
@@ -387,7 +378,7 @@ class BlogArticle(Article):
         self.document = soup.find('div', attrs={'id':div_id})
 
     def __unicode__(self):
-        return strip_whitespace(self.document.getText())
+        return canonicalize(self.document.getText())
 
 
 class TagesschauArticle(Article):
@@ -490,8 +481,8 @@ windows-1251
 windows-1253
 windows-1255""".split()
 def is_boring(old, new):
-    oldu = old.decode('utf8')
-    newu = new.decode('utf8')
+    oldu = canonicalize(old.decode('utf8'))
+    newu = canonicalize(new.decode('utf8'))
 
     if oldu.splitlines()[1:] == newu.splitlines()[1:]:
         return True
@@ -499,7 +490,7 @@ def is_boring(old, new):
     for charset in CHARSET_LIST:
         try:
             if oldu.encode(charset) == new:
-                print 'Boring!'
+                logger.debug('Boring!')
                 return True
         except UnicodeEncodeError:
             pass
@@ -514,60 +505,117 @@ def get_diff_info(old, new):
     chars_removed = sum(len(text) for (sign, text) in diff if sign == -1)
     return dict(chars_added=chars_added, chars_removed=chars_removed)
 
-def add_to_git_repo(data, filename):
+def add_to_git_repo(data, filename, article):
+    start_time = time.time()
+
     full_path = os.path.join(models.GIT_DIR, filename)
     mkdir_p(os.path.dirname(full_path))
 
     boring = False
     diff_info = None
-    already_exists = os.path.exists(full_path)
+
+    try:
+        previous = subprocess.check_output([GIT_PROGRAM, 'show', 'HEAD:'+filename], cwd=models.GIT_DIR, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        if e.output.endswith("does not exist in 'HEAD'\n"):
+            already_exists = False
+        else:
+            raise
+    else:
+        already_exists = True
+
+
+    open(full_path, 'w').write(data)
+
     if already_exists:
-        previous = open(full_path).read()
         if previous == data:
             return None, None, None
+
+        #Now check how many times this same version has appeared before
+        my_hash = subprocess.check_output([GIT_PROGRAM, 'hash-object',
+                                        filename], cwd=models.GIT_DIR).strip()
+
+        commits = [v.v for v in article.versions()]
+        if len(commits) > 2:
+            logger.debug('Checking for duplicates among %s commits',
+                          len(commits))
+            def get_hash(version):
+                """Return the SHA1 hash of filename in a given version"""
+                output = subprocess.check_output([GIT_PROGRAM, 'ls-tree', '-r',
+                                                  version, filename],
+                                                 cwd=models.GIT_DIR)
+                return output.split()[2]
+            hashes = map(get_hash, commits)
+
+            number_equal = sum(1 for h in hashes if h == my_hash)
+
+            logger.debug('Got %s', number_equal)
+
+            if number_equal >= 2: #Refuse to list a version more than twice
+                subprocess.check_output([GIT_PROGRAM, 'checkout', filename],
+                                        cwd=models.GIT_DIR)
+                return None, None, None
+
         if is_boring(previous, data):
             boring = True
         else:
             diff_info = get_diff_info(previous, data)
 
-    open(full_path, 'w').write(data)
+    subprocess.check_output([GIT_PROGRAM, 'add', filename], cwd=models.GIT_DIR)
     if not already_exists:
-        subprocess.call([GIT_PROGRAM, 'add', filename], cwd=models.GIT_DIR)
         commit_message = 'Adding file %s' % filename
     else:
         commit_message = 'Change to %s' % filename
-    print >> sys.stderr, 'Running git commit...'
-    subprocess.call([GIT_PROGRAM, 'commit', filename, '-m', commit_message],
+    logger.debug('Running git commit... %s', time.time()-start_time)
+    subprocess.check_output([GIT_PROGRAM, 'commit', filename,
+                             '-m', commit_message,
+                             ],
                     cwd=models.GIT_DIR)
-    print >> sys.stderr, 'git revlist...'
-    v = subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1', filename], cwd=models.GIT_DIR).strip()
-    print >> sys.stderr, 'done'
+    logger.debug('git revlist... %s', time.time()-start_time)
+
+    # Now figure out what the commit ID was.
+    # I would like this to be "git rev-list HEAD -n1 filename"
+    # unfortunately, this command is slow: it doesn't abort after the 
+    # first line is output.  Without filename, it does abort.
+    v = subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1'],
+                                cwd=models.GIT_DIR).strip()
+    logger.debug('done %s', time.time()-start_time)
     return v, boring, diff_info
+
+
+def load_article(url):
+    try:
+        parser = get_parser(url)
+    except KeyError:
+        logger.info('Unable to parse domain, skipping')
+        return
+    try:
+        parsed_article = parser(url)
+    except (AttributeError, urllib2.HTTPError, httplib.HTTPException), e:
+        if isinstance(e, urllib2.HTTPError) and e.msg == 'Gone':
+            return
+        logger.error('Exception when parsing %s', url)
+        logger.error(traceback.format_exc())
+        logger.error('Continuing')
+        return
+    if not parsed_article.real_article:
+        return
+    return parsed_article
 
 #Update url in git
 #Return whether it changed
 def update_article(article):
-    try:
-        parser = get_parser(article.url)
-    except KeyError:
-        print >> sys.stderr, 'Unable to parse domain, skipping'
-        return
-    try:
-        parsed_article = parser(article.url)
-        t = datetime.now()
-    except (AttributeError, urllib2.HTTPError, httplib.HTTPException), e:
-        if isinstance(e, urllib2.HTTPError) and e.msg == 'Gone':
-            return
-        print >> sys.stderr, 'Exception when parsing', article.url
-        traceback.print_exc()
-        print >> sys.stderr, 'Continuing'
-        return
-    if not parsed_article.real_article:
+    parsed_article = load_article(article.url)
+    if parsed_article is None:
         return
     to_store = unicode(parsed_article).encode('utf8')
-    v, boring, diff_info = add_to_git_repo(to_store, url_to_filename(article.url))
+    t = datetime.now()
+
+    v, boring, diff_info = add_to_git_repo(to_store,
+                                           url_to_filename(article.url),
+                                           article)
     if v:
-        print 'Modifying! new blob: %s' % v
+        logger.info('Modifying! new blob: %s', v)
         v_row = models.Version(v=v,
                                boring=boring,
                                title=parsed_article.title,
@@ -576,9 +624,10 @@ def update_article(article):
                                article=article,
                                )
         v_row.diff_info = diff_info
-        article.last_update = t
         v_row.save()
-        article.save()
+        if not boring:
+            article.last_update = t
+            article.save()
 
 def update_articles():
     for url in get_all_article_urls():
@@ -605,36 +654,27 @@ def update_versions(do_all=False):
     update_priority = lambda x: x.minutes_since_check() * 1. / get_update_delay(x.minutes_since_update())
     articles = sorted([a for a in articles if (update_priority(a) > 1 or do_all)], key=update_priority, reverse=True)
 
-    print 'Checking %s of %s articles' % (len(articles), total_articles)
+    logger.info('Checking %s of %s articles', len(articles), total_articles)
     for i, article in enumerate(articles):
-        print 'Woo:', article.minutes_since_update(), article.minutes_since_check(), update_priority(article), '(%s/%s)' % (i+1, len(articles))
+        logger.debug('Woo: %s %s %s (%s/%s)', article.minutes_since_update(), article.minutes_since_check(), update_priority(article), i+1, len(articles))
         delay = get_update_delay(article.minutes_since_update())
         if article.minutes_since_check() < delay and not do_all:
             continue
-        print 'Considering', article.url, datetime.now()
+        logger.info('Considering %s', article.url)
         article.last_check = datetime.now()
         try:
             update_article(article)
         except Exception, e:
-            print >> sys.stderr, 'Unknown exception when updating', article.url
-            traceback.print_exc()
+            if isinstance(e, subprocess.CalledProcessError):
+                logger.error('CalledProcessError when updating %s', article.url)
+                logger.error(repr(e.output))
+            else:
+                logger.error('Unknown exception when updating %s', article.url)
+
+            logger.error(traceback.format_exc())
         article.save()
     subprocess.call([GIT_PROGRAM, 'gc'], cwd=models.GIT_DIR)
-    print 'Done!'
-
-legacy_bad_commit_range = (datetime(2012, 7, 8, 4, 0),
-                           datetime(2012, 7, 8, 8, 0))
-legacy_bad_commit_exceptions = """
-828670ebb99e3422a203534b867c390f71d253d2
-4681bf53fccbfd460b7b3e444f602f2e92f41ff0
-795719cbee655c62f8554d79a89a999fd8ca5a9a
-2acb2377130989bf7723bea283f1af146ae6ee6b
-3955bf25ac01038cb49416292185857b717d2367
-dda84ac629f96bfd4cb792dc4db1829e76ad94e5
-64cfe3c10b03f9e854f2c24ed358f2cac4990e14
-0ac04be3af54962dc7f8bb28550267543692ec28
-2611043df5a4bfe28a050f474b1a96afbae2edb1
-""".split()
+    logger.info('Done!')
 
 #Remove index.lock if 5 minutes old
 def cleanup_git_repo():
