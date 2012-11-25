@@ -44,12 +44,13 @@
     </script>
 
       {% block head %} {% endblock %}
+     <script src="{% url static 'js/jquery.js' %}"></script> 
+	<!-- <script src="http://code.jquery.com/jquery-latest.js"></script>-->         
+	<script src="{% url static 'js/bootstrap.js'%}"></script>
+
   </head>
 
   <body>
-    <!-- <script src="{% url static 'js/jquery.js' %}"></script> -->
-	<script src="http://code.jquery.com/jquery-latest.js"></script>         
-	<script src="{% url static 'lib/bootstrap.min.js'%}"></script>
 
 
 
@@ -94,7 +95,7 @@
     <!-- Bootstrap javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    
+<!--    
     <script src="{% url static 'lib/bootstrap-alert.js' %}"></script>
     <script src="{% url static 'lib/bootstrap-modal.js' %}"></script>
     <script src="{% url static 'lib/bootstrap-dropdown.js' %}"></script>
@@ -106,6 +107,6 @@
     <script src="{% url static 'lib/bootstrap-collapse.js' %}"></script>
     <script src="{% url static 'lib/bootstrap-carousel.js' %}"></script>
     <script src="{% url static 'lib/bootstrap-typeahead.js' %}"></script>
-    
+-->    
   </body>
 </html>
