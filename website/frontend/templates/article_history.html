@@ -14,7 +14,7 @@
      <thead><tr>
 	<td>Headline</td>
 	<td>Date/Time EST Archived</td>
-	<td>Compare</td>
+	<td>Diff</td>
     </tr> </thead>
 
     {% for difflink, version in versions %}
@@ -22,7 +22,7 @@
       <td><a href="{{link}}">{{version.title}}</a></td>
       <td>{{version.date}}</td>
       {% if difflink %}
-      <td><a href="{{difflink}}">(Compare)</a></td>
+      <td><a href="{{difflink}}">(Compare with previous)</a></td>
     {% else %}
     <td></td>
     {% endif %}
