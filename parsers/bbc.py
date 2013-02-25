@@ -11,7 +11,11 @@ class BBCParser(BaseParser):
                              fromEncoding='utf-8')
 
         self.meta = soup.findAll('meta')
-        self.title = soup.find('h1', 'story-header').getText()
+        elt = soup.find('h1', 'story-header')
+        if elt is None:
+            self.real_article = False
+            return
+        self.title = elt.getText()
         self.byline = ''
         self.date = soup.find('span', 'date').getText()
 

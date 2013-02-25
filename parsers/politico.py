@@ -27,7 +27,10 @@ class PoliticoParser(BaseParser):
         self.title = soup.find('strong').getText()
         entity = soup.find('span', attrs={'class':'author'})
         children = list(entity.childGenerator())
-        self.byline = 'By ' + children[1].getText()
+        try:
+            self.byline = 'By ' + children[1].getText()
+        except IndexError:
+            self.byline = ''
         self.date = children[-1].strip()
 
         self.body = '\n'+'\n\n'.join([p.getText() for p in p_tags])

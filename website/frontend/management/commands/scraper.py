@@ -127,6 +127,30 @@ def url_to_filename(url):
     return strip_prefix(url, 'http://').rstrip('/')
 
 
+class IndexLockError(OSError):
+    pass
+
+def run_git_command(command, max_timeout=15):
+    """Run a git command like ['show', filename] and return the output.
+
+    First, wait up to max_timeout seconds for the index.lock file to go away.
+    If the index.lock file remains, raise an IndexLockError.
+
+    Still have a race condition if two programs run this at the same time.
+    """
+    end_time = time.time() + max_timeout
+    delay = 0.1
+    lock_file = os.path.join(models.GIT_DIR, '.git/index.lock')
+    while os.path.exists(lock_file):
+        if time.time() < end_time - delay:
+            time.sleep(delay)
+        else:
+            raise IndexLockError('Git index.lock file exists for %s seconds'
+                                 % max_timeout)
+    output =  subprocess.check_output([GIT_PROGRAM] + command,
+                                      cwd=models.GIT_DIR,
+                                      stderr=subprocess.STDOUT)
+    return output
 
 #Article urls for a single website
 def find_article_urls(feeder_url, filter_article, SoupVersion=BeautifulSoup):
@@ -195,9 +219,10 @@ def add_to_git_repo(data, filename, article):
     diff_info = None
 
     try:
-        previous = subprocess.check_output([GIT_PROGRAM, 'show', 'HEAD:'+filename], cwd=models.GIT_DIR, stderr=subprocess.STDOUT)
+        previous = run_git_command(['show', 'HEAD:'+filename])
     except subprocess.CalledProcessError as e:
-        if e.output.endswith("does not exist in 'HEAD'\n"):
+        if (e.output.endswith("does not exist in 'HEAD'\n") or
+            e.output.endswith("exists on disk, but not in 'HEAD'.\n")):
             already_exists = False
         else:
             raise
@@ -212,8 +237,7 @@ def add_to_git_repo(data, filename, article):
             return None, None, None
 
         #Now check how many times this same version has appeared before
-        my_hash = subprocess.check_output([GIT_PROGRAM, 'hash-object',
-                                        filename], cwd=models.GIT_DIR).strip()
+        my_hash = run_git_command(['hash-object', filename]).strip()
 
         commits = [v.v for v in article.versions()]
         if len(commits) > 2:
@@ -221,9 +245,7 @@ def add_to_git_repo(data, filename, article):
                           len(commits))
             def get_hash(version):
                 """Return the SHA1 hash of filename in a given version"""
-                output = subprocess.check_output([GIT_PROGRAM, 'ls-tree', '-r',
-                                                  version, filename],
-                                                 cwd=models.GIT_DIR)
+                output = run_git_command(['ls-tree', '-r', version, filename])
                 return output.split()[2]
             hashes = map(get_hash, commits)
 
@@ -232,8 +254,7 @@ def add_to_git_repo(data, filename, article):
             logger.debug('Got %s', number_equal)
 
             if number_equal >= 2: #Refuse to list a version more than twice
-                subprocess.check_output([GIT_PROGRAM, 'checkout', filename],
-                                        cwd=models.GIT_DIR)
+                run_git_command(['checkout', filename])
                 return None, None, None
 
         if is_boring(previous, data):
@@ -241,24 +262,22 @@ def add_to_git_repo(data, filename, article):
         else:
             diff_info = get_diff_info(previous, data)
 
-    subprocess.check_output([GIT_PROGRAM, 'add', filename], cwd=models.GIT_DIR)
+    run_git_command(['add', filename])
     if not already_exists:
         commit_message = 'Adding file %s' % filename
     else:
         commit_message = 'Change to %s' % filename
     logger.debug('Running git commit... %s', time.time()-start_time)
-    subprocess.check_output([GIT_PROGRAM, 'commit', filename,
-                             '-m', commit_message,
-                             ],
-                    cwd=models.GIT_DIR)
+    run_git_command(['commit', filename, '-m', commit_message])
     logger.debug('git revlist... %s', time.time()-start_time)
 
     # Now figure out what the commit ID was.
     # I would like this to be "git rev-list HEAD -n1 filename"
-    # unfortunately, this command is slow: it doesn't abort after the 
-    # first line is output.  Without filename, it does abort.
-    v = subprocess.check_output([GIT_PROGRAM, 'rev-list', 'HEAD', '-n1'],
-                                cwd=models.GIT_DIR).strip()
+    # unfortunately, this command is slow: it doesn't abort after the
+    # first line is output.  Without filename, it does abort; therefore
+    # we do this and hope no intervening commit occurs.
+    # (looks like the slowness is fixed in git HEAD)
+    v = run_git_command(['rev-list', 'HEAD', '-n1']).strip()
     logger.debug('done %s', time.time()-start_time)
     return v, boring, diff_info
 
@@ -353,7 +372,7 @@ def update_versions(do_all=False):
 
             logger.error(traceback.format_exc())
         article.save()
-    subprocess.call([GIT_PROGRAM, 'gc'], cwd=models.GIT_DIR)
+    run_git_command(['gc'])
     logger.info('Done!')
 
 #Remove index.lock if 5 minutes old

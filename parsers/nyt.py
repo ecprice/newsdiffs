@@ -8,14 +8,22 @@ class NYTParser(BaseParser):
     def _parse(self, html):
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES)
         self.meta = soup.findAll('meta')
-        seo_title = soup.find('meta', attrs={'name':'hdl'}).get('content')
+        try:
+            seo_title = soup.find('meta', attrs={'name':'hdl'}).get('content')
+        except AttributeError:
+            self.real_article = False
+            return
         tmp = soup.find('meta', attrs={'name':'hdl_p'})
         if tmp and tmp.get('content'):
             self.title = tmp.get('content')
         else:
             self.title = seo_title
-        self.date = soup.find('meta', attrs={'name':'dat'}).get('content')
-        self.byline = soup.find('meta', attrs={'name':'byl'}).get('content')
+        try:
+            self.date = soup.find('meta', attrs={'name':'dat'}).get('content')
+            self.byline = soup.find('meta', attrs={'name':'byl'}).get('content')
+        except AttributeError:
+            self.real_article = False
+            return
         p_tags = soup.findAll('p', attrs={'itemprop':'articleBody'})
         main_body = '\n'.join([p.getText() for p in p_tags])
         authorids = soup.find('div', attrs={'class':'authorIdentification'})
