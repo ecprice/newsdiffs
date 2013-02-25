@@ -188,6 +188,8 @@ def article_history(request):
     if url is None:
         return HttpResponseRedirect(reverse(front))
 
+    url = url.split('?')[0]
+
     try:
         article = Article.objects.get(url=url)
     except Article.DoesNotExist:
