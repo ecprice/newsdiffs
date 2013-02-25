@@ -1,0 +1,23 @@
+from baseparser import BaseParser
+from BeautifulSoup import BeautifulSoup, Tag
+
+
+class BBCParser(BaseParser):
+    SUFFIX = '?print=true'
+    domains = ['www.bbc.co.uk']
+
+    def _parse(self, html):
+        soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
+                             fromEncoding='utf-8')
+
+        self.meta = soup.findAll('meta')
+        self.title = soup.find('h1', 'story-header').getText()
+        self.byline = ''
+        self.date = soup.find('span', 'date').getText()
+
+        div = soup.find('div', 'story-body')
+        if div is None:
+            self.real_article = False
+            return
+        self.body = '\n'+'\n\n'.join([x.getText() for x in div.childGenerator()
+                                      if isinstance(x, Tag) and x.name == 'p'])

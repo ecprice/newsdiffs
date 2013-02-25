@@ -28,7 +28,7 @@ On Mac OS, the easiest way may be to install pip:
 and then
   $ pip install Django
 
- 
+
 Initial setup
 -------------
 
@@ -44,6 +44,7 @@ Do the initial setup above.  Then to start the webserver for testing:
   $ python website/manage.py runserver
 
 and visit http://localhost:8000/
+
 
 Running the scraper
 -------------------
@@ -75,3 +76,27 @@ display the associated changes.
 To run the scraper every hour, run something like:
 
  $ while true; do python website/manage.py scraper; sleep 60m; done
+
+or make a cron job.
+
+Adding new sites to the scraper
+-------------------------------
+
+The procedure for adding new sites to the scraper is outlined in
+parsers/__init__.py .  You need to
+
+  (1) Create a new parser module in parsers/ .  This should be a
+      subclass of BaseParser (in parsers/baseparser.py).  Model it off
+      the other parsers in that directory.
+
+  (2) Add the parser to 'parsers' in parsers/__init__.py
+
+  (3) Add the homepage to 'feeders' in parsers/__init__.py
+
+This should cause the scraper to start tracking the site.
+
+To make the source display properly on the website, you will need
+minor edits to two other files: website/frontend/models.py and
+website/frontend/views.py (to define the display name and create a tab
+for the source, respectively).  Search for 'bbc' to find the locations
+to edit.
