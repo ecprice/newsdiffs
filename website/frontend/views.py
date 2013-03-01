@@ -11,6 +11,7 @@ import urllib
 import django.db
 import time
 from django.template import Context, loader
+from django.views.decorators.cache import cache_page
 
 OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
@@ -82,6 +83,7 @@ def get_articles(source=None, distance=0):
 
 SOURCES = 'nytimes.com cnn.com politico.com bbc.co.uk'.split() + ['']
 
+@cache_page(60 * 30)  #30 minute cache
 def browse(request, source=''):
     if source not in SOURCES:
         raise Http404
