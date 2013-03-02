@@ -192,6 +192,9 @@ def article_history(request):
 
     url = url.split('?')[0]
 
+    if '//' not in url:
+        url = 'http://' + url
+
     try:
         article = Article.objects.get(url=url)
     except Article.DoesNotExist:
