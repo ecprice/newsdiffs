@@ -87,7 +87,12 @@ parsers/__init__.py .  You need to
 
   (1) Create a new parser module in parsers/ .  This should be a
       subclass of BaseParser (in parsers/baseparser.py).  Model it off
-      the other parsers in that directory.
+      the other parsers in that directory.  You can test the parser
+      with by running, e.g.,
+
+$ python parsers/test_parser.py bbc.BBCParser http://www.bbc.co.uk/news/uk-21649494
+
+      which will output the text that NewsDiffs would store.
 
   (2) Add the parser to 'parsers' in parsers/__init__.py
 
