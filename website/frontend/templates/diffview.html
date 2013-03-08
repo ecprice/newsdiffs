@@ -17,14 +17,24 @@
     $('#compare')[0].innerHTML = dmp.diff_prettyHtml(diff);
   });
 </script>
+
+  <style type="text/css">
+  del {
+    background-color: #ffa0a0;
+  }
+  ins {
+    background-color: #a0ffa0;
+  }
+  </style>
+
 {% endblock head %}
 
 {% block content %}
     <h2>Comparing: {{title}}</h2>
     <h3><a href="{{article_url}}">{{article_url}}</a></h3>
     <ul>
-      <li><del style="background:#ffe6e6;">Pink: Archived {{date1}}</del></li>
-      <li><ins style="background:#e6ffe6;">Green: Archived {{date2}}</ins></li>
+      <li><del>Pink: Archived {{date1}}</del></li>
+      <li><ins>Green: Archived {{date2}}</ins></li>
     </ul>
     <p>
       {% if prev %}

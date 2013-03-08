@@ -1256,10 +1256,10 @@ diff_match_patch.prototype.diff_prettyHtml = function(diffs) {
     var text = html.replace(pattern_para, symbol_para);
     switch (op) {
       case DIFF_INSERT:
-        fragments[x] = '<ins style="background:#e6ffe6;">' + text + '</ins>';
+        fragments[x] = '<ins>' + text + '</ins>';
         break;
       case DIFF_DELETE:
-        fragments[x] = '<del style="background:#ffe6e6;">' + text + '</del>';
+        fragments[x] = '<del>' + text + '</del>';
         break;
       case DIFF_EQUAL:
         fragments[x] = '<span>' + text + '</span>';
