@@ -1,4 +1,5 @@
 {% extends 'template.html' %}
+{% load url from future %}
 
 
 {% block title %}Error{% endblock title%}
@@ -8,6 +9,6 @@
 <h1>Oops, this doesn't look right</h1>
 <p>
 Hm. If you are on this page, something went wrong.
-<p>If you want to tell us what, you can <a href="{% url contact %}">contact us</a>.
+<p>If you want to tell us what, you can <a href="{% url 'contact' %}">contact us</a>.
   
 {% endblock content%}

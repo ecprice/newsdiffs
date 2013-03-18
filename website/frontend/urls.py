@@ -12,7 +12,5 @@ urlpatterns = patterns('',
   url(r'^subscribe/$', 'frontend.views.subscribe', name='subscribe'),
   url(r'^press/$', 'frontend.views.press', name='press'),
   url(r'^article-history/$', 'frontend.views.article_history', name='article_history'),
-  url(r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/static/images/favicon.ico'}),
-  url(r'^assets/ico/favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/static/images/favicon.ico'}),
   url(r'^$', 'frontend.views.front', name='root'),
 )

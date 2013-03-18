@@ -1,10 +1,11 @@
 {% extends "template.html" %}
+{% load url from future %}
 
 {% block head %}
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
 
-<script src="{% url static 'lib/diff_match_patch_uncompressed.js'%}" type="text/javascript"></script>
+<script src="{% url 'static' 'lib/diff_match_patch_uncompressed.js'%}" type="text/javascript"></script>
 
 <script type="text/javascript">
   var text1 = '{{text1|escapejs}}';
@@ -42,7 +43,7 @@
       {% else %}
       No previous revision
       {% endif %} |
-      <a href="{% url article_history %}?url={{article_url}}">All changes</a>
+      <a href="{% url 'article_history' %}?url={{article_url}}">All changes</a>
       |
       {% if next %}
       <a href="{{next}}">Later revision =></a>
@@ -52,7 +53,7 @@
     </p>
 
 <!--
-Are these changes interesting?   <form action="{% url upvote %}" method=POST>
+Are these changes interesting?   <form action="{% url 'upvote' %}" method=POST>
       <input type=hidden name=article_url value={{article_url}}>
       <input type=hidden name=diff_v1 value={{v1}}>
       <input type=hidden name=diff_v2 value={{v2}}>

@@ -1,13 +1,14 @@
 {% extends 'template.html' %}
+{% load url from future %}
 
 {% block content %}
 
 {% include "find_by_uri.html" %}
 
 	<ul id="myTab" class="nav nav-tabs">
-            <li {% if not source  %} class="active" {% endif %} ><a href="{% url browse '' %}" data-toggle="tab">All</a></li>
+            <li {% if not source  %} class="active" {% endif %} ><a href="{% url 'browse' %}" data-toggle="tab">All</a></li>
             {% for sourceopt in sources %}
-            <li {% ifequal source sourceopt %}class="active"{% endifequal %}><a href="{% url browse sourceopt %}" data-toggle="tab">{{sourceopt}}</a></li>
+            <li {% ifequal source sourceopt %}class="active"{% endifequal %}><a href="{% url 'browse' sourceopt %}" data-toggle="tab">{{sourceopt}}</a></li>
             {% endfor %}
               </ul>
             </li>
@@ -20,7 +21,7 @@
     <table class="table table-condensed"  style="width:100%">
       <thead><tr><th text-align:"left";>Article</th><th>Version</th><th>Diff</th></tr></thead>
       {% for article, last_version, versions in articles %}
-      <tr><td rowspan="{{versions|length}}" valign="top"><a href="{% url article_history %}?url={{article.url}}">{{last_version.title}}</a> (<a href="{{article.url}}">{{article.publication}}</a>)<br>{{last_version.byline}}</td>
+      <tr><td rowspan="{{versions|length}}" valign="top"><a href="{% url 'article_history' %}?url={{article.url}}">{{last_version.title}}</a> (<a href="{{article.url}}">{{article.publication}}</a>)<br>{{last_version.byline}}</td>
         {% for difflink, version in versions %}
         <td>{{version.date}}</td>
         {% if difflink %}
@@ -35,7 +36,7 @@
     {% if i == page %}
     {{i}}
     {% else %}
-    <a href="{% url browse source %}?page={{i}}">{{i}}</a>
+    <a href="{% url 'browse' source %}?page={{i}}">{{i}}</a>
     {% endif %}
     {% endfor %}
 
