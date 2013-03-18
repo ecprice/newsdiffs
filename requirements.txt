@@ -1,0 +1,4 @@
+Django <= 1.5
+simplejson
+beautifulsoup4
+beautifulsoup
