@@ -85,7 +85,6 @@ def canonicalize(text):
 
 # End utility functions
 
-
 # Base Parser
 # To create a new parser, subclass and define _parse(html).
 class BaseParser(object):
@@ -102,6 +101,13 @@ class BaseParser(object):
     SUFFIX = ''         # append suffix, like '?fullpage=yes', to urls
 
     meta = []  # Currently unused.
+
+    # Used when finding articles to parse
+    feeder_base = None  # Look for links on this page
+    feeder_pat = None   # matching this regular expression
+
+    feeder_bs = BeautifulSoup #use this version of beautifulsoup for feed
+
 
     def __init__(self, url):
         self.url = url
@@ -125,3 +131,17 @@ class BaseParser(object):
     def __unicode__(self):
         return canonicalize(u'\n'.join((self.date, self.title, self.byline,
                                         self.body,)))
+
+    @classmethod
+    def feed_urls(cls):
+        html = grab_url(cls.feeder_base)
+        soup = cls.feeder_bs(html)
+
+        # "or ''" to make None into str
+        urls = [a.get('href') or '' for a in soup.findAll('a')]
+
+        # If no http://, prepend domain name
+        domain = '/'.join(cls.feeder_base.split('/')[:3])
+        urls = [url if '://' in url else domain + url for url in urls]
+
+        return [url for url in urls if re.search(cls.feeder_pat, url)]

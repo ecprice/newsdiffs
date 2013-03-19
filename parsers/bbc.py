@@ -6,6 +6,9 @@ class BBCParser(BaseParser):
     SUFFIX = '?print=true'
     domains = ['www.bbc.co.uk']
 
+    feeder_base = 'http://www.bbc.co.uk/news/'
+    feeder_pat  = '^http://www.bbc.co.uk/news/'
+
     def _parse(self, html):
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
                              fromEncoding='utf-8')

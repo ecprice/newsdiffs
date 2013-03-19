@@ -90,13 +90,15 @@ parsers/__init__.py .  You need to
       the other parsers in that directory.  You can test the parser
       with by running, e.g.,
 
+$ python parsers/test_parser.py bbc.BBCParser
+
+      which will output a list of URLs to track, and
+
 $ python parsers/test_parser.py bbc.BBCParser http://www.bbc.co.uk/news/uk-21649494
 
       which will output the text that NewsDiffs would store.
 
   (2) Add the parser to 'parsers' in parsers/__init__.py
-
-  (3) Add the homepage to 'feeders' in parsers/__init__.py
 
 This should cause the scraper to start tracking the site.
 

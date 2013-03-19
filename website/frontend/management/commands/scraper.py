@@ -152,22 +152,10 @@ def run_git_command(command, max_timeout=15):
                                       stderr=subprocess.STDOUT)
     return output
 
-#Article urls for a single website
-def find_article_urls(feeder_url, filter_article, SoupVersion=BeautifulSoup):
-    html = grab_url(feeder_url)
-    soup = SoupVersion(html)
-
-    # "or ''" to make None into str
-    urls = [a.get('href') or '' for a in soup.findAll('a')]
-
-    domain = '/'.join(feeder_url.split('/')[:3])
-    urls = [url if '://' in url else domain + url for url in urls]
-    return [url for url in urls if filter_article(url)]
-
 def get_all_article_urls():
     ans = set()
     for feeder in parsers.feeders:
-        urls = find_article_urls(*feeder)
+        urls = feeder()
         ans = ans.union(map(canonicalize_url, urls))
     return ans
 

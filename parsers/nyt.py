@@ -5,6 +5,9 @@ class NYTParser(BaseParser):
     SUFFIX = '?pagewanted=all'
     domains = ['www.nytimes.com']
 
+    feeder_base = 'http://www.nytimes.com/'
+    feeder_pat  = '^http://www.nytimes.com/201'
+
     def _parse(self, html):
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES)
         self.meta = soup.findAll('meta')

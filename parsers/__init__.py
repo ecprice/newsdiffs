@@ -1,13 +1,9 @@
 #!/usr/bin/python
 
-import BeautifulSoup
-import bs4
-
 # To start tracking a new site:
 #  - create a parser class in another file, based off (say) bbc.BBCParser
 #  - add it to parsers (below)
-#  - add the homepage of the site to feeders (below)
-
+# Test with test_parser.py
 
 # List of parsers to import and use based on parser.domains
 
@@ -16,7 +12,6 @@ nyt.NYTParser
 cnn.CNNParser
 politico.PoliticoParser
 bbc.BBCParser
-tagesschau.TagesschauParser
 """.split()
 
 parser_dict = {}
@@ -31,23 +26,8 @@ for parsername in parsers:
 def get_parser(url):
     return parser_dict[url.split('/')[2]]
 
+# Each feeder places URLs into the database to be checked periodically.
 
-# Determine which URLs get into the database to be checked periodically.
-
-# The first entry is the homepage to look for urls
-# The second entry is a filter on urls, returning True on urls to track
-# The (optional) third entry is the BeautifulSoup version to use when
-#  parsing the homepage.
-
-feeders = [('http://www.nytimes.com/',
-            lambda url: 'www.nytimes.com/201' in url),
-           ('http://edition.cnn.com/',
-            lambda url: 'edition.cnn.com/201' in url),
-           ('http://www.politico.com/',
-            lambda url: 'www.politico.com/news/stories' in url,
-            bs4.BeautifulSoup),
-           ('http://www.bbc.co.uk/news/',
-            lambda url: 'www.bbc.co.uk/news' in url),
-           ]
+feeders = [parser.feed_urls for parser in parser_dict.values()]
 
 __all__ = ['feeders', 'get_parser']

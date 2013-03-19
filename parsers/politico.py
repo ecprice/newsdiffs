@@ -11,6 +11,11 @@ import bs4
 class PoliticoParser(BaseParser):
     domains = ['www.politico.com']
 
+    feeder_base = 'http://www.politico.com/'
+    feeder_pat  = '^http://www.politico.com/(news/stories|story)/'
+
+    feeder_bs = bs4.BeautifulSoup
+
     def _parse(self, html):
         soup = bs4.BeautifulSoup(html)
         print_link = soup.findAll('a', text='Print')[0].get('href')
