@@ -169,10 +169,10 @@ def diff_internal(article, url, v1, v2):
     links = []
     for i in range(2):
         if all(x[i] for x in adjacent_versions):
-            links.append('%s?%s' % (reverse(diffview),
-                                    urllib.urlencode(dict(url=url,
-                                                          v1=adjacent_versions[0][i].v,
-                                                          v2=adjacent_versions[1][i].v,))))
+            diffl = reverse('diffview', kwargs=dict(vid1=adjacent_versions[0][i].id,
+                                                    vid2=adjacent_versions[1][i].id,
+                                                    urlarg=article.filename()))
+            links.append(diffl)
         else:
             links.append('')
 
