@@ -326,9 +326,9 @@ def get_update_delay(minutes_since_update):
     if minutes_since_update < 60*3:
         return 15
     elif days_since_update < 1:
-        return 30
+        return 60
     elif days_since_update < 7:
-        return 120
+        return 180
     elif days_since_update < 30:
         return 60*24
     else:
