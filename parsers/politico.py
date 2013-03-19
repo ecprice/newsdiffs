@@ -28,6 +28,8 @@ class PoliticoParser(BaseParser):
 
         self.meta = soup.findAll('meta')
         p_tags = soup.findAll('p')[1:]
+        real_p_tags = [p for p in p_tags if
+                       not p.findAll(attrs={'class':"twitter-follow-button"})]
 
         self.title = soup.find('strong').getText()
         entity = soup.find('span', attrs={'class':'author'})
@@ -38,4 +40,4 @@ class PoliticoParser(BaseParser):
             self.byline = ''
         self.date = children[-1].strip()
 
-        self.body = '\n'+'\n\n'.join([p.getText() for p in p_tags])
+        self.body = '\n'+'\n\n'.join([p.getText() for p in real_p_tags])
