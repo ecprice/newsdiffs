@@ -22,7 +22,11 @@ class CNNParser(BaseParser):
         self.meta = soup.findAll('meta')
         self.title = soup.find('meta', attrs={'itemprop':'headline'}).get('content')
         datestr = soup.find('meta', attrs={'itemprop':'dateModified'}).get('content')
-        date = datetime.strptime(datestr, '%Y-%m-%dT%H:%M:%SZ') - timedelta(hours=4)
+        if datestr:
+            date = datetime.strptime(datestr, '%Y-%m-%dT%H:%M:%SZ') - timedelta(hours=4)
+        else:
+            datestr = ''
+
         self.date = date.strftime(DATE_FORMAT)
         self.byline = soup.find('meta', attrs={'itemprop':'author'}).get('content')
         lede = p_tags[0].previousSibling.previousSibling
