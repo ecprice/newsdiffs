@@ -44,6 +44,8 @@ if False: #django 1.3
 # system time zone.
 TIME_ZONE = 'America/New_York'
 
+DATETIME_FORMAT = 'F j, Y, g:i a'
+
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
