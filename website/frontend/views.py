@@ -103,7 +103,7 @@ def browse(request, source=''):
             })
 
 
-def diffview(request):
+def old_diffview(request):
     url = request.REQUEST.get('url')
     v1tag = request.REQUEST.get('v1')
     v2tag = request.REQUEST.get('v2')
@@ -122,7 +122,26 @@ def diffview(request):
         return Http400()
     assert(v1.article == article)
     assert(v2.article == article)
+    return diff_internal(article, url, v1, v2)
 
+def new_diffview(request, vid1, vid2, urlarg):
+    try:
+        v1 = Version.objects.get(id=int(vid1))
+        v2 = Version.objects.get(id=int(vid2))
+    except Version.DoesNotExist:
+        raise Http404
+
+    article = v1.article
+    url = article.url
+
+    if (v1.article != article or
+        v2.article != article or
+        article.filename() != urlarg):
+        raise Http404
+
+    return diff_internal(article, url, v1, v2)
+
+def diff_internal(article, url, v1, v2):
     title = article.latest_version().title
 
     versions = dict(enumerate(article.versions()))
@@ -169,19 +188,18 @@ def get_rowinfo(article, version_lst=None):
     if version_lst is None:
         version_lst = article.versions()
     rowinfo = []
-    lastcommit = None
+    lastv = None
+    urlarg = article.filename()
     for version in version_lst:
         date = version.date
-        commit = version.v
-        if lastcommit is None:
+        if lastv is None:
             diffl = ''
         else:
-            diffl = '%s?%s' % (reverse(diffview),
-                               urllib.urlencode(dict(url=article.url,
-                                                     v1=lastcommit,
-                                                     v2=commit)))
+            diffl = reverse('diffview', kwargs=dict(vid1=lastv.id,
+                                                    vid2=version.id,
+                                                    urlarg=urlarg))
         rowinfo.append((diffl, version))
-        lastcommit = commit
+        lastv = version
     rowinfo.reverse()
     return rowinfo
 
