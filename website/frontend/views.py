@@ -125,6 +125,8 @@ def old_diffview(request):
     return diff_internal(article, url, v1, v2)
 
 def new_diffview(request, vid1, vid2, urlarg):
+    # urlarg is unused, and only for readability
+    # Could be strict and enforce urlarg == article.filename()
     try:
         v1 = Version.objects.get(id=int(vid1))
         v2 = Version.objects.get(id=int(vid2))
@@ -134,9 +136,7 @@ def new_diffview(request, vid1, vid2, urlarg):
     article = v1.article
     url = article.url
 
-    if (v1.article != article or
-        v2.article != article or
-        article.filename() != urlarg):
+    if v1.article != v2.article:
         raise Http404
 
     return diff_internal(article, url, v1, v2)
