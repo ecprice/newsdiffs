@@ -1,7 +1,7 @@
 import datetime
 import re
 
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from models import Article, Version
 import models
 import simplejson
@@ -104,6 +104,7 @@ def browse(request, source=''):
 
 
 def old_diffview(request):
+    """Support for legacy diff urls"""
     url = request.REQUEST.get('url')
     v1tag = request.REQUEST.get('v1')
     v2tag = request.REQUEST.get('v2')
@@ -120,11 +121,14 @@ def old_diffview(request):
         article = Article.objects.get(url=url)
     except Article.DoesNotExist:
         return Http400()
-    assert(v1.article == article)
-    assert(v2.article == article)
-    return diff_internal(article, url, v1, v2)
 
-def new_diffview(request, vid1, vid2, urlarg):
+    return redirect(reverse('diffview', kwargs=dict(vid1=v1.id,
+                                                    vid2=v2.id,
+                                                    urlarg=article.filename())),
+                    permanent=True)
+
+
+def diffview(request, vid1, vid2, urlarg):
     # urlarg is unused, and only for readability
     # Could be strict and enforce urlarg == article.filename()
     try:
@@ -139,9 +143,6 @@ def new_diffview(request, vid1, vid2, urlarg):
     if v1.article != v2.article:
         raise Http404
 
-    return diff_internal(article, url, v1, v2)
-
-def diff_internal(article, url, v1, v2):
     title = article.latest_version().title
 
     versions = dict(enumerate(article.versions()))
