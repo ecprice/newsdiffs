@@ -2,7 +2,6 @@ from baseparser import BaseParser
 import re
 from BeautifulSoup import BeautifulSoup
 from datetime import datetime, timedelta
-import date
 
 DATE_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
@@ -24,11 +23,11 @@ class CNNParser(BaseParser):
         self.title = soup.find('meta', attrs={'itemprop':'headline'}).get('content')
         datestr = soup.find('meta', attrs={'itemprop':'dateModified'}).get('content')
         if datestr:
-            date = datetime.strptime(datestr, '%Y-%m-%dT%H:%M:%SZ') - timedelta(hours=4)
+            datet = datetime.strptime(datestr, '%Y-%m-%dT%H:%M:%SZ') - timedelta(hours=4)
+            self.date = datet.strftime(DATE_FORMAT)
         else:
-            datestr = ''
+            self.date = ''
 
-        self.date = date.strftime(DATE_FORMAT)
         self.byline = soup.find('meta', attrs={'itemprop':'author'}).get('content')
         lede = p_tags[0].previousSibling.previousSibling
 
