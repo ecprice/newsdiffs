@@ -176,7 +176,12 @@ def is_boring(old, new):
     oldu = canonicalize(old.decode('utf8'))
     newu = canonicalize(new.decode('utf8'))
 
-    if oldu.splitlines()[1:] == newu.splitlines()[1:]:
+    def extra_canonical(s):
+        """Ignore changes in whitespace or the date line"""
+        nondate_portion = s.split('\n', 1)[1]
+        return nondate_portion.split()
+
+    if extra_canonical(oldu) == extra_canonical(newu):
         return True
 
     for charset in CHARSET_LIST:
