@@ -15,16 +15,9 @@ import urllib2
 import diff_match_patch
 
 import parsers
-from parsers.baseparser import grab_url, canonicalize, formatter, logger
+from parsers.baseparser import canonicalize, formatter, logger
 
-# Different versions of BeautifulSoup have different properties.
-# Some work with one site, some with another.
-# This is BeautifulSoup 3.2.
-from BeautifulSoup import BeautifulSoup
-# This is BeautifulSoup 4
-import bs4
-
-GIT_PROGRAM='git'
+GIT_PROGRAM = 'git'
 
 from django.core.management.base import BaseCommand
 from optparse import make_option
@@ -344,11 +337,15 @@ def update_versions(do_all=False):
     total_articles = len(articles)
 
     update_priority = lambda x: x.minutes_since_check() * 1. / get_update_delay(x.minutes_since_update())
-    articles = sorted([a for a in articles if (update_priority(a) > 1 or do_all)], key=update_priority, reverse=True)
+    articles = sorted([a for a in articles if update_priority(a) > 1 or do_all],
+                      key=update_priority, reverse=True)
 
     logger.info('Checking %s of %s articles', len(articles), total_articles)
     for i, article in enumerate(articles):
-        logger.debug('Woo: %s %s %s (%s/%s)', article.minutes_since_update(), article.minutes_since_check(), update_priority(article), i+1, len(articles))
+        logger.debug('Woo: %s %s %s (%s/%s)',
+                     article.minutes_since_update(),
+                     article.minutes_since_check(),
+                     update_priority(article), i+1, len(articles))
         delay = get_update_delay(article.minutes_since_update())
         if article.minutes_since_check() < delay and not do_all:
             continue
@@ -380,4 +377,4 @@ def cleanup_git_repo():
         os.remove(fname)
 
 if __name__ == '__main__':
-    print >>sys.stderr, "Try `python website/manage.py scraper`."
+    print >> sys.stderr, "Try `python website/manage.py scraper`."
