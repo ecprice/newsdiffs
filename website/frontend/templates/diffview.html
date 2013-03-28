@@ -31,6 +31,31 @@
 {% endblock head %}
 
 {% block content %}
+{% if display_search_banner %}
+    <style>
+      .search-banner h3{
+        text-align: center;
+        padding-bottom: .5em;
+      }
+      .search-banner {
+        background-color: #ffffa0;
+        border: 2px solid black;
+        padding: .5em;
+        margin: 0.4em 1em 1em 1em;
+        font-size: 14pt;
+      }
+    </style>
+
+<div class="search-banner">
+<h3>Welcome to <a href="{% url 'root' %}">NewsDiffs</a>!</h3>
+
+NewsDiffs tracks post-publication changes to articles in online news
+media.  Below, you can see edits made to an article after it was
+published.  You can browse through many such edits in our <a href=
+"{% url 'browse' %}" > archive</a>.
+</div>
+{% endif %}
+
     <h2>Comparing: {{title}}</h2>
     <h3><a href="{{article_url}}">{{article_url}}</a></h3>
     <ul>

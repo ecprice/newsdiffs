@@ -15,6 +15,19 @@ from django.views.decorators.cache import cache_page
 
 OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 
+SEARCH_ENGINES = """
+http://www.ask.com
+http://www.google
+search.yahoo.com
+http://www.bing.com
+""".split()
+
+def came_from_search_engine(request):
+    return any(x in request.META.get('HTTP_REFERER', '')
+               for x in SEARCH_ENGINES)
+
+
+
 def Http400():
     t = loader.get_template('404.html')
     return HttpResponse(t.render(Context()), status=400)
@@ -183,6 +196,7 @@ def diffview(request, vid1, vid2, urlarg):
             'prev':links[0], 'next':links[1],
             'article_shorturl': article.filename(),
             'article_url': article.url, 'v1': v1, 'v2': v2,
+            'display_search_banner': came_from_search_engine(request),
             })
 
 def get_rowinfo(article, version_lst=None):
@@ -226,7 +240,9 @@ def article_history(request, urlarg=''):
 
     rowinfo = get_rowinfo(article)
     return render_to_response('article_history.html', {'article':article,
-                                                       'versions':rowinfo})
+                                                       'versions':rowinfo,
+            'display_search_banner': came_from_search_engine(request),
+                                                       })
 
 def upvote(request):
     article_url = request.REQUEST.get('article_url')
