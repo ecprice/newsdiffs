@@ -138,7 +138,6 @@ def diffview(request, vid1, vid2, urlarg):
         raise Http404
 
     article = v1.article
-    url = article.url
 
     if v1.article != v2.article:
         raise Http404
@@ -182,7 +181,8 @@ def diffview(request, vid1, vid2, urlarg):
             'date1':dates[0], 'date2':dates[1],
             'text1':texts[0], 'text2':texts[1],
             'prev':links[0], 'next':links[1],
-            'article_url': url, 'v1': v1, 'v2': v2,
+            'article_shorturl': article.filename(),
+            'article_url': article.url, 'v1': v1, 'v2': v2,
             })
 
 def get_rowinfo(article, version_lst=None):
@@ -204,9 +204,11 @@ def get_rowinfo(article, version_lst=None):
     rowinfo.reverse()
     return rowinfo
 
-def article_history(request):
+def article_history(request, urlarg=''):
     url = request.REQUEST.get('url')
     if url is None:
+        url = urlarg
+    if len(url) == 0:
         return HttpResponseRedirect(reverse(front))
 
     url = url.split('?')[0]
@@ -218,6 +220,9 @@ def article_history(request):
         article = Article.objects.get(url=url)
     except Article.DoesNotExist:
         return render_to_response('article_history_missing.html', {'url': url})
+
+    if len(urlarg) == 0:
+        return HttpResponseRedirect(reverse(article_history, args=[article.filename()]))
 
     rowinfo = get_rowinfo(article)
     return render_to_response('article_history.html', {'article':article,

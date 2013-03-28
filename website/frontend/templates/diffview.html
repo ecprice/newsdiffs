@@ -43,7 +43,7 @@
       {% else %}
       No previous revision
       {% endif %} |
-      <a href="{% url 'article_history' %}?url={{article_url}}">All changes</a>
+      <a href="{% url 'article_history' article_shorturl %}">All changes</a>
       |
       {% if next %}
       <a href="{{next}}">Later revision =></a>
