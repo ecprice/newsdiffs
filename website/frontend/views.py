@@ -18,6 +18,7 @@ OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 SEARCH_ENGINES = """
 http://www.ask.com
 http://www.google
+https://www.google
 search.yahoo.com
 http://www.bing.com
 """.split()
