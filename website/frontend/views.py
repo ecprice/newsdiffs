@@ -103,7 +103,7 @@ def browse(request, source=''):
         raise Http404
     pagestr=request.REQUEST.get('page', '1')
     try:
-        page = int(page)
+        page = int(pagestr)
     except ValueError:
         page = 1
 
