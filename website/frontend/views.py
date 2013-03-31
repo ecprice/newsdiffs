@@ -101,7 +101,11 @@ SOURCES = 'nytimes.com cnn.com politico.com bbc.co.uk'.split() + ['']
 def browse(request, source=''):
     if source not in SOURCES:
         raise Http404
-    page=int(request.REQUEST.get('page', '1'))
+    pagestr=request.REQUEST.get('page', '1')
+    try:
+        page = int(page)
+    except ValueError:
+        page = 1
 
     first_update = get_first_update(source)
     num_pages = (datetime.datetime.now() - first_update).days + 1
