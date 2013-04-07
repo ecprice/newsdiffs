@@ -21,6 +21,7 @@ PublicationDict = {'www.nytimes.com': 'NYT',
                    'edition.cnn.com': 'CNN',
                    'www.bbc.co.uk': 'BBC',
                    'www.politico.com': 'Politico',
+                   'www.nos.nl': 'NOS.nl',
                    }
 
 ancient = datetime(1901, 1, 1)
