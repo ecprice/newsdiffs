@@ -12,6 +12,7 @@ nyt.NYTParser
 cnn.CNNParser
 politico.PoliticoParser
 bbc.BBCParser
+nunl.NuNLParser
 """.split()
 
 parser_dict = {}
