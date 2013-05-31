@@ -282,6 +282,16 @@ def article_history(request, urlarg=''):
                                                        'versions':rowinfo,
             'display_search_banner': came_from_search_engine(request),
                                                        })
+def article_history_feed(request):
+    url = request.REQUEST.get('url')
+    if url is None:
+        return HttpResponseRedirect(reverse(front))
+    article = get_object_or_404(Article, url=url)
+    rowinfo = get_rowinfo(article)
+    return render_to_response('article_history.xml',
+                              { 'article': article, 'versions': rowinfo },
+                              context_instance=RequestContext(request),
+                              mimetype='application/atom+xml')
 
 def upvote(request):
     article_url = request.REQUEST.get('article_url')

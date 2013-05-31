@@ -14,6 +14,7 @@ urlpatterns = patterns('',
   url(r'^subscribe/$', 'frontend.views.subscribe', name='subscribe'),
   url(r'^press/$', 'frontend.views.press', name='press'),
   url(r'^article-history/$', 'frontend.views.article_history', name='article_history'),
+  url(r'^article-history/feed$', 'frontend.views.article_history_feed', name='article_history_feed'),
   url(r'^article-history/(?P<urlarg>.*)$', 'frontend.views.article_history', name='article_history'),
   url(r'^$', 'frontend.views.front', name='root'),
 )
