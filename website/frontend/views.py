@@ -224,7 +224,7 @@ def get_rowinfo(article, version_lst=None):
     return rowinfo
 
 def article_history(request, urlarg=''):
-    url = request.REQUEST.get('url')
+    url = request.REQUEST.get('url') # ?url=foo is the deprecated interface.
     if url is None:
         url = urlarg
     if len(url) == 0:
