@@ -148,6 +148,7 @@ def feed(request, source=''):
     return render_to_response('feed.xml', {
             'source': source, 'articles': articles,
             'page':page,
+            'request':request,
             'page_list': page_list,
             'last_update': last_update,
             'sources': SOURCES[:-1]
@@ -292,7 +293,10 @@ def article_history_feed(request, url=''):
     article = get_object_or_404(Article, url=url)
     rowinfo = get_rowinfo(article)
     return render_to_response('article_history.xml',
-                              { 'article': article, 'versions': rowinfo },
+                              { 'article': article,
+                                'versions': rowinfo,
+                                'request': request,
+                                },
                               context_instance=RequestContext(request),
                               mimetype='application/atom+xml')
 
