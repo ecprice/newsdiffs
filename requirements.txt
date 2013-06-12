@@ -3,3 +3,4 @@ simplejson
 beautifulsoup4
 beautifulsoup
 South
+html5lib
