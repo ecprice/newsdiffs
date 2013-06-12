@@ -32,7 +32,7 @@ and then
 Initial setup
 -------------
 
-  $ python website/manage.py syncdb
+  $ python website/manage.py syncdb && python website/manage.py migrate
   $ git init articles
   $ cd articles && touch x && git add x && git commit -m 'Initial commit'
 
@@ -72,6 +72,10 @@ not yet have any changes. To get changes, wait some time (say, 3
 hours) and run 'python website/manage.py scraper' again.  If any of
 the articles have changed in the intervening time, the website should
 display the associated changes.
+
+The scraper will log progress to /tmp/newsdiffs_logging (which is
+overwritten each run) and errors to /tmp/newsdiffs/logging_errs (which
+is cumulative).
 
 To run the scraper every hour, run something like:
 
