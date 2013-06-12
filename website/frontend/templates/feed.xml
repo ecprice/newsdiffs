@@ -11,8 +11,8 @@
 	{% for article, last_version, versions in articles %}
 	<entry>
 		<title>{{last_version.title}}</title>
-		<link href="http://{{request.META.HTTP_HOST}}{% url article_history %}?url={{article.url}}"/>
-		<id>http://{{request.META.HTTP_HOST}}{% url article_history %}?url={{article.url}}"</id>
+		<link href="http://{{request.META.HTTP_HOST}}{% url article_history article.url %}"/>
+		<id>http://{{request.META.HTTP_HOST}}{% url article_history article.url%}"</id>
 		<published>{{article.initial_date|date:"r"}}</published>
 		<updated>{{last_version.date|date:"r"}}</updated>
 		<content type="text">This article has been modified {{versions|length}} times.</content>
