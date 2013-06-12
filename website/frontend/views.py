@@ -258,6 +258,24 @@ def get_rowinfo(article, version_lst=None):
     rowinfo.reverse()
     return rowinfo
 
+
+def prepend_http(url):
+    """Return a version of the url that starts with the proper scheme.
+
+    url may look like
+
+    www.nytimes.com
+    https:/www.nytimes.com    <- because double slashes get stripped
+    http://www.nytimes.com
+    """
+    components = url.split('/', 2)
+    if len(components) < 2 or '.' in components[0]:
+        components = ['http:', '']+components
+    elif components[1]:
+        components[1:1] = ['']
+    return '/'.join(components)
+
+
 def article_history(request, urlarg=''):
     url = request.REQUEST.get('url') # this is the deprecated interface.
     if url is None:
@@ -265,10 +283,9 @@ def article_history(request, urlarg=''):
     if len(url) == 0:
         return HttpResponseRedirect(reverse(front))
 
-    url = url.split('?')[0]
+    url = url.split('?')[0]  #For if user copy-pastes from news site
 
-    if '//' not in url:
-        url = 'http://' + url
+    url = prepend_http(url)
 
     try:
         article = Article.objects.get(url=url)
@@ -284,8 +301,7 @@ def article_history(request, urlarg=''):
             'display_search_banner': came_from_search_engine(request),
                                                        })
 def article_history_feed(request, url=''):
-    if '//' not in url:
-        url = 'http://' + url
+    url = prepend_http(url)
     article = get_object_or_404(Article, url=url)
     rowinfo = get_rowinfo(article)
     return render_to_response('article_history.xml',
