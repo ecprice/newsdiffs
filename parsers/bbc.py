@@ -24,6 +24,9 @@ class BBCParser(BaseParser):
 
         div = soup.find('div', 'story-body')
         if div is None:
+            # Hack for video articles
+            div = soup.find('div', 'emp-decription')
+        if div is None:
             self.real_article = False
             return
         self.body = '\n'+'\n\n'.join([x.getText() for x in div.childGenerator()
