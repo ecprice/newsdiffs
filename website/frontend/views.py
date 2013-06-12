@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 import urllib
 import django.db
 import time
-from django.template import Context, loader
+from django.template import Context, RequestContext, loader
 from django.views.decorators.cache import cache_page
 
 OUT_FORMAT = '%B %d, %Y at %l:%M%P EDT'
@@ -38,6 +38,15 @@ def get_first_update(source):
         source = ''
     updates = models.Article.objects.order_by('last_update').filter(last_update__gt=datetime.datetime(1990, 1, 1, 0, 0),
                                                                     url__contains=source)
+    try:
+        return updates[0].last_update
+    except IndexError:
+        return datetime.datetime.now()
+
+def get_last_update(source):
+    if source is None:
+        source = ''
+    updates = models.Article.objects.order_by('-last_update').filter(last_update__gt=datetime.datetime(1990, 1, 1, 0, 0), url__contains=source)
     try:
         return updates[0].last_update
     except IndexError:
@@ -120,6 +129,31 @@ def browse(request, source=''):
             'sources': SOURCES[:-1]
             })
 
+@cache_page(60 * 30)  #30 minute cache
+def feed(request, source=''):
+    if source not in SOURCES:
+        raise Http404
+    pagestr=request.REQUEST.get('page', '1')
+    try:
+        page = int(pagestr)
+    except ValueError:
+        page = 1
+
+    first_update = get_first_update(source)
+    last_update = get_last_update(source)
+    num_pages = (datetime.datetime.now() - first_update).days + 1
+    page_list=range(1, 1+num_pages)
+
+    articles = get_articles(source=source, distance=page-1)
+    return render_to_response('feed.xml', {
+            'source': source, 'articles': articles,
+            'page':page,
+            'page_list': page_list,
+            'last_update': last_update,
+            'sources': SOURCES[:-1]
+            },
+            context_instance=RequestContext(request),
+            mimetype='application/atom+xml')
 
 def old_diffview(request):
     """Support for legacy diff urls"""
@@ -224,7 +258,7 @@ def get_rowinfo(article, version_lst=None):
     return rowinfo
 
 def article_history(request, urlarg=''):
-    url = request.REQUEST.get('url') # ?url=foo is the deprecated interface.
+    url = request.REQUEST.get('url') # this is the deprecated interface.
     if url is None:
         url = urlarg
     if len(url) == 0:
@@ -248,6 +282,15 @@ def article_history(request, urlarg=''):
                                                        'versions':rowinfo,
             'display_search_banner': came_from_search_engine(request),
                                                        })
+def article_history_feed(request, url=''):
+    if '//' not in url:
+        url = 'http://' + url
+    article = get_object_or_404(Article, url=url)
+    rowinfo = get_rowinfo(article)
+    return render_to_response('article_history.xml',
+                              { 'article': article, 'versions': rowinfo },
+                              context_instance=RequestContext(request),
+                              mimetype='application/atom+xml')
 
 def upvote(request):
     article_url = request.REQUEST.get('article_url')

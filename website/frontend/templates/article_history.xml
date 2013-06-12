@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>{{article.latest_version.title}}, Change Log</title>
+    <id>{{request.build_absolute_uri}}</id>
+    <link rel="self" href="{{request.build_absolute_uri}}"/>
+    <link rel="alternate" href="{{article.url}}"/>
+    <updated>{{article.last_update|date:"r"}}</updated>
+    <author>
+         <name>{{article.publication}}</name>
+    </author>
+    {% for difflink, version in versions %}
+    {% if difflink %}
+    <entry>
+        <title>{{version.title}}</title>
+        <published>{{version.date|date:"r"}}</published>
+	<id>http://{{request.META.HTTP_HOST}}{{difflink}}</id>
+	<link rel="self" href="http://{{request.META.HTTP_HOST}}{{difflink}}"></link>
+    </entry>
+    {% endif %}
+    {% endfor %}
+</feed>
