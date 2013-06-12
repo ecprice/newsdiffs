@@ -6,7 +6,8 @@ class NYTParser(BaseParser):
     domains = ['www.nytimes.com']
 
     feeder_pat   = '^http://www.nytimes.com/201'
-    feeder_pages = ['http://www.nytimes.com/pages/world/',
+    feeder_pages = ['http://www.nytimes.com/',
+                    'http://www.nytimes.com/pages/world/',
                     'http://www.nytimes.com/pages/national/',
                     'http://www.nytimes.com/pages/politics/',
                     'http://www.nytimes.com/pages/nyregion/',
