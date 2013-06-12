@@ -8,8 +8,8 @@ DATE_FORMAT = '%B %d, %Y at %l:%M%P EDT'
 class CNNParser(BaseParser):
     domains = ['edition.cnn.com']
 
-    feeder_base = 'http://edition.cnn.com/'
-    feeder_pat  = '^http://edition.cnn.com/201'
+    feeder_pat   = '^http://edition.cnn.com/201'
+    feeder_pages = ['http://edition.cnn.com/']
 
     def _parse(self, html):
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,

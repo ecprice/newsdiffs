@@ -103,8 +103,8 @@ class BaseParser(object):
     meta = []  # Currently unused.
 
     # Used when finding articles to parse
-    feeder_base = None  # Look for links on this page
-    feeder_pat = None   # matching this regular expression
+    feeder_pat   = None # Look for links matching this regular expression
+    feeder_pages = []   # on these pages
 
     feeder_bs = BeautifulSoup #use this version of beautifulsoup for feed
 
@@ -134,14 +134,18 @@ class BaseParser(object):
 
     @classmethod
     def feed_urls(cls):
-        html = grab_url(cls.feeder_base)
-        soup = cls.feeder_bs(html)
+        all_urls = []
+        for feeder_url in cls.feeder_pages:
+            html = grab_url(feeder_url)
+            soup = cls.feeder_bs(html)
 
-        # "or ''" to make None into str
-        urls = [a.get('href') or '' for a in soup.findAll('a')]
+            # "or ''" to make None into str
+            urls = [a.get('href') or '' for a in soup.findAll('a')]
 
-        # If no http://, prepend domain name
-        domain = '/'.join(cls.feeder_base.split('/')[:3])
-        urls = [url if '://' in url else domain + url for url in urls]
+            # If no http://, prepend domain name
+            domain = '/'.join(feeder_url.split('/')[:3])
+            urls = [url if '://' in url else domain + url for url in urls]
 
-        return [url for url in urls if re.search(cls.feeder_pat, url)]
+            all_urls = all_urls + [url for url in urls if
+                                   re.search(cls.feeder_pat, url)]
+        return all_urls
