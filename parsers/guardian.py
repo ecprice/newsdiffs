@@ -46,6 +46,9 @@ class GuardianParser(BaseParser):
         if subhead:
             body.extend(subhead.getText('\n').split('\n'))
 
+        # strip out any <script> elements in story text (flash videos, etc.)
+        [x.extract() for x in div.findAll('script')]
+
         body.extend([x.getText()
                      for x in div.recursiveChildGenerator()
                      if isinstance(x, Tag) and x.name in ('p', 'h2')])
