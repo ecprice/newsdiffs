@@ -25,10 +25,12 @@ class GuardianParser(BaseParser):
             return
         self.title = title.getText()
 
+        self.byline = ''
         byline = soup.find('div', 'contributor-full')
         if byline:
             self.byline = byline.getText().strip()
 
+        self.date = ''
         date = soup.find('time', itemprop='datePublished')
         if date:
             self.date = date.getText()
