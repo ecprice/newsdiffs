@@ -315,6 +315,7 @@ def update_article(article):
             article.save()
 
 def update_articles():
+    logger.info('Starting scraper; looking for new URLs')
     for url in get_all_article_urls():
         if not models.Article.objects.filter(url=url).count():
             models.Article(url=url).save()
@@ -341,6 +342,12 @@ def update_versions(do_all=False):
                       key=update_priority, reverse=True)
 
     logger.info('Checking %s of %s articles', len(articles), total_articles)
+
+    # Do git gc at the beginning, so if we're falling behind and killed
+    # it still happens and I don't run out of quota. =)
+    logger.info('Starting with gc:')
+    run_git_command(['gc'])
+    logger.info('Done!')
     for i, article in enumerate(articles):
         logger.debug('Woo: %s %s %s (%s/%s)',
                      article.minutes_since_update(),
@@ -362,7 +369,8 @@ def update_versions(do_all=False):
 
             logger.error(traceback.format_exc())
         article.save()
-    run_git_command(['gc'])
+    #logger.info('Ending with gc:')
+    #run_git_command(['gc'])
     logger.info('Done!')
 
 #Remove index.lock if 5 minutes old
