@@ -198,8 +198,10 @@ def get_diff_info(old, new):
 def add_to_git_repo(data, filename, article):
     start_time = time.time()
 
-    full_path = os.path.join(models.GIT_DIR, filename)
-    mkdir_p(os.path.dirname(full_path))
+    #Don't use full path because it can exceed the maximum filename length
+    #full_path = os.path.join(models.GIT_DIR, filename)
+    os.chdir(models.GIT_DIR)
+    mkdir_p(os.path.dirname(filename))
 
     boring = False
     diff_info = None
@@ -216,7 +218,7 @@ def add_to_git_repo(data, filename, article):
         already_exists = True
 
 
-    open(full_path, 'w').write(data)
+    open(filename, 'w').write(data)
 
     if already_exists:
         if previous == data:
