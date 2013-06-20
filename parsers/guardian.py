@@ -37,8 +37,11 @@ class GuardianParser(BaseParser):
 
         div = soup.find('div', id='article-body-blocks')
         if div is None:
-            self.real_article = False
-            return
+            # try again, this time looking for a live blog
+            div = soup.find('div', id='live-blog-blocks')
+            if div is None:
+                self.real_article = False
+                return
 
         body = []
 
