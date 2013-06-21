@@ -13,6 +13,7 @@ cnn.CNNParser
 politico.PoliticoParser
 bbc.BBCParser
 washpo.WashPoParser
+guardian.GuardianParser
 """.split()
 
 parser_dict = {}
