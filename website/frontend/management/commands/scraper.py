@@ -319,6 +319,8 @@ def update_article(article):
 def update_articles():
     logger.info('Starting scraper; looking for new URLs')
     for url in get_all_article_urls():
+        if len(url) > 255:  #Icky hack, but otherwise they're truncated in DB.
+            continue
         if not models.Article.objects.filter(url=url).count():
             models.Article(url=url).save()
 
