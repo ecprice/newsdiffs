@@ -104,11 +104,12 @@ def get_articles(source=None, distance=0):
     return articles
 
 
-SOURCES = 'nytimes.com cnn.com politico.com bbc.co.uk'.split() + ['']
+SOURCES = '''nytimes.com cnn.com politico.com washingtonpost.com
+bbc.co.uk'''.split()
 
 @cache_page(60 * 30)  #30 minute cache
 def browse(request, source=''):
-    if source not in SOURCES:
+    if source not in SOURCES + ['']:
         raise Http404
     pagestr=request.REQUEST.get('page', '1')
     try:
@@ -126,12 +127,12 @@ def browse(request, source=''):
             'page':page,
             'page_list': page_list,
             'first_update': first_update,
-            'sources': SOURCES[:-1]
+            'sources': SOURCES
             })
 
 @cache_page(60 * 30)  #30 minute cache
 def feed(request, source=''):
-    if source not in SOURCES:
+    if source not in SOURCES + ['']:
         raise Http404
     pagestr=request.REQUEST.get('page', '1')
     try:
@@ -151,7 +152,7 @@ def feed(request, source=''):
             'request':request,
             'page_list': page_list,
             'last_update': last_update,
-            'sources': SOURCES[:-1]
+            'sources': SOURCES
             },
             context_instance=RequestContext(request),
             mimetype='application/atom+xml')
@@ -331,7 +332,7 @@ def contact(request):
     return render_to_response('contact.html', {})
 
 def front(request):
-    return render_to_response('front.html', {})
+    return render_to_response('front.html', {'sources': SOURCES})
 
 def subscribe(request):
     return render_to_response('subscribe.html', {})

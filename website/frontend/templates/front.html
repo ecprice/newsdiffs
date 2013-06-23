@@ -14,7 +14,12 @@ style="padding:10px; margin-left:25px; margin-top:10px; float:right" width="400"
 <h1>NewsDiffs |  Tracking Online News Over Time</h1><p>
 
 <h2>	NewsDiffs <a href="http://newsdiffs.org/browse">archives changes</a> in  
-articles after publication.<br> Currently, we track <a href="{% url 'browse' 'nytimes.com' %}">nytimes.com</a>, <a href="{% url 'browse' 'cnn.com' %}">cnn.com</a>, <a href="{% url 'browse' 'politico.com' %}">politico.com</a> and <a href="{% url 'browse' 'bbc.co.uk' %}">bbc.co.uk</a>.</h2> 
+articles after publication.<br> Currently, we track
+{% for source in sources|slice:":-1" %}
+<a href="{% url 'browse' source %}">{{source}}</a>,
+{% endfor %}
+and
+<a href="{% url 'browse' sources|last %}">{{sources|last}}</a>.</h2> 
 
 <p>
 <p>NewsDiffs, which was born out of the Knight Mozilla MIT hackathon in June 2012, is trying to solve the problem of archiving news in the constantly evolving world of online journalism.
