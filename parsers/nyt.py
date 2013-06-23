@@ -61,7 +61,8 @@ class NYTParser(BaseParser):
         except AttributeError:
             self.real_article = False
             return
-        p_tags = soup.findAll('p', attrs={'itemprop':'articleBody'})
+        p_tags = sum([list(soup.findAll('p', attrs={'itemprop':x}))
+                      for x in ['articleBody', 'reviewBody']], [])
         main_body = '\n'.join([p.getText() for p in p_tags])
         authorids = soup.find('div', attrs={'class':'authorIdentification'})
         authorid = authorids.getText() if authorids else ''
