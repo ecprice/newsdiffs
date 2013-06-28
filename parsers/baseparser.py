@@ -83,6 +83,9 @@ def parse_double_utf8(txt):
 def canonicalize(text):
     return strip_whitespace(parse_double_utf8(text))
 
+def concat(domain, url):
+    return domain + url if url.startswith('/') else domain + '/' + url
+
 # End utility functions
 
 # Base Parser
@@ -146,7 +149,7 @@ class BaseParser(object):
 
             # If no http://, prepend domain name
             domain = '/'.join(feeder_url.split('/')[:3])
-            urls = [url if '://' in url else domain + url for url in urls]
+            urls = [url if '://' in url else concat(domain, url) for url in urls]
 
             all_urls = all_urls + [url for url in urls if
                                    re.search(cls.feeder_pat, url)]
