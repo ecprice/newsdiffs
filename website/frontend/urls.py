@@ -19,6 +19,6 @@ urlpatterns = patterns('',
   url(r'^press/$', 'frontend.views.press', name='press'),
   url(r'^feed/article-history/(.*)$', 'frontend.views.article_history_feed', name='article_history_feed'),
   url(r'^article-history/(?P<urlarg>.*)$', 'frontend.views.article_history', name='article_history'),
-  url(r'^json/view/(?P<vid>\d+)$', 'frontend.views.json_view'),
+  url(r'^json/view/(?P<vid>\d+)/?$', 'frontend.views.json_view'),
   url(r'^$', 'frontend.views.front', name='root'),
 )
