@@ -4,7 +4,7 @@ import re
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from models import Article, Version
 import models
-import simplejson
+import json
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 import urllib

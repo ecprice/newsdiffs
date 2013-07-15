@@ -3,7 +3,7 @@ import subprocess
 import os
 from datetime import datetime, timedelta
 
-import simplejson as json
+import json
 from django.db import models, IntegrityError
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
