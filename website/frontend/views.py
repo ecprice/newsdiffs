@@ -4,7 +4,7 @@ import re
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from models import Article, Version
 import models
-import simplejson
+import json
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 import urllib
@@ -316,6 +316,16 @@ def article_history_feed(request, url=''):
                                 },
                               context_instance=RequestContext(request),
                               mimetype='application/atom+xml')
+
+def json_view(request, vid):
+    version = get_object_or_404(Version, id=int(vid))
+    data = dict(
+        title=version.title,
+        byline = version.byline,
+        date = version.date.isoformat(),
+        text = version.text(),
+        )
+    return HttpResponse(json.dumps(data), mimetype="application/json")
 
 def upvote(request):
     article_url = request.REQUEST.get('article_url')
