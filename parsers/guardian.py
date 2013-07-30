@@ -6,11 +6,11 @@ HEADLINE_PAT = re.compile(r'headline')
 
 class GuardianParser(BaseParser):
     SUFFIX = '/print'
-    domains = ['www.guardian.co.uk']
+    domains = ['www.theguardian.com']
 
-    feeder_pat = '^http://www.guardian.co.uk/[^/]+/201'
+    feeder_pat = '^http://www.theguardian.com/[^/]+/201'
     feeder_pages = [
-        'http://www.guardian.co.uk/',
+        'http://www.theguardian.com/us',
     ]
 
     def _parse(self, html):
