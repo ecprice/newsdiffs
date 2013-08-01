@@ -350,7 +350,15 @@ def update_versions(do_all=False):
     # Do git gc at the beginning, so if we're falling behind and killed
     # it still happens and I don't run out of quota. =)
     logger.info('Starting with gc:')
-    run_git_command(['gc'])
+    try:
+        run_git_command(['gc'])
+    except subprocess.CalledProcessError as e:
+        print >> sys.stderr, 'Error on initial gc!'
+        print >> sys.stderr, 'Output was """'
+        print >> sys.stderr, e.output
+        print >> sys.stderr, '"""'
+        raise
+
     logger.info('Done!')
     for i, article in enumerate(articles):
         logger.debug('Woo: %s %s %s (%s/%s)',
@@ -379,14 +387,15 @@ def update_versions(do_all=False):
 
 #Remove index.lock if 5 minutes old
 def cleanup_git_repo():
-    fname = os.path.join(models.GIT_DIR, '.git/index.lock')
-    try:
-        stat = os.stat(fname)
-    except OSError:
-        return
-    age = time.time() - stat.st_ctime
-    if age > 60*5:
-        os.remove(fname)
+    for name in ['.git/index.lock', '.git/refs/heads/master.lock']:
+        fname = os.path.join(models.GIT_DIR, name)
+        try:
+            stat = os.stat(fname)
+        except OSError:
+            return
+        age = time.time() - stat.st_ctime
+        if age > 60*5:
+            os.remove(fname)
 
 if __name__ == '__main__':
     print >> sys.stderr, "Try `python website/manage.py scraper`."
