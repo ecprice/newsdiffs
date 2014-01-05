@@ -12,15 +12,15 @@ ADMINS = (
 MANAGERS = ADMINS
 
 
-for line in open('/mit/ecprice/.my.cnf').read().split():
+for line in open('/mit/newsdiffs/.my.cnf').read().split():
     if line.startswith('password='):
         pwd = line.split('=')[1]
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'HOST': 'sql.mit.edu',
-        'NAME': 'ecprice+newsdiffs',
-        'USER': 'ecprice',
+        'NAME': 'newsdiffs+newsdiffs',
+        'USER': 'newsdiffs',
         'PASSWORD': pwd,
         'OPTIONS': {
 # This doesn't seem to work.

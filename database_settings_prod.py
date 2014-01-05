@@ -1,5 +1,5 @@
-for line in open('/mit/ecprice/.my.cnf').read().split():
+for line in open('/mit/newsdiffs/.my.cnf').read().split():
     if line.startswith('password='):
         pwd = line.split('=')[1]
 
-location = 'mysql://ecprice:%s@sql.mit.edu/ecprice+newsdiffs' % pwd
+location = 'mysql://newsdiffs:%s@sql.mit.edu/newsdiffs+newsdiffs' % pwd
