@@ -369,6 +369,13 @@ def update_versions(do_all=False):
         if article.minutes_since_check() < delay and not do_all:
             continue
         logger.info('Considering %s', article.url)
+
+        # Hack to ignore bbc articles while we can't log them
+        # (because all articles go in a single directory which has
+        #  reached its limit in AFS)
+        if article.url.startswith('http://www.bbc.co.uk'):
+            continue
+
         article.last_check = datetime.now()
         try:
             update_article(article)
