@@ -63,6 +63,13 @@ class NYTParser(BaseParser):
             return
         p_tags = sum([list(soup.findAll('p', attrs={'itemprop':x}))
                       for x in ['articleBody', 'reviewBody']], [])
+        div = soup.find('div', attrs={'class': 'story-addendum story-content theme-correction'})
+        if div:
+            p_tags += [div]
+        footer = soup.find('footer', attrs={'class':'story-footer story-content'})
+        if footer:
+            p_tags += list(footer.findAll(lambda x: x.get('class') != 'story-print-citation' and x.name == 'p'))
+
         main_body = '\n'.join([p.getText() for p in p_tags])
         authorids = soup.find('div', attrs={'class':'authorIdentification'})
         authorid = authorids.getText() if authorids else ''
