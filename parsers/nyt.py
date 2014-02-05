@@ -70,7 +70,7 @@ class NYTParser(BaseParser):
         if footer:
             p_tags += list(footer.findAll(lambda x: x.get('class') != 'story-print-citation' and x.name == 'p'))
 
-        main_body = '\n'.join([p.getText() for p in p_tags])
+        main_body = '\n\n'.join([p.getText() for p in p_tags])
         authorids = soup.find('div', attrs={'class':'authorIdentification'})
         authorid = authorids.getText() if authorids else ''
 
