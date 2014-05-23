@@ -1,13 +1,13 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
         # Adding model 'Article'
         db.create_table('Articles', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -27,6 +27,7 @@ class Migration(SchemaMigration):
             ('byline', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('date', self.gf('django.db.models.fields.DateTimeField')()),
             ('boring', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('diff_json', self.gf('django.db.models.fields.CharField')(max_length=255, null=True)),
         ))
         db.send_create_signal('frontend', ['Version'])
 
@@ -43,7 +44,6 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        
         # Deleting model 'Article'
         db.delete_table('Articles')
 
@@ -78,6 +78,7 @@ class Migration(SchemaMigration):
             'boring': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'byline': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'date': ('django.db.models.fields.DateTimeField', [], {}),
+            'diff_json': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'v': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'})

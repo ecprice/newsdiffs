@@ -8,7 +8,7 @@ from django.db import models, IntegrityError
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(THIS_DIR))
-GIT_DIR = ROOT_DIR+'/articles'
+GIT_DIR = ROOT_DIR+'/articles/'
 
 GIT_PROGRAM = 'git'
 
@@ -36,6 +36,11 @@ class Article(models.Model):
     initial_date = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(default=ancient)
     last_check = models.DateTimeField(default=ancient)
+    git_dir = models.CharField(max_length=255, blank=False, default='old')
+
+    @property
+    def full_git_dir(self):
+        return GIT_DIR + self.git_dir
 
     def filename(self):
         return self.url[len('http://'):].rstrip('/')
@@ -53,7 +58,7 @@ class Article(models.Model):
         return self.versions()[0]
 
     def minutes_since_update(self):
-        delta = datetime.now() - self.last_update
+        delta = datetime.now() - max(self.last_update, self.initial_date)
         return delta.seconds // 60 + 24*60*delta.days
 
     def minutes_since_check(self):
@@ -77,7 +82,7 @@ class Version(models.Model):
         try:
             return subprocess.check_output([GIT_PROGRAM, 'show',
                                             self.v+':'+self.article.filename()],
-                                           cwd=GIT_DIR)
+                                           cwd=self.article.full_git_dir)
         except subprocess.CalledProcessError as e:
             return None
 
@@ -102,14 +107,6 @@ class Upvote(models.Model):
     diff_v2 = models.CharField(max_length=255, blank=False)
     creation_time = models.DateTimeField(blank=False)
     upvoter_ip = models.CharField(max_length=255)
-
-
-def get_commit_date(commit):
-    if commit is None:
-        return datetime.now()
-    datestr = subprocess.check_output([GIT_PROGRAM, 'show', '-s', '--format=%ci', commit], cwd=GIT_DIR)
-    return datetime.strptime(datestr.strip(), '%Y-%m-%d %H:%M:%S -0400')
-
 
 
 # subprocess.check_output appeared in python 2.7.

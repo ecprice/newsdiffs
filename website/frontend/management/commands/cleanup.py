@@ -45,6 +45,7 @@ scanned them recently, unless --all is passed.
 
 
 def migrate_versions():
+    XXX_this_hasnt_been_updated_for_having_multiple_git_dirs
     git_output = subprocess.check_output([GIT_PROGRAM, 'log'], cwd=models.GIT_DIR)
     commits = git_output.split('\n\ncommit ')
     commits[0] = commits[0][len('commit '):]
