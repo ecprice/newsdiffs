@@ -1,11 +1,13 @@
 {% extends 'template.html' %}
 
+{% load url from future %}
+
 {% block active_about %}class="active"{% endblock %}
 
 {% block content %}
 <a 
-href="http://www.newsdiffs.org/diffview?url=http://www.nytimes.com/2012/06/20/world/middleeast/mubarak-is-on-life-support-egypt-security-officials-say.html&v1=e935fb9e8ce50c90971916796fde2c10f0b8b7ad&v2=99c50b4ba9d0d066c485697d90b0fcd0de0b7b3e&pagewanted=all"><img  
-src="http://getfile0.posterous.com/getfile/files.posterous.com/jenny8lee/t1ytPiPm0SElFmqYNkue5qEEaG2uBncZE3REpniFmMxHfAyFg92xQ82AO59c/photo.png.scaled.500.jpg" 
+href="http://www.newsdiffs.org/diff/192021/192137/www.nytimes.com/2013/03/31/science/space/yvonne-brill-rocket-scientist-dies-at-88.html"><img  
+src="{% url 'static' 'images/brill.png' %}" 
 width="450" align="right" style="padding:15px; margin:15px"/></a>
       <h1>About NewsDiffs</h1>
       <p>
@@ -23,7 +25,7 @@ href="http://opennews-mit.eventbrite.com/">Knight Mozilla MIT hackathon</a> on J
 		
 <div class="boldhead">What Types of Changes?</div>
 			<p>Updates to articles on major news web sites happen all the time.</p>
-			<p>Often the changes are articles simply minor, small edits that are tightening up (such as "most" to "many.")</p>
+			<p>Often the changes to articles are simply minor, small edits that are tightening up (such as "most" to "many.")</p>
 			<p>Sometimes the changes are the insertion or the deletion of a section.</p>
 			<p>Sometimes the story changes as a result of a rapidly breaking news, such as <a 
 href="http://www.newsdiffs.org/diffview?url=http://www.nytimes.com/2012/06/18/us/rodney-king-whose-beating-led-to-la-riots-dead-at-47.html&v1=4914b33add01e16c34ed2d066bba5c829bcfdf8b&v2=eed0278b77d633f80398660ed97d8490ac84fc27&pagewanted=all">the 
