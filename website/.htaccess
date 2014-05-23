@@ -1,4 +1,9 @@
 RewriteEngine On
+# mod_rewrite doesn't understand escaping, so it passes invalid inputs
+# to the fcgi script if the url has these characters.
+RewriteRule # - [L]
+RewriteRule \? - [L]
+
 RewriteRule ^static - [L]
 RewriteRule ^images - [L]
 RewriteRule ^styles - [L]
