@@ -33,8 +33,7 @@ Initial setup
 -------------
 
   $ python website/manage.py syncdb && python website/manage.py migrate
-  $ git init articles
-  $ cd articles && touch x && git add x && git commit -m 'Initial commit'
+  $ mkdir articles
 
 
 Running NewsDiffs Locally
