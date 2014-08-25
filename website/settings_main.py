@@ -1,4 +1,7 @@
-# Django settings for newsdiffer project.
+# Django settings for the newsdiffs project.
+
+ALLOWED_HOSTS = ['.newsdiffs.org', '.newsdiffs.org.',
+                 'newsdiffs.scripts.mit.edu', 'localhost', '127.0.0.1']
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG

@@ -1,7 +1,6 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import url
 
-urlpatterns = patterns('',
-
+urlpatterns = [
   # These are deprecated, and meant to preserve legacy URLs:
   url(r'^diffview/$', 'frontend.views.old_diffview'),
   url(r'^article-history/$', 'frontend.views.article_history', name='article_history'),
@@ -21,4 +20,4 @@ urlpatterns = patterns('',
   url(r'^article-history/(?P<urlarg>.*)$', 'frontend.views.article_history', name='article_history'),
   url(r'^json/view/(?P<vid>\d+)/?$', 'frontend.views.json_view'),
   url(r'^$', 'frontend.views.front', name='root'),
-)
+]
