@@ -295,7 +295,11 @@ def article_history(request, urlarg=''):
     try:
         article = Article.objects.get(url=url)
     except Article.DoesNotExist:
-        return render_to_response('article_history_missing.html', {'url': url})
+        try:
+            return render_to_response('article_history_missing.html', {'url': url})
+        except (TypeError, ValueError):
+            # bug in django + mod_rewrite can cause this. =/
+            return HttpResponse('Bug!')
 
     if len(urlarg) == 0:
         return HttpResponseRedirect(reverse(article_history, args=[article.filename()]))
