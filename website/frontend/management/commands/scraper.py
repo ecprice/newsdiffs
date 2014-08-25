@@ -365,7 +365,7 @@ def get_update_delay(minutes_since_update):
     elif days_since_update < 7:
         return 180
     elif days_since_update < 30:
-        return 60*24 + 60*24*365*1e5
+        return 60*24*3
     else:
         return 60*24*365*1e5  #ignore old articles
 
