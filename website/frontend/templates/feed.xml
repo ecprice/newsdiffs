@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 	<title>{{source}} diffs</title>
-	<link rel="self" href="http://{{request.META.HTTP_HOST}}{% url feed source %}"/>
-	<link rel="alternate" href="http://{{request.META.HTTP_HOST}}{% url browse source %}?page={{page}}"/>
+	<link rel="self" href="http://{{request.META.HTTP_HOST}}{% url 'feed' source %}"/>
+	<link rel="alternate" href="http://{{request.META.HTTP_HOST}}{% url 'browse' source %}?page={{page}}"/>
 	<updated>{{last_update|date:"r"}}</updated>
 	<author>
 		<name>NewsDiffs</name>
@@ -11,8 +11,8 @@
 	{% for article, last_version, versions in articles %}
 	<entry>
 		<title>{{last_version.title}}</title>
-		<link href="http://{{request.META.HTTP_HOST}}{% url article_history article.filename %}"/>
-		<id>http://{{request.META.HTTP_HOST}}{% url article_history article.filename%}"</id>
+		<link href="http://{{request.META.HTTP_HOST}}{% url 'article_history' article.filename %}"/>
+		<id>http://{{request.META.HTTP_HOST}}{% url 'article_history' article.filename%}"</id>
 		<published>{{article.initial_date|date:"r"}}</published>
 		<updated>{{last_version.date|date:"r"}}</updated>
 		<content type="text">This article has been modified {{versions|length}} times.</content>
@@ -20,10 +20,10 @@
 	</entry>
         {% endfor %}
 	{% if page < page_list|length %}
-	<link rel="next" href="http://{{request.META.HTTP_HOST}}{% url browse source %}?page={{page|add:1}}"/>
+	<link rel="next" href="http://{{request.META.HTTP_HOST}}{% url 'browse' source %}?page={{page|add:1}}"/>
 	{% endif %}
 	{% if page > 1 %}
-	<link rel="previous" href="http://{{request.META.HTTP_HOST}}{% url browse source %}?page={{page|add:-1}}"/>
+	<link rel="previous" href="http://{{request.META.HTTP_HOST}}{% url 'browse' source %}?page={{page|add:-1}}"/>
 	{% endif %}
 </feed>
 
