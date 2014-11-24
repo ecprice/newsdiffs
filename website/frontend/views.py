@@ -107,6 +107,10 @@ def get_articles(source=None, distance=0):
 SOURCES = '''nytimes.com cnn.com politico.com washingtonpost.com
 bbc.co.uk'''.split()
 
+def is_valid_domain(domain):
+    """Cheap method to tell whether a domain is being tracked."""
+    return any(domain.endswith(source) for source in SOURCES)
+
 @cache_page(60 * 30)  #30 minute cache
 def browse(request, source=''):
     if source not in SOURCES + ['']:
@@ -291,6 +295,13 @@ def article_history(request, urlarg=''):
     # This is a hack to deal with unicode passed in the URL.
     # Otherwise gives an error, since our table character set is latin1.
     url = url.encode('ascii', 'ignore')
+
+    # Give an error on urls with the wrong hostname without hitting the
+    # database.  These queries are usually spam.
+    domain = url.split('/')[2]
+    if not is_valid_domain(domain):
+        return render_to_response('article_history_missing.html', {'url': url})
+
 
     try:
         article = Article.objects.get(url=url)
