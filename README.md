@@ -45,7 +45,7 @@ Do the initial setup above.  Then to start the webserver for testing:
 
     python website/manage.py runserver
 
-and visit `http://localhost:8000/`
+and visit [http://localhost:8000/](http://localhost:8000/)
 
 
 Running the scraper
@@ -68,7 +68,7 @@ some websites are parsed correctly in only one version.
 
 Then run
 
-   python website/manage.py scraper
+    python website/manage.py scraper
 
 This will populate the articles repository with a list of current news
 articles.  This is a snapshot at a single time, so the website will
