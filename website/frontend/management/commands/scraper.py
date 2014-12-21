@@ -175,8 +175,9 @@ def run_git_command(command, git_dir, max_timeout=15):
 
 def get_all_article_urls():
     ans = set()
-    for feeder in parsers.feeders:
-        urls = feeder()
+    for parser in parsers.parsers:
+        logger.info('Looking up %s' % parser.domains)
+        urls = parser.feed_urls()
         ans = ans.union(map(canonicalize_url, urls))
     return ans
 

@@ -29,6 +29,6 @@ def get_parser(url):
 
 # Each feeder places URLs into the database to be checked periodically.
 
-feeders = [parser.feed_urls for parser in parser_dict.values()]
+parsers = [parser for parser in parser_dict.values()]
 
-__all__ = ['feeders', 'get_parser']
+__all__ = ['parsers', 'get_parser']
