@@ -13,7 +13,7 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-
+SERVER_EMAIL = "newsdiffs@mit.edu"
 
 for line in open('/mit/newsdiffs/.my.cnf').read().split():
     if line.startswith('password='):
