@@ -251,6 +251,7 @@ def add_to_git_repo(data, filename, article):
 
     if already_exists:
         if previous == data:
+            logger.debug('Article matches current version in repo')
             return None, None, None
 
         #Now check how many times this same version has appeared before
@@ -330,7 +331,7 @@ def update_article(article):
         return
     to_store = unicode(parsed_article).encode('utf8')
     t = datetime.now()
-
+    logger.debug('Article parsed; trying to store')
     v, boring, diff_info = add_to_git_repo(to_store,
                                            url_to_filename(article.url),
                                            article)
@@ -351,11 +352,16 @@ def update_article(article):
 
 def update_articles(todays_git_dir):
     logger.info('Starting scraper; looking for new URLs')
-    for url in get_all_article_urls():
+    all_urls = get_all_article_urls()
+    logger.info('Got all %s urls; storing to database' % len(all_urls))
+    for i, url in enumerate(all_urls):
+        logger.debug('Woo: %d/%d is %s' % (i+1, len(all_urls), url))
         if len(url) > 255:  #Icky hack, but otherwise they're truncated in DB.
             continue
         if not models.Article.objects.filter(url=url).count():
+            logger.debug('Adding!')
             models.Article(url=url, git_dir=todays_git_dir).save()
+    logger.info('Done storing to database')
 
 def get_update_delay(minutes_since_update):
     days_since_update = minutes_since_update // (24 * 60)
