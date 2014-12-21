@@ -274,7 +274,7 @@ def prepend_http(url):
     http://www.nytimes.com
     """
     components = url.split('/', 2)
-    if len(components) < 2 or '.' in components[0]:
+    if len(components) <= 2 or '.' in components[0]:
         components = ['http:', '']+components
     elif components[1]:
         components[1:1] = ['']
