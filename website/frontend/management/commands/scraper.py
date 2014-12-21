@@ -367,11 +367,14 @@ def get_update_delay(minutes_since_update):
         return 180
     elif days_since_update < 30:
         return 60*24*3
+    elif days_since_update < 360:
+        return 60*24*30
     else:
         return 60*24*365*1e5  #ignore old articles
 
 def update_versions(todays_repo, do_all=False):
-    articles = list(models.Article.objects.all())
+    logger.info('Looking for articles to check')
+    articles = list(models.Article.objects.exclude(git_dir='old'))
     total_articles = len(articles)
 
     update_priority = lambda x: x.minutes_since_check() * 1. / get_update_delay(x.minutes_since_update())
