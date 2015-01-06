@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <title>{{article.latest_version.title}}, Change Log</title>
-    <id>http://{{request.META.HTTP_HOST}}{% url article_history_feed article.filename %}</id>
-    <link rel="self" href="http://{{request.META.HTTP_HOST}}{% url article_history_feed article.filename %}"/>
+    <id>http://{{request.META.HTTP_HOST}}{% url 'article_history_feed' article.filename %}</id>
+    <link rel="self" href="http://{{request.META.HTTP_HOST}}{% url 'article_history_feed' article.filename %}"/>
     <link rel="alternate" href="{{article.filename}}"/>
     <updated>{{article.last_update|date:"r"}}</updated>
     <author>
