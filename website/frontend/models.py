@@ -25,6 +25,7 @@ PublicationDict = {'www.nytimes.com': 'NYT',
                    'www.zeit.de': 'Zeit Online',
                    'www.bild.de': 'Bild',
                    'www.focus.de': 'Focus Online',
+                   'www.welt.de': 'Die Welt',
                    }
 
 ancient = datetime(1901, 1, 1)

@@ -16,6 +16,7 @@ parsers = """
 zeit.ZeitParser
 bild.BildParser
 focus.FocusParser
+spiegel.SpiegelParser
 """.split()
 
 parser_dict = {}
