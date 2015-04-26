@@ -2,31 +2,29 @@ from baseparser import BaseParser
 from BeautifulSoup import BeautifulSoup, Tag
 
 
-class ZeitParser(BaseParser):
-    SUFFIX = '?print=true'
-    domains = ['www.zeit.de']
+class BildParser(BaseParser):
+    SUFFIX = ''
+    domains = ['www.bild.de']
 
-    feeder_pat   = '^http://www.zeit.de/news/\d'
-    feeder_pages = ['http://www.zeit.de/news/index/']
+    feeder_pat   = '^http://www.bild.de/(politik|regional|geld)'
+    feeder_pages = ['http://www.bild.de/']
 
     def _parse(self, html):
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
                              fromEncoding='utf-8')
 
         self.meta = soup.findAll('meta')
-        elt = soup.find('span', 'title')
-        elTopic = soup.find('span', 'supertitle')
+        elt = soup.find('span', 'headline')
         if elt is None:
             self.real_article = False
             return
         self.title = elt.getText()
         self.byline = ''
-        self.date = soup.find('span', 'articlemeta-datetime').getText()
+        self.date = soup.find(attrs = {'time' : 'datetime'})
+        self.authorids = soup.find('div', attrs={'itemprop':'author'})
+        self.authorid = self.authorids.getText() if self.authorids else ''
 
-        div = soup.find('div', 'article-body')
-        if div is None:
-            # Hack for video articles
-            div = soup.find('div', 'emp-decription')
+        div = soup.find('div', 'articleBody')
         if div is None:
             self.real_article = False
             return
