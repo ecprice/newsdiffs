@@ -7,7 +7,7 @@ class BildParser(BaseParser):
     domains = ['www.bild.de']
 
     feeder_pat   = '^http://www.bild.de/(politik|regional|geld)'
-    feeder_pages = ['http://www.bild.de/']
+    feeder_pages = ['http://www.bild.de/news']
 
     def _parse(self, html):
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
@@ -23,9 +23,9 @@ class BildParser(BaseParser):
         self.byline = ''
         self.date = soup.find(attrs = {'time' : 'datetime'})
         self.authorids = soup.find('div', attrs={'itemprop':'author'})
-        self.authorid = self.authorids.getText() if self.authorids else ''
+        self.byline = self.authorids.getText() if self.authorids else ''
 
-        div = soup.find('div', 'articleBody')
+        div = soup.find('div', 'txt').getText()
         print(div)
         if div is None:
             self.real_article = False

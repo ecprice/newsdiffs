@@ -12,8 +12,7 @@
 # List of parsers to import and use based on parser.domains
 
 parsers = """
-bild.BildParser
-
+focus.FocusParser
 """.split()
 
 parser_dict = {}
