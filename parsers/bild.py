@@ -14,17 +14,19 @@ class BildParser(BaseParser):
                              fromEncoding='utf-8')
 
         self.meta = soup.findAll('meta')
-        elt = soup.find('span', 'headline')
+        elt = soup.find(attrs = {'class' : 'headline'})
         if elt is None:
             self.real_article = False
             return
         self.title = elt.getText()
+        print(self.title)
         self.byline = ''
         self.date = soup.find(attrs = {'time' : 'datetime'})
         self.authorids = soup.find('div', attrs={'itemprop':'author'})
         self.authorid = self.authorids.getText() if self.authorids else ''
 
         div = soup.find('div', 'articleBody')
+        print(div)
         if div is None:
             self.real_article = False
             return

@@ -23,6 +23,7 @@ class SternParser(BaseParser):
         self.date = soup.find('div', attrs = {'class' : 'datePublished'})
 
         div = soup.find('span', attrs={'itemprop':'articleBody'})
+        print(div)
         if div is None:
             self.real_article = False
             return
