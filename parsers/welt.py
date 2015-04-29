@@ -3,26 +3,26 @@ from BeautifulSoup import BeautifulSoup, Tag
 
 
 class WeltParser(BaseParser):
-    SUFFIX = '?config=print'
+
     domains = ['www.welt.de']
 
-    feeder_pat   = '^http://www.welt.de/(politik|wirtschaft|panorama|geld|wissen|regional)/'
+    feeder_pat   = 'article\d*'
     feeder_pages = ['http://www.welt.de/']
+    #feeder_div = 'groupWrapper'
 
     def _parse(self, html):
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
                              fromEncoding='utf-8')
 
         self.meta = soup.findAll('meta')
-        elt = soup.find('h1')
+        elt = soup.find('h1', 'widget storyContent title    prefix_1 grid_8')
         if elt is None:
             self.real_article = False
             return
         self.title = elt.getText()
-        self.byline = ''
-        self.date = soup.find('div', attrs = {'id' : 'currenttime'})
         self.authorids = soup.find('span', attrs={'itemprop':'author'})
-        self.authorid = self.authorids.getText() if self.authorids else ''
+        self.byline = self.authorids.getText() if self.authorids else ''
+        self.date = soup.find('meta', {'name':'last-modified'})['content']
 
         div = soup.find('div', 'storyBody')
         if div is None:
