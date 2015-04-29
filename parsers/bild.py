@@ -6,8 +6,11 @@ class BildParser(BaseParser):
     SUFFIX = ''
     domains = ['www.bild.de']
 
-    feeder_pat   = '^http://www.bild.de/(politik|regional|geld)'
-    feeder_pages = ['http://www.bild.de/news']
+    feeder_pat   = '^http://www.bild.de/(politik|regional|geld|digital)'
+    feeder_pages = ['http://www.bild.de/politik/startseite',
+                    'http://www.bild.de/geld/startseite/',
+                    'http://www.bild.de/regional/startseite/',
+                    'http://www.bild.de/digital/startseite/']
 
     def _parse(self, html):
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
@@ -25,8 +28,7 @@ class BildParser(BaseParser):
         self.authorids = soup.find('div', attrs={'itemprop':'author'})
         self.byline = self.authorids.getText() if self.authorids else ''
 
-        div = soup.find('div', 'txt').getText()
-        print(div)
+        div = soup.find('div', 'txt')
         if div is None:
             self.real_article = False
             return
