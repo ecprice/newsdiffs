@@ -2,13 +2,12 @@
 {% load url from future %}
 
 
-{% block title %}Error{% endblock title%}
+{% block title %}Error 500{% endblock title%}
 
 {% block content %}
 
-<h1>Oops, this doesn't look right</h1>
-<p>
-Hm. If you are on this page, something went wrong.
-<p>If you want to tell us what, you can <a href="{% url 'contact' %}">contact us</a>.
+<h1>Nanu, das sieht nicht richtig aus.</h1>
+<p>Wenn du auf dieser Seite bist, scheint etwas schief gelaufen zu sein.</p>
+<p>Falls du mehr darüber weißt, kannst du uns gerne <a href="{% url 'contact' %}">kontaktieren</a>.</p>
   
 {% endblock content%}
