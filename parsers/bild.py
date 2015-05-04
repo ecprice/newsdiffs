@@ -27,9 +27,11 @@ class BildParser(BaseParser):
         self.authorids = soup.find('div', attrs={'itemprop':'author'})
         self.byline = self.authorids.getText() if self.authorids else ''
 
-        div = soup.find('div', 'txt')
+        div = soup.find('div', attrs={'itemprop':'articleBody'})
         print(div)
         if div is None:
             self.real_article = False
             return
-        self.body = str(div)
+        self.body = '\n'+'\n\n'.join([x.getText() for x in div.childGenerator()
+                                      if isinstance(x, Tag) and x.name == 'p'])
+

@@ -3,7 +3,7 @@ from BeautifulSoup import BeautifulSoup, Tag
 
 
 class FocusParser(BaseParser):
-    SUFFIX = ''
+    SUFFIX = '?drucken=1'
     domains = ['www.focus.de']
 
     feeder_pat   = '^http://www.focus.de/(politik|finanzen|panorama|gesundheit|wissen)'
@@ -14,18 +14,22 @@ class FocusParser(BaseParser):
                              fromEncoding='utf-8')
 
         self.meta = soup.findAll('meta')
-        elt = soup.find('h1', 'articleIDentH1')
+        elt = soup.find('h1')
         if elt is None:
             self.real_article = False
             return
         self.title = elt.getText()
-        self.byline = ''
-        self.date = soup.find('span', 'created').getText()
+        #self.byline = soup.find('a', {'rel':'author'})
+        #self.date = soup.find('meta', {'name':'date'})['content']
 
-
-        div = soup.find('div', 'article-body')
-        if div is None:
+        content = soup.find('div', 'articleContent').findAll('div', 'textBlock')
+        if content is None:
             self.real_article = False
             return
-        self.body = '\n'+'\n\n'.join([x.getText() for x in div.childGenerator()
-                                      if isinstance(x, Tag) and x.name == 'p'])
+        text = ''
+        for div in content:
+            p = div.findAll('p')
+            for txt in p:
+                text += txt.getText()
+        print(text)
+        self.body = text
