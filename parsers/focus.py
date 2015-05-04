@@ -19,9 +19,14 @@ class FocusParser(BaseParser):
             self.real_article = False
             return
         self.title = elt.getText()
-        #self.byline = soup.find('a', {'rel':'author'})
-        #self.date = soup.find('meta', {'name':'date'})['content']
-
+        try:
+            author = soup.find('a', {'rel':'author'}).text
+        except:
+            author = ''
+        self.byline = author
+        created_at = soup.find('meta', {'name':'date'})['content']
+        self.date = created_at if created_at else ''
+        self.body = ''
         content = soup.find('div', 'articleContent').findAll('div', 'textBlock')
         if content is None:
             self.real_article = False
@@ -30,6 +35,5 @@ class FocusParser(BaseParser):
         for div in content:
             p = div.findAll('p')
             for txt in p:
-                text += txt.getText()
-        print(text)
+                text += txt.getText()+'\n'
         self.body = text
