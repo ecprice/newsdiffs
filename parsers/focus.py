@@ -6,7 +6,7 @@ class FocusParser(BaseParser):
     SUFFIX = '?drucken=1'
     domains = ['www.focus.de']
 
-    feeder_pat   = '^http://www.focus.de/(politik|finanzen|panorama|gesundheit|wissen)'
+    feeder_pat   = '^http://www.focus.de/(politik|finanzen|gesundheit|wissen)'
     feeder_pages = ['http://www.focus.de/']
 
     def _parse(self, html):
