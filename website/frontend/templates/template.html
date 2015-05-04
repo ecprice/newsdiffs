@@ -73,8 +73,6 @@
               <li {% block active_about %}{% endblock %}><a href="{% url 'about' %}">Über NewsDiffs</a></li>
               <li {% block active_browse %}{% endblock %}><a href="{% url 'browse' %}">Entdecken</a></li>
               <li {% block active_examples %}{% endblock %}><a href="{% url 'examples' %}">Highlights</a></li>
-              <li {% block active_press %}{% endblock %}><a href="{% url 'press' %}">Pressestimmen</a></li>
-              <li {% block active_subscribe %}{% endblock %}><a href="{% url 'subscribe' %}">Abonnieren</a></li>
               <li {% block active_contact %}{% endblock %}><a href="{% url 'contact' %}">Kontakt</a></li>
 
             </ul>
@@ -88,7 +86,7 @@
 <hr>
  {% block footer %} 
 	<footer>
-        <p>&copy; <a href="{% url 'contact' %}">NewsDiffs</a> 2015 | <a href="http://twitter.com/newsdiffsde">@NewsDiffsDE</a> | <a href="{% url 'subscribe' %}">Abonnieren</a> </p>
+        <p>&copy; <a href="{% url 'contact' %}">NewsDiffs</a> 2015 | <a href="http://twitter.com/newsdiffs_de">@newsdiffs_de</a></p>
         </footer>
 {% endblock footer %}
     </div>

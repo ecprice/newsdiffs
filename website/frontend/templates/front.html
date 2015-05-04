@@ -7,12 +7,12 @@
 
 {% include "find_by_uri.html" %}
 
+
 <a href="{% url 'browse' %}"><img
 src="https://phaven-prod.s3.amazonaws.com/files/image_part/asset/802050/slGF-1I5TqAsI_01Z9N8hnAv85o/medium_Screen_shot_2012-06-18_at_5.10.png"
 style="padding:10px; margin-left:25px; margin-top:10px; float:right" width="400"></a>	
 		
 <h1>NewsDiffs |  Tracking Online News Over Time</h1><p>
-
 <h2>	NewsDiffs <a href="{% url 'browse' %}">archiviert Änderungen</a>, die an
 Artikeln nach ihrer Veröffentlichung vorgenommen werden und macht diese sichtbar.<br> Zur Zeit verfolgen wir die Änderungen auf 
 {% for source in sources|slice:":-1" %}
@@ -23,12 +23,9 @@ und
 
 <p>
 <p>NewsDiffs versucht das Problem der Nachrichtenarchivierung in der sich ständig ändernden Welt des Online-Journalismus zu beheben.
-
 <p>Du kannst unser Archiv nach Artikeln <a href="{% url 'browse' %}">durchsuchen</a>. Außerdem haben wir ein paar <a href="{% url 'examples' %}">Beispiele</a> für besonders interessante Änderungen an Artikeln zusammengestellt.
 <p>Softwareentwickler können sich gerne unser <a href="https://github.com/NewsdiffsDE/newsdiffs">GitHub Repository</a> angucken.
-
-
-			<p>Falls du an Updates interessiert bist kannst du @NewsdiffsDE gerne auf Twitter folgen.
+<p>Falls du an Updates interessiert bist kannst du <a href="http://twitter.com/newsdiffs_de">@newsdiffs_de</a> gerne auf Twitter folgen.
  
 
 <p>	
