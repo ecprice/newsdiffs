@@ -1,12 +1,11 @@
 from baseparser import BaseParser
-from BeautifulSoup import BeautifulSoup, Tag
-
+from BeautifulSoup import BeautifulSoup
 
 class SpiegelParser(BaseParser):
     SUFFIX = ''
     domains = ['www.spiegel.de']
 
-    feeder_pat   = '^http://www.spiegel.de/(politik|wirtschaft|panorama|netzwelt|gesundheit)/'
+    feeder_pat   = '^http://www.spiegel.de/(politik|wirtschaft|panorama|netzwelt|gesundheit)/[a-z]'
     feeder_pages = ['http://www.spiegel.de/schlagzeilen/index.html']
 
     def _parse(self, html):
@@ -14,17 +13,27 @@ class SpiegelParser(BaseParser):
                              fromEncoding='utf-8')
 
         self.meta = soup.findAll('meta')
-        elt = soup.find('h2', attrs={'class':'article-title'})
+        elt = soup.find('h2',{'class':'article-title'})
         if elt is None:
             self.real_article = False
             return
         self.title = elt.getText()
-        self.byline = ''
-        self.date = soup.find(attrs = {'time' : 'datetime'})
+        try:
+            author = soup.find('a', {'rel':'author'}).text
+        except:
+            author = ''
+        self.byline = author
+        created_at = soup.find('meta', {'name':'last-modified'})['content']
+        self.date = created_at if created_at else ''
 
-        div = soup.find('div', 'article-section')
+        div = soup.find('div', 'article-section clearfix')
         if div is None:
             self.real_article = False
             return
-        self.body = '\n'+'\n\n'.join([x.getText() for x in div.childGenerator()
-                                      if isinstance(x, Tag) and x.name == 'p'])
+
+        div = self.remove_non_content(div)
+        text = ''
+        p = div.findAll('p')
+        for txt in p:
+            text += txt.getText()+'\n'
+        self.body = text

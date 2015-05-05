@@ -1,12 +1,12 @@
 from baseparser import BaseParser
-from BeautifulSoup import BeautifulSoup, Tag
+from BeautifulSoup import BeautifulSoup
 
 
 class BildParser(BaseParser):
     SUFFIX = ''
     domains = ['www.bild.de']
 
-    feeder_pat   = '^http://www.bild.de/(politik|regional|geld|digital)'
+    feeder_pat   = '^http://www.bild.de/(politik|regional|geld|digital/[a-z])'
     feeder_pages = ['http://www.bild.de/politik/startseite',
                     'http://www.bild.de/geld/startseite/',
                     'http://www.bild.de/regional/startseite/',
@@ -17,20 +17,21 @@ class BildParser(BaseParser):
                              fromEncoding='utf-8')
 
         self.meta = soup.findAll('meta')
-        elt = soup.find('meta', {'property': 'og:title'})['content']
-        if elt is None:
+        try:
+            elt = soup.find('meta', {'property': 'og:title'})['content']
+            self.title = elt
+        except:
             self.real_article = False
             return
-        self.title = elt
-        created_at = soup.find('div', {'class': 'date'}).getText()
-        self.date = created_at if created_at else ''
+        created_at = soup.find('div', {'class': 'date'})
+        self.date = created_at.getText() if created_at else ''
         author = soup.find('div', {'itemprop':'author'})
         self.byline = author.getText() if author else ''
-        print(self.byline)
         div = soup.find('div', {'itemprop':'articleBody isFamilyFriendly'})
         if div is None:
             self.real_article = False
             return
+        div = self.remove_non_content(div)
         text = ''
         p = div.findAll('p')
         for txt in p:

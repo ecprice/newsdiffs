@@ -13,9 +13,6 @@
 
 parsers = """
 bild.BildParser
-focus.FocusParser
-welt.WeltParser
-zeit.ZeitParser
 """.split()
 
 parser_dict = {}

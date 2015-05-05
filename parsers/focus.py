@@ -1,5 +1,5 @@
 from baseparser import BaseParser
-from BeautifulSoup import BeautifulSoup, Tag
+from BeautifulSoup import BeautifulSoup
 
 
 class FocusParser(BaseParser):
@@ -27,13 +27,13 @@ class FocusParser(BaseParser):
         created_at = soup.find('meta', {'name':'date'})['content']
         self.date = created_at if created_at else ''
         self.body = ''
-        content = soup.find('div', 'articleContent').findAll('div', 'textBlock')
-        if content is None:
+        div = soup.find('div', 'articleContent')
+        if div is None:
             self.real_article = False
             return
+        div = self.remove_non_content(div)
         text = ''
-        for div in content:
-            p = div.findAll('p')
-            for txt in p:
+        p = div.findAll('p')
+        for txt in p:
                 text += txt.getText()+'\n'
         self.body = text
