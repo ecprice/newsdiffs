@@ -17,7 +17,7 @@ class RPOParser(BaseParser):
             self.real_article = False
             return
         self.title = elt
-        self.byline = ''
+        self.byline = soup.find('meta', {'itemprop':'author'})['content']
         self.date = soup.find('meta', {'property':'vr:published_time'})['content']
         div = soup.find('div', {'class':'main-text '})
 	intro = soup.find('div', {'class':'first intro'}).find('strong')

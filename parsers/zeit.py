@@ -20,8 +20,13 @@ class ZeitParser(BaseParser):
             self.real_article = False
             return
         self.title = elt.getText()
-        self.byline = ''
-        self.date = soup.find('span', 'articlemeta-datetime').getText()
+	elbyline = soup.find('span', {'class':'header_author'})
+	if elbyline is None:
+        	elbyline = ''
+	else:
+		elbyline = elbyline.getText()
+	self.byline = elbyline
+	self.date = soup.find('span', 'articlemeta-datetime').getText()
 
         div = soup.find('div', 'article-body')
         if div is None:

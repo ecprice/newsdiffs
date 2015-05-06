@@ -17,7 +17,12 @@ class SDParser(BaseParser):
             self.real_article = False
             return
         self.title = elt
-        self.byline = ''
+        elbyline = soup.find('div', {'class':'authorProfileContainer'})
+	if elbyline is None:
+        	elbyline = ''
+	else:
+		elbyline = elbyline.getText()
+	self.byline = elbyline
         self.date = soup.find('time', {'class':'timeformat'})['datetime']
 
         div = soup.find('div', {'id':'wrapper'})

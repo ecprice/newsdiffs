@@ -18,7 +18,7 @@ class NTVParser(BaseParser):
             self.real_article = False
             return
         self.title = elt.getText()
-        self.byline = ''
+        self.byline = soup.find('meta', {'name':'author'})['content']
 	self.date = soup.find('meta', {'name':'last-modified'})['content']
         div = soup.find('div', {'class':'content'})
         if div is None:
