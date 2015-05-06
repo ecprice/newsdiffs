@@ -1,5 +1,5 @@
 from baseparser import BaseParser
-from BeautifulSoup import BeautifulSoup, Tag
+from BeautifulSoup import BeautifulSoup
 
 
 class SternParser(BaseParser):
@@ -23,11 +23,11 @@ class SternParser(BaseParser):
             self.real_article = False
             return
         self.title = elt.getText()
-        self.byline = ''
+        self.byline = ''        # no author on stern.de
         created_at = soup.find('meta', {'name':'last-modified'})
         self.date = created_at['content'] if created_at else ''
 
-        div = soup.find('span', {'itemprop':'articleBody'})
+        div = soup.find('div', {'itemprop':'mainContentOfPage'})
         if div is None:
             self.real_article = False
             return
