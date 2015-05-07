@@ -70,7 +70,29 @@ ul.nav.navbar-nav.navbar-right li > a{
 	margin: 50px auto;
 }
 
-#description {
+#main {
 	margin: 20px auto;
 }
 
+ul.article-options {
+	list-style: none;
+
+}
+
+ul.article-options>li {
+	float: left;
+	padding-right: 5%;
+}
+
+ul.pages {
+	list-style: none;
+}
+
+ul.pages>li {
+	float: left;
+	padding-right: 5%
+}
+
+ul.pages>li p{
+	padding-top: 24px;
+}
