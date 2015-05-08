@@ -44,6 +44,14 @@ html, body {
 	padding: 0 10px;
 }
 
+footer {
+	color: #fff;
+}
+
+footer a {
+	color: #fff;
+}
+
 .footer-social img{
 	height: 20px;
 	padding: 0 5px;
