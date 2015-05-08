@@ -18,16 +18,20 @@ class SternParser(BaseParser):
                              fromEncoding='utf-8')
 
         self.meta = soup.findAll('meta')
-        elt = soup.find('h2', {'id':'div_article_headline'})
+        #article headline
+        elt = soup.find('h2', {'id': 'div_article_headline'})
         if elt is None:
             self.real_article = False
             return
         self.title = elt.getText()
-        self.byline = ''        # no author on stern.de
-        created_at = soup.find('meta', {'name':'last-modified'})
+        # byline / author
+        author = soup.find('p', {'id': 'div_article_intro'}).find('span')
+        self.byline = author.getText() if author else ''
+        # article date
+        created_at = soup.find('meta', {'name': 'date'})
         self.date = created_at['content'] if created_at else ''
-
-        div = soup.find('div', {'itemprop':'mainContentOfPage'})
+        #article content
+        div = soup.find('div', {'itemprop': 'mainContentOfPage'})
         if div is None:
             self.real_article = False
             return
