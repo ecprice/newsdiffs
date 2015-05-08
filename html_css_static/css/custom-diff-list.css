@@ -67,10 +67,10 @@ ul.nav.navbar-nav.navbar-right li > a{
 }
 
 #search-bar {
-	margin: 50px 0;
+	margin: 50px auto;
 }
 
-#description {
-	margin: 20px 0;
+#main {
+	margin: 20px auto;
 }
 
