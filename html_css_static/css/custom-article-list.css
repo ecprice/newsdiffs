@@ -14,6 +14,7 @@ ul.article-options>li {
 
 ul.pages {
 	list-style: none;
+	margin: 0 auto;
 }
 
 ul.pages>li {
