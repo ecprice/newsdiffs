@@ -16,6 +16,8 @@
 		<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
 		<!--Custom CSS-->
 		<link href="css/custom.css" rel="stylesheet" type="typeext/css">
+		<!-- Search Bar CSS-->
+		<link href="css/custom-searchbar.css" rel="stylesheet" type="text/css">
 
 		<script src="js/jquery.js"></script> 
 	</head>
@@ -62,8 +64,8 @@
   			</div><!-- /.container-fluid -->
 		</nav>
 
-		<div class="container" id="description">
-			<div class="row">
+		<div class="container">
+			<div class="row" id="description">
 				<div class="col-sm-6 col-sm-offset-3">
 					<p class="text-justify">
 						Die Idee hinter NewsDiffs.de ist es, Änderungen an Nachrichtenartikeln sichtbar und nachvollziehbar zu machen. NewsDiffs.de trackt alle Änderungen an Artikeln der Titelseiten der 10 größten deutschsprachigen Nachrichtenportale. Nutze die Suchfunktion, um nach Artikeln zu suchen oder sieh dir unsere Highlights an.
@@ -71,20 +73,42 @@
 				</div>
 			</div>
 
+			
+
 			<div class="row" id="search-bar">
 				<div class="col-sm-6 col-sm-offset-3">
 					<div id="imaginary_container"> 
 						<div class="input-group stylish-input-group">
-							<input type="text" class="form-control"  placeholder="Search" >
-							<span class="input-group-addon">
-								<button type="submit">
-									<span class="glyphicon glyphicon-search"></span>
-								</button>  
-							</span>
-						</div>
+							
+								<input type="text" class="form-control"  placeholder="Search" >
+								<span class="input-group-addon">
+									<button type="submit">
+										<span class="glyphicon glyphicon-search"></span>
+									</button>  
+								</span>
+							
+
+
+						</div>						
 					</div>
 				</div>
 			</div>
+
+			<div class="row" id="search-foldout">
+				<div class="col-sm-6 col-sm-offset-3">
+					<ul class="list-group">
+						<li class="list-group-item"><span class="glyphicon glyphicon-paperclip"></span>Stichwort</li>
+						<li class="list-group-item"><span class="glyphicon glyphicon-link"></span>URL</li>
+						<li class="list-group-item"><span class="glyphicon glyphicon-file"></span>Zeitung</li>
+						<li class="list-group-item"><span class="glyphicon glyphicon-calendar"></span>Datum</li>
+						<li class="list-group-item"><span class="glyphicon glyphicon-user"></span>Autor</li>
+					</ul>
+				</div>
+			</div>
+
+			
+
+			
 
 			<div class="row">
 				<div class="col-sm-6 col-sm-offset-3">
