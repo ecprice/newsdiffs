@@ -18,8 +18,15 @@ class NTVParser(BaseParser):
             self.real_article = False
             return
         self.title = elt.getText()
-        self.byline = soup.find('meta', {'name':'author'})['content']
-	self.date = soup.find('meta', {'name':'last-modified'})['content']
+        ebyline = soup.find('meta', {'name':'author'})
+	if ebyline is None:
+            self.byline = ''
+	else: self.byline = ebyline['content']
+	edate = soup.find('meta', {'name':'last-modified'})
+	if edate is None:
+            self.real_article = False
+            return
+	self.date= edate['content']
         div = soup.find('div', {'class':'content'})
         if div is None:
             # Hack for video articles

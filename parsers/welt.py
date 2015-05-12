@@ -20,7 +20,11 @@ class WeltParser(BaseParser):
             return
         self.title = elt.getText()
         self.byline = ''
-        self.date = soup.find('meta', {'name':'last-modified'})['content']
+        edate = soup.find('meta', {'name':'last-modified'})
+	if edate is None:
+            self.real_article = False
+            return
+	self.date= edate['content']
 
         div = soup.find('div', 'storyBody')
         if div is None:

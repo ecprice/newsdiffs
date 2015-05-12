@@ -3,7 +3,7 @@ from BeautifulSoup import BeautifulSoup, Tag
 
 
 class SDParser(BaseParser):
-    domains = ['http://www.sueddeutsche.de/']
+    domains = ['www.sueddeutsche.de']
 
     feeder_pat   = '1\.\d*$'
     feeder_pages = ['http://www.sueddeutsche.de/']
@@ -12,10 +12,11 @@ class SDParser(BaseParser):
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
                              fromEncoding='utf-8')
         self.meta = soup.findAll('meta')
-        elt = soup.find('meta', {'property':'og:title'})['content']
+        elt = soup.find('meta', {'property':'og:title'})
         if elt is None:
             self.real_article = False
             return
+	else: elt = elt['content']
         self.title = elt
         elbyline = soup.find('div', {'class':'authorProfileContainer'})
 	if elbyline is None:
@@ -23,18 +24,22 @@ class SDParser(BaseParser):
 	else:
 		elbyline = elbyline.getText()
 	self.byline = elbyline
-        self.date = soup.find('time', {'class':'timeformat'})['datetime']
+        edate = soup.find('time', {'class':'timeformat'})
+	if edate is None:
+            self.real_article = False
+            return
+	self.date= edate['datetime']
 
         div = soup.find('div', {'id':'wrapper'})
 	intro = soup.find('section', {'class':'body'})
-
         if div is None:
             # Hack for video articles
             div = soup.find('div', 'emp-decription')
         if div is None:
             self.real_article = False
             return
-	self.body = '\n'+'\n\n'.join([x.getText() for x in intro.childGenerator()
-                                      if isinstance(x, Tag) and x.name=='ul'])
+	if intro is not None:
+            self.body = '\n'+'\n\n'.join([x.getText() for x in intro.childGenerator()
+                                      if isinstance(x, Tag) and x.name=='ul'])	
         self.body += '\n'+'\n\n'.join([x.getText() for x in div.childGenerator()
                                       if isinstance(x, Tag) and x.name=='p'])

@@ -26,8 +26,11 @@ class ZeitParser(BaseParser):
 	else:
 		elbyline = elbyline.getText()
 	self.byline = elbyline
-	self.date = soup.find('span', 'articlemeta-datetime').getText()
-
+	edate = soup.find('span', 'articlemeta-datetime')
+	if edate is None: 
+            self.real_article = False
+            return
+	else: self.date = edate.getText()
         div = soup.find('div', 'article-body')
         if div is None:
             # Hack for video articles
