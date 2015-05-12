@@ -6,7 +6,13 @@ class FAZParser(BaseParser):
     domains = ['www.faz.net']
 
     feeder_pat = 'aktuell/.*\.html$'
-    feeder_pages = ['http://www.faz.net/']
+    feeder_pages = ['http://www.faz.net/aktuell/finanzen',
+                    'http://www.faz.net/aktuell/gesellschaft',
+                    'http://www.faz.net/aktuell/politik',
+                    'http://www.faz.net/aktuell/wirtschaft',
+                    'http://www.faz.net/aktuell/wissen',
+                    'http://www.faz.net/aktuell/feuilleton',
+                    ]
 
     def _parse(self, html):
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
