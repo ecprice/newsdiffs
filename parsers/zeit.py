@@ -15,7 +15,7 @@ class ZeitParser(BaseParser):
 
         self.meta = soup.findAll('meta')
         elt = soup.find('span', 'title')
-	elTopic = soup.find('span', 'supertitle')
+        elTopic = soup.find('span', 'supertitle')
         if elt is None:
             self.real_article = False
             return
