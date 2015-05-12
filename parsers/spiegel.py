@@ -13,24 +13,26 @@ class SpiegelParser(BaseParser):
                              fromEncoding='utf-8')
 
         self.meta = soup.findAll('meta')
-        elt = soup.find('h2',{'class':'article-title'})
+        #article headline
+        elt = soup.find('h2', {'class': 'article-title'})
         if elt is None:
             self.real_article = False
             return
         self.title = elt.getText()
+        # byline / author
         try:
-            author = soup.find('a', {'rel':'author'}).text
+            author = soup.find('a', {'rel': 'author'}).text
         except:
             author = ''
         self.byline = author
-        created_at = soup.find('meta', {'name':'last-modified'})['content']
+        # article date
+        created_at = soup.find('meta', {'name': 'date'})['content']
         self.date = created_at if created_at else ''
-
+        #article content
         div = soup.find('div', 'article-section clearfix')
         if div is None:
             self.real_article = False
             return
-
         div = self.remove_non_content(div)
         text = ''
         p = div.findAll('p')
