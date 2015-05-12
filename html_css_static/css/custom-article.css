@@ -39,3 +39,8 @@
 	background-color: #a3ffa3;
 	text-decoration: underline;
 }
+
+button[type=button] {
+	margin-top: 5px;
+}
+
