@@ -26,10 +26,14 @@ class FAZParser(BaseParser):
         self.date = created_at if created_at else ''
         #article content
         div = soup.find('div', 'FAZArtikelContent')
-        div = self.remove_non_content(div)
         if div is None:
             self.real_article = False
             return
+        div = self.remove_non_content(div)
+        map(lambda x: x.extract(), div.findAll('span', {'class':'autorBox clearfix'})) # Author description
+        map(lambda x: x.extract(), div.findAll('p', {'class':'WeitereBeitraege'})) # more articles like that one
+        map(lambda x: x.extract(), div.findAll('ul', {'class':'WBListe'}))# other articles from this author
+
         div = div.find('div', {'class': ''})
         if hasattr(div, "childGenerator"):
             self.body = '\n' + '\n\n'.join([x.getText() for x in div.childGenerator()

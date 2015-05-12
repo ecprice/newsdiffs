@@ -26,7 +26,8 @@ class WeltParser(BaseParser):
         self.date = soup.find('meta', {'name': 'date'})['content']
         #article content
         div = soup.find('div', 'storyBody')
-        div = self.remove_non_content(div)
+        #div = self.remove_non_content(div)
+        print(div)
         if div is None:
             self.real_article = False
             return

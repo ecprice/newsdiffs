@@ -32,6 +32,7 @@ class BildParser(BaseParser):
             self.real_article = False
             return
         div = self.remove_non_content(div)
+        map(lambda x: x.extract(), div.findAll('div', {'class':'infoEl center edge'})) # commercials
         text = ''
         p = div.findAll('p')
         for txt in p:

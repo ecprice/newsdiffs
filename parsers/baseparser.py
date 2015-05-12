@@ -109,7 +109,6 @@ class BaseParser(object):
     # Used when finding articles to parse
     feeder_pat   = None # Look for links matching this regular expression
     feeder_pages = []   # on these pages
-    feeder_div = None
 
     feeder_bs = BeautifulSoup #use this version of beautifulsoup for feed
 
@@ -145,8 +144,6 @@ class BaseParser(object):
         for feeder_url in cls.feeder_pages:
             html = grab_url(feeder_url)
             soup = cls.feeder_bs(html)
-	    if cls.feeder_div is not None:
-		soup = soup.find('div', cls.feeder_div)
 
             # "or ''" to make None into str
             urls = [a.get('href') or '' for a in soup.findAll('a')]
@@ -161,8 +158,6 @@ class BaseParser(object):
 
         #removes all non-content
     def remove_non_content(self, html):
-        map(lambda x: x.extract(), html.findAll('div', {'class':'adition'})) #focus
-        map(lambda x: x.extract(), html.findAll('div', {'class':'infoEl center edge'})) # bild
         map(lambda x: x.extract(), html.findAll('script'))
         map(lambda x: x.extract(), html.findAll('style'))
         map(lambda x: x.extract(), html.findAll('embed'))

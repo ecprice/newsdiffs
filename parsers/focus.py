@@ -32,6 +32,7 @@ class FocusParser(BaseParser):
             self.real_article = False
             return
         div = self.remove_non_content(div)
+        map(lambda x: x.extract(), div.findAll('div', {'class':'adition'})) #focus
         text = ''
         p = div.findAll('p')
         for txt in p:
