@@ -65,8 +65,9 @@ footer a {
 	margin-top: 2.3em;
 }
 
-ul.dropdown{
+ul.dropdown-menu{
 	border: none;
+	
 }
 
 ul.nav.navbar-nav.navbar-right li > a{
