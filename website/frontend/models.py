@@ -20,8 +20,11 @@ def strip_prefix(string, prefix):
 PublicationDict = {'www.zeit.de': 'Zeit Online',
                    'www.bild.de': 'Bild',
                    'www.focus.de': 'Focus Online',
-                   'www.welt.de': 'Die Welt',
-                   'www.stern.de': 'Stern',
+                   'www.stern.de': 'Der Stern',
+                   'www.zeit.de': 'Die Zeit',
+                   'www.sueddeutsche.de': 'Süddeutsche Zeitung',
+                   'www.spiegel.de': 'Der Spiegel',
+                   'www.faz.de': 'FAZ',
                    }
 
 ancient = datetime(1901, 1, 1)
