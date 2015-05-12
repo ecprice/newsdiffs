@@ -7,12 +7,7 @@
 # List of parsers to import and use based on parser.domains
 
 parsers = """
-stern.SternParser
-bild.BildParser
-focus.FocusParser
-spiegel.SpiegelParser
 welt.WeltParser
-zeit.ZeitParser
 """.split()
 
 parser_dict = {}
