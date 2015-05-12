@@ -17,16 +17,21 @@ class BildParser(BaseParser):
                              fromEncoding='utf-8')
 
         self.meta = soup.findAll('meta')
+        #article headline
         try:
             elt = soup.find('meta', {'property': 'og:title'})['content']
             self.title = elt
         except:
             self.real_article = False
             return
-        created_at = soup.find('div', {'class': 'date'})
-        self.date = created_at.getText() if created_at else ''
+
+        # byline / author
         author = soup.find('div', {'itemprop':'author'})
         self.byline = author.getText() if author else ''
+        # article date
+        created_at = soup.find('div', {'class': 'date'})
+        self.date = created_at.getText() if created_at else ''
+        #article content
         div = soup.find('div', {'itemprop':'articleBody isFamilyFriendly'})
         if div is None:
             self.real_article = False

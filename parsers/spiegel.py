@@ -26,8 +26,8 @@ class SpiegelParser(BaseParser):
             author = ''
         self.byline = author
         # article date
-        created_at = soup.find('meta', {'name': 'date'})['content']
-        self.date = created_at if created_at else ''
+        created_at = soup.find('meta', {'name': 'date'})
+        self.date = created_at['content'] if created_at else ''
         #article content
         div = soup.find('div', 'article-section clearfix')
         if div is None:
