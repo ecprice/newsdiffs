@@ -25,11 +25,11 @@ class FAZParser(BaseParser):
             return
         self.title = elt['content']
         # byline / author
-        author = soup.find('meta', {'name': 'author'})['content']
-        self.byline = author if author else ''
+        author = soup.find('meta', {'name': 'author'})
+        self.byline = author['content'] if author else ''
         # article date
-        created_at = soup.find('meta', {'name': 'DC.date.issued'})['content']
-        self.date = created_at if created_at else ''
+        created_at = soup.find('meta', {'name': 'DC.date.issued'})
+        self.date = created_at['content'] if created_at else ''
         #article content
         div = soup.find('div', 'FAZArtikelContent')
         if div is None:
