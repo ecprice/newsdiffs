@@ -22,7 +22,7 @@ PublicationDict = {'www.zeit.de': 'Zeit Online',
                    'www.focus.de': 'Focus Online',
                    'www.stern.de': 'Der Stern',
                    'www.zeit.de': 'Die Zeit',
-                   'www.sueddeutsche.de': 'Süddeutsche Zeitung',
+                   'www.sueddeutsche.de': 'Sueddeutsche Zeitung',
                    'www.spiegel.de': 'Der Spiegel',
                    'www.faz.de': 'FAZ',
                    }
