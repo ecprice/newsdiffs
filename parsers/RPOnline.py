@@ -26,7 +26,6 @@ class RPOParser(BaseParser):
         self.date = created_at if created_at else ''
         #article content
         div = soup.find('div', {'class': 'main-text '})
-        div = self.remove_non_content(div)
         intro = soup.find('div', {'class': 'first intro'})
         if intro is None:
             intro = ''
@@ -35,6 +34,7 @@ class RPOParser(BaseParser):
         if div is None:
             self.real_article = False
             return
+        div = self.remove_non_content(div)
         self.body = intro
         self.body += '\n' + '\n\n'.join([x.getText() for x in div.childGenerator()
                                          if isinstance(x, Tag) and x.name == 'p'])

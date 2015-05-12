@@ -7,7 +7,7 @@
 # List of parsers to import and use based on parser.domains
 
 parsers = """
-faz.FAZParser
+sueddeutsche.SDParser
 """.split()
 
 parser_dict = {}

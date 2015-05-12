@@ -30,11 +30,11 @@ class SDParser(BaseParser):
         self.date = created_at['datetime']
         #article content
         div = soup.find('div', {'id': 'wrapper'})
-        div = self.remove_non_content(div)
         intro = soup.find('section', {'class': 'body'})
         if div is None:
             self.real_article = False
             return
+        div = self.remove_non_content(div)
         if intro is not None:
             self.body = '\n' + '\n\n'.join([x.getText() for x in intro.childGenerator()
                                             if isinstance(x, Tag) and x.name == 'ul'])
