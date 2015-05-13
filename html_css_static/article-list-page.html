@@ -83,51 +83,84 @@
 			<div class="row">
 				<div class="col-md-10 col-md-offset-1">
 					<h1>Suchergebnisse für | //Filterbegriff</h1>
-					<h5>Sortieren nach: Relevanz | Neueste</h5>    
+					<div class="sort">
+						<h5>Sortieren nach: </h5>
+						<div class="btn-group">
+							<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> ... <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="#">Relevanz</a></li>
+								<li><a href="#">Neueste</a></li>
+							</ul>
+						</div>
+					</div>
 					<div class="table-responsive">
-						<table class="table table-bordered">
+						<table class="table table-condensed">
+							<thead>
+								<tr>
+									<th>Zeitung</th>
+									<th>Artikel</th>
+								</tr>
+							</thead>
 							<tbody>
 								<tr>
-									<td><h3>//Zeitung</h3><br/>
-									<button type="button" class="btn btn-default btn-default"><span class="glyphicon glyphicon-link"></span> Quelle</button></td>
-									<td><h3>//Artikel</h3><br/>
-									<ul class="article-options">
-										<li>//n Änderungen</li>
-										<li>//Datum</li>
-										<li><button type="button" class="btn btn-default btn-default"><span class="glyphicon glyphicon-transfer"></span> Vergleichen</button></li>
-										<li><button type="button" class="btn btn-default btn-default"><span class="glyphicon glyphicon-time"></span> Artikelverlauf</button></li>
-									</ul>
+									<td>
+										<ul>
+											<li><h3>//Zeitung</h3></li>
+											<li><button type="button" class="btn btn-default btn-default"><span class="glyphicon glyphicon-link"></span> Quelle</button></td></li>
+										</ul>
+									<td>
+										<ul>
+											<li><h3>//Artikel</h3></li>
+											<li><ul class="article-options">
+												<li><p>//n Änderungen</p></li>
+												<li><p>//Datum</p></li>
+												<li><button type="button" class="btn btn-default btn-default"><img src="./images/Icon_Vergleichen16px.png"> Vergleichen</button></li>
+												<li><button type="button" class="btn btn-default btn-default"><img src="./images/Icon_Artikelverlauf16px.png"> Artikelverlauf</button></li>
+											</ul></li>
+										</ul>
 									</td>
 								</tr>
 								<tr>
-									<td><h3>//Zeitung</h3><br/>
-									<button type="button" class="btn btn-default btn-default"><span class="glyphicon glyphicon-link"></span> Quelle</button></td>
-									<td><h3>//Artikel</h3><br/>
-									<ul class="article-options">
-										<li>//n Änderungen</li>
-										<li>//Datum</li>
-										<li><button type="button" class="btn btn-default btn-default"><span class="glyphicon glyphicon-transfer"></span> Vergleichen</button></li>
-										<li><button type="button" class="btn btn-default btn-default"><span class="glyphicon glyphicon-time"></span> Artikelverlauf</button></li>
-									</ul>
+									<td>
+										<ul>
+											<li><h3>//Zeitung</h3></li>
+											<li><button type="button" class="btn btn-default btn-default"><span class="glyphicon glyphicon-link"></span> Quelle</button></td></li>
+										</ul>
+									<td>
+										<ul>
+											<li><h3>//Artikel</h3></li>
+											<li><ul class="article-options">
+												<li><p>//n Änderungen</p></li>
+												<li><p>//Datum</p></li>
+												<li><button type="button" class="btn btn-default btn-default"><img src="./images/Icon_Vergleichen16px.png"> Vergleichen</button></li>
+												<li><button type="button" class="btn btn-default btn-default"><img src="./images/Icon_Artikelverlauf16px.png"> Artikelverlauf</button></li>
+											</ul></li>
+										</ul>
 									</td>
 								</tr>
 								<tr>
-									<td><h3>//Zeitung</h3><br/>
-									<button type="button" class="btn btn-default btn-default"><span class="glyphicon glyphicon-link"></span> Quelle</button></td>
-									<td><h3>//Artikel</h3><br/>
-									<ul class="article-options">
-										<li>//n Änderungen</li>
-										<li>//Datum</li>
-										<li><button type="button" class="btn btn-default btn-default"><span class="glyphicon glyphicon-transfer"></span> Vergleichen</button></li>
-										<li><button type="button" class="btn btn-default btn-default"><span class="glyphicon glyphicon-time"></span> Artikelverlauf</button></li>
-									</ul>
+									<td>
+										<ul>
+											<li><h3>//Zeitung</h3></li>
+											<li><button type="button" class="btn btn-default btn-default"><span class="glyphicon glyphicon-link"></span> Quelle</button></td></li>
+										</ul>
+									<td>
+										<ul>
+											<li><h3>//Artikel</h3></li>
+											<li><ul class="article-options">
+												<li><p>//n Änderungen</p></li>
+												<li><p>//Datum</p></li>
+												<li><button type="button" class="btn btn-default btn-default"><img src="./images/Icon_Vergleichen16px.png"> Vergleichen</button></li>
+												<li><button type="button" class="btn btn-default btn-default"><img src="./images/Icon_Artikelverlauf16px.png"> Artikelverlauf</button></li>
+											</ul></li>
+										</ul>
 									</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 					<ul class="pages">
-						<li><p>Seite</p></li>
 						<li>
 							<ul class="pagination pagination-sm">
 								<li><a href="#">1</a></li>
@@ -137,7 +170,10 @@
 								<li><a href="#">5</a></li>
 							</ul>
 						</li>
-						<li><p>Gehe zu <a href="#">...</a></p></li>
+						<li>
+							<label for="pageNo">Gehe zu:</label>  
+							<input type="number" id="pageNo"  size="1" maxlength="4">
+						</li>
 					</ul>
 				</div>
 			</div>
