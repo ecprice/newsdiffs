@@ -1,9 +1,34 @@
+/* *****************************************************************************
+ Navbar 
+ **************************************************************************** */
+
 .navbar-default {
 	height: 6em;
-	border-radius: 0;
-	border-color: #FFFFFF;
+	border: none;
 	background-color: #FFFFFF;
 }
+
+.navbar-brand img{
+	height: 3em;
+}
+
+.navbar-collapse {
+	margin-top: 2.3em;
+}
+
+ul.dropdown-menu{
+	border: none;
+	
+}
+
+ul.nav.navbar-nav.navbar-right li > a{
+	width: 160px;
+	text-align: center;
+}
+
+/* *****************************************************************************
+ Footer 
+ **************************************************************************** */
 
 .footer {
 	background-color: #666;
@@ -39,23 +64,10 @@ footer a {
 	padding: 0 5px;
 }
 
-.navbar-brand img{
-	height: 3em;
-}
 
-.navbar-collapse {
-	margin-top: 2.3em;
-}
-
-ul.dropdown-menu{
-	border: none;
-	
-}
-
-ul.nav.navbar-nav.navbar-right li > a{
-	width: 160px;
-	text-align: center;
-}
+/* *****************************************************************************
+ Search Bar 
+ **************************************************************************** */
 
 #search-bar {
 	margin: 50px auto;
