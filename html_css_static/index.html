@@ -22,7 +22,7 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default">
         <div class="container-fluid col-md-8 col-md-offset-2">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -82,37 +82,23 @@
             </div>
         </div>
 
-
-        <div id="search-bar" class="row">
-            <div class="col-md-6 col-md-offset-3">
-                
-                <div id="imaginary_container" class="row">
-                    <div class="input-group stylish-input-group">
-                        <input type="text" class="form-control col-md-8" placeholder="Search">
-
-                        <span class="input-group-addon col-md-4">
-                            <button type="submit" class="col-md-12">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                        </span>
-                    </div>
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <div id="search-input">
+                    <input type="text" placeholder="Suche" id="search-input-line"><button type="button" id="search-input-btn"><span class="glyphicon glyphicon-search" ></span></button>
                 </div>
 
-                <div id="search-foldout" class="row">
-
-                    <ul class="list-group col-md-8">
-
+                <div id="search-foldout">
+                    <ul class="list-group">
                         <li class="list-group-item"><span class="glyphicon glyphicon-paperclip"></span>Stichwort</li>
                         <li class="list-group-item"><span class="glyphicon glyphicon-link"></span>URL</li>
                         <li class="list-group-item"><span class="glyphicon glyphicon-file"></span>Zeitung</li>
                         <li class="list-group-item"><span class="glyphicon glyphicon-calendar"></span>Datum</li>
                         <li class="list-group-item"><span class="glyphicon glyphicon-user"></span>Autor</li>
                     </ul>
-
                 </div>
             </div>
         </div>
-
 
         <div class="row">
             <div class="col-sm-6 col-sm-offset-3">
@@ -193,6 +179,7 @@
 
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/search.js"></script>
 
 </body>
 </html>
