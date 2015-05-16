@@ -109,4 +109,22 @@ Es gibt auch WYSIWYG-Editoren fürs Bootstrap Grid: http://shoelace.io/ , http:/
 
 Ich baue an den Seiten jetzt nichts um. 
 
-.....
+
+### 2d) Article List Page (article-list-page.html)
+
+Erste Sache die wich wichtig finde: solche Mockups immer mit echten Inhalten machen! Das Wort "Artikel" wirkt und funktioniert natürlich ganz anders als wenn dort steht "Manchester United defender Ferdinand retires from international football". Damit wäre dann aufgefallen, dass die "table-responsive" Klasse ganz komische Sachen macht bei längeren Texten. Und auch sonst fallen bei dem richtigen HTML Mockup Dinge auf, die man im Wireframe nicht sofort sieht: 
+
+- Fie diff-list-page.html funktioniert mit richtigen Überschriften ganz anders. Im Moment ist "Schlagzeile" die schmalste Spalte, und die anderen heben viel Platz. Wenn richtige Überschriften drin ständen, sähe die ganze Tabelle anders aus. (Und in der letzten Spalte würden die "Vergleichen mit vorheriger Version" umbrechen, wenn `.btn` nicht die Eigenschaft `white-space: nowrap;` hätte.)
+- Ich würde Zeitung/Quelle nicht mehr in eine seperate Spalte nehmen. Vor Allem weil das auf verschiedenen Bildschirmen und mit verscheidenen Ǘberschrift-Längen immer komische Effekte gibt. Die Zeitung einfach in Klammern hinter den Titel schreiben wie bei newsdiffs.org scheint sinnvoll. 
+- Alternative: "Original-Artikel bei ZEIT.de lesen" als kleine Zeile unter den Titel ... oder den Link zum Original erst auf der Detailseite bringen. Die Leute sollen ja nicht gleich auf unserer Liste 100 Links nach draußen finden.
+
+
+Ich würde die ganze Auflistung nochmal zur Diskussion stellen, und anhand unserer funktionierenden Seite weiterentwickeln. Und daher am bisherigen Code nichts optimieren. 
+
+Aber ein paar Hinweise zum Code möchte ich noch geben: 
+
+- Warum die ganzen <ul> und <li>? Die machen hier keinen Sinn. Innerhalb einer Zeile sidn Titel, Änderungen, Datum, Vergleichen und Verlauf keine Auflistung.
+- "Vergleichen" und "Artikelverlauf" sind semantisch keine Buttons sondern Links. Statt `<button type="button" class="btn btn-default">` geht auch `<a class="btn btn-default">`, was dasselbe Styling hat aber eben ein Link ist.
+- In den Buttons wie im Footer habt ihr die Icons als Bilder eingebunden. Besser ist es, die als CSS_Eigenschaft zu verwenden. Denn sie sind kein Inhalt, sondern ein Gestaltungsmerkmal. Wie das geht würde ich aber später mal erklären. Für den Moment funktioniert das gut so.
+
+Again: Keine Kritik sondern Hinweise.
