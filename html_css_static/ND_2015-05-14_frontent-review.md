@@ -77,8 +77,7 @@ Den Border sollte man direkt ausblenden, anstatt die Farbe auf die Hintergrundfa
 
 **Logo Image**
 
-Die Höhe als em festzulegen ist keine gute Idee. Scon deshalb, weil man nie genau weiß wie groß es tatsächlich wird und ob es mit anderen inhalten in der Breite kollidiert. 
-
+Die Höhe als em festzulegen ist keine gute Idee. Schon deshalb, weil man nie genau weiß wie groß es tatsächlich wird und ob es mit anderen Inhalten in der Breite kollidiert. M ein Vorschlag wäre, das Logo in eine Column des Grid Systems (siehe nächster Punkt) zu setzen, und auf width=100%. Dann passt es sich in den zur Verfügung stehenden Platz ein. Falls das System auf Fluid gesetzt ist und potentiell ewig breit werden kann, dann kann man das Bild noch mit max-width=500px (z.B.) begrenzen.
 
 
 
@@ -86,5 +85,28 @@ Die Höhe als em festzulegen ist keine gute Idee. Scon deshalb, weil man nie gen
 
 Das mit dem `container` vs `container-fluid` ist hier erklärt: http://getbootstrap.com/css/#grid . Hier kürzer in eigenen Worten: 
 
+Inhalte, die nebeneinander dargestellt werden sollen, werden immer innerhalb eines `.container` (feste Breite) oder `.container-fluid` (100% des Bildschirms platziert). 
+
+Wenn der Container fluid ist, dann ist er immer 100% des Bildschirms. Wenn er nicht fluid ist, ist er bei beliebig großen Bildschirmen immer 1200 Pixel breit (egal ob de Bildschirm 1300 oder 2800 Pixel hat). Wenn der Bildschirm kleiner als 1200 Pixel ist, ist der .container immer 960 Pixel breit (egal ob der Bildschirm 1000 oder 1199 Pixel breit ist). Das geht dann stufenweise herunter bis hin zu kleinen Bildschirmen. Aber es gibt immer den "breakpoint", bei dem der Container dann eine Stufe kleiner wird. 
+
+Innerhalb eines containers können "columns" gepackt werden. Es ist immer Platz für 12 columns. Ich kann also 12 x `<div class="col-1"></div>` unterbringen, oder 2 x `<div class="col-6"></div>` oder `<div class="col-8"></div><div class="col-2"></div><div class="col-2"></div>` usw. Und diese Columns sind immer gleich breit. Je nach Bildschirmgröße und Größe des Containers passen sich dann die Columns an.
+
+    <div class="container-fluid col-md-8 col-md-offset-2">
+
+Müsste, korrekt angewendet, so hier aussehen: 
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2"> ... content ... </div>
+        </div>
+    </div>
+
+Das würde dann sagen: alles was bei "... content ..." steht, hat 66,6% der Bildschirmbreite (col-md-8). Und hat nach links einen Abstand von 16% (col-md-offset-2). Beides gilt aber nur ab einer Bildschirmbreite von 992 Pixeln (dafür sorgt das "md" Segment). Mit dem Kürzel xs, sm, md und lg kann man genauer unterscheiden, für welche Geräte die Spalten-Aufteilung gelten soll (bei kleinen Geräten mit 400 Pixeln Breite machen 12 Spalten wenig Sinn, da will man vielleicht eher umbrechen und die untereinander darstellen). Bei col-md-4 (usw) werden die Spalten bei Bildchirmen größer als 992 Pixel aufrecht erhalten. Wird der Bildschirm kleiner, werden alle md Spalten untereinander dargestellt anstatt nebeneinander. sm Spalten sind ab 768 Pixeln nebenaindner, darunter brechen sie um und werden untereinander dargestellt. xs Spalten sind immer nebeneinander. 
+
+Mit dem Wissen kann man sich dann überlegen: wie sollen unsere Seiten dargestellt werden? Immer volle Bildschirmbreite (container-fluid), oder feste Breite mit maximal 1200 Pixeln (container)? Ich plädiere für die feste Breite, weil man sonst bei sehr großen Bildschirmen auch sehr breite Textzeilen bekommt, und diese nicht mehr lesen kann. Und dann: wie breit sollen die Inhalte sein? Und muss die Breite überhaupt angegeben werden? In der Nav-Bar z.B. ist sowieso das Logo links und die Punkte rechts, da kann die Breite egal sein. (Erst wenn die Inhalte ineinander ragen, müsste man sich etwas überlegen.) Bei article.html wollen wir ja links den Artikel und rechts das Sharing haben .. hier kann man dann Grid mit 8-4 oder 10-2 verwenden. 
+
+Es gibt auch WYSIWYG-Editoren fürs Bootstrap Grid: http://shoelace.io/ , http://www.layoutit.com/build . Was die taugen, weiß ich nicht.
+
+Ich baue an den Seiten jetzt nichts um. 
 
 .....
