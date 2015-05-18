@@ -1,10 +1,10 @@
 ## (1) Handwerkliches
 
-- fehlendes/falsch verlinktes Bild zu GitHub sieht man schona uf der Seite, und auch in der Chrome Developer Toolbar. Da war nur der Dateiname falsch geschrieben - easy fix. Beim Entwickeln hab ich meistens die DevToolbar offen, dann sieht man solche Sachen sofort (weil Fehlermeldungen auftauchen). 
+- fehlendes/falsch verlinktes Bild zu GitHub sieht man schon auf der Seite, und auch in der Chrome Developer Toolbar. Da war nur der Dateiname falsch geschrieben - easy fix. Beim Entwickeln hab ich meistens die DevToolbar offen, dann sieht man solche Sachen sofort (weil Fehlermeldungen auftauchen). 
 - <html> Tag am Ende der Seite nicht geschlossen, sondern nochmal geöffnet.
-- HTML Syntax sollte man immer checken. Sonst können Fehler auftreten, bei denen man verzweifelt im CSS sucht, dabei ist das Problem im HTML. Manche IDe warnen bei ungültigem HTML. Oder man nimmt einen Validator (https://validator.w3.org/check)
+- HTML Syntax sollte man immer checken. Sonst können Fehler auftreten, bei denen man verzweifelt im CSS sucht, dabei ist das Problem im HTML. Manche IDEs warnen bei ungültigem HTML. Oder man nimmt einen Validator (https://validator.w3.org/check)
 - Klasse doppelt vergeben (`class="btn btn-default btn-default"`). Ist kein Problem, und passiert halt. Wollte nur kurz drauf hinweisen.
-- JavaScript Dateien sollte man nicht im `<head>` einbinden, sondern als letztes im `<head>`. Das macht die Seite schneller. Wenn das JS im Head ist, unterbricht der Browser das Rendern der Seite bis er die JS Datei heruntergeladen und ausgewertet hat, und macht danach erst mit der Darstellung der Seite weiter. Wenn man das JS in den Fußm der Seite verbannt, kann schonmal alles dargestelt werden bevor das JS geladen wird.
+- JavaScript Dateien sollte man nicht im `<head>` einbinden, sondern als letztes im `<body>`. Das macht die Seite schneller. Wenn das JS im Head ist, unterbricht der Browser das Rendern der Seite bis er die JS Datei heruntergeladen und ausgewertet hat, und macht danach erst mit der Darstellung der Seite weiter. Wenn man das JS in den Fuß der Seite verbannt, kann schonmal alles dargestelt werden bevor das JS geladen wird.
 
 Commit: **[Frontend/Static-HTML-Templates-Fixes 9aa7eec] fixed HTML syntax errors**
 
@@ -77,7 +77,7 @@ Den Border sollte man direkt ausblenden, anstatt die Farbe auf die Hintergrundfa
 
 **Logo Image**
 
-Die Höhe als em festzulegen ist keine gute Idee. Schon deshalb, weil man nie genau weiß wie groß es tatsächlich wird und ob es mit anderen Inhalten in der Breite kollidiert. M ein Vorschlag wäre, das Logo in eine Column des Grid Systems (siehe nächster Punkt) zu setzen, und auf width=100%. Dann passt es sich in den zur Verfügung stehenden Platz ein. Falls das System auf Fluid gesetzt ist und potentiell ewig breit werden kann, dann kann man das Bild noch mit max-width=500px (z.B.) begrenzen.
+Die Höhe als em festzulegen ist keine gute Idee. Schon deshalb, weil man nie genau weiß wie groß es tatsächlich wird und ob es mit anderen Inhalten in der Breite kollidiert. Mein Vorschlag wäre, das Logo in eine Column des Grid Systems (siehe nächster Punkt) zu setzen, und auf width=100%. Dann passt es sich in den zur Verfügung stehenden Platz ein. Falls das System auf Fluid gesetzt ist und potentiell ewig breit werden kann, dann kann man das Bild noch mit max-width=500px (z.B.) begrenzen.
 
 
 
@@ -123,7 +123,7 @@ Ich würde die ganze Auflistung nochmal zur Diskussion stellen, und anhand unser
 
 Aber ein paar Hinweise zum Code möchte ich noch geben: 
 
-- Warum die ganzen <ul> und <li>? Die machen hier keinen Sinn. Innerhalb einer Zeile sidn Titel, Änderungen, Datum, Vergleichen und Verlauf keine Auflistung.
+- Warum die ganzen `<ul>` und `<li>`? Die machen hier keinen Sinn. Innerhalb einer Zeile sind Titel, Änderungen, Datum, Vergleichen und Verlauf keine Auflistung.
 - "Vergleichen" und "Artikelverlauf" sind semantisch keine Buttons sondern Links. Statt `<button type="button" class="btn btn-default">` geht auch `<a class="btn btn-default">`, was dasselbe Styling hat aber eben ein Link ist.
 - In den Buttons wie im Footer habt ihr die Icons als Bilder eingebunden. Besser ist es, die als CSS_Eigenschaft zu verwenden. Denn sie sind kein Inhalt, sondern ein Gestaltungsmerkmal. Wie das geht würde ich aber später mal erklären. Für den Moment funktioniert das gut so.
 
