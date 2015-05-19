@@ -6,7 +6,7 @@
 # Test with test_parser.py
 # List of parsers to import and use based on parser.domains
 
-parsers = """
+"""
 sueddeutsche.SDParser
 stern.SternParser
 bild.BildParser
@@ -15,6 +15,10 @@ spiegel.SpiegelParser
 zeit.ZeitParser
 RPOnline.RPOParser
 faz.FAZParser
+"""
+
+parsers = """
+welt.WeltParser
 """.split()
 
 parser_dict = {}
