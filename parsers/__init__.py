@@ -15,10 +15,11 @@ spiegel.SpiegelParser
 zeit.ZeitParser
 RPOnline.RPOParser
 faz.FAZParser
+welt.WeltParser
 """
 
 parsers = """
-welt.WeltParser
+n-tv.NTVParser
 """.split()
 
 parser_dict = {}
