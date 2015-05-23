@@ -3,17 +3,18 @@
  **************************************************************************** */
 
 .navbar-default {
-	height: 6em;
+	height: 80px;
 	border: none;
 	background-color: #FFFFFF;
+	margin-bottom: 0px;
 }
 
 .navbar-brand img{
-	height: 3em;
+	height: 50px;
+
 }
 
 .navbar-collapse {
-	margin-top: 2.3em;
 }
 
 ul.dropdown-menu{
@@ -22,8 +23,11 @@ ul.dropdown-menu{
 }
 
 ul.nav.navbar-nav.navbar-right li > a{
-	width: 160px;
 	text-align: center;
+}
+
+#bs-example-navbar-collapse-1 {
+	margin-top: 15px;
 }
 
 /* *****************************************************************************

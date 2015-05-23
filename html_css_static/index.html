@@ -33,35 +33,19 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">
-                    <img src="images/Logo_ND_with_Name_horizontal_transp_cut.png" alt="NewsDiffs Logo">
-                </a>
+                <a class="navbar-brand" href="/"><img src="images/logo_nd_neu.png" alt="NewsDiffs Logo"></a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#">Startseite</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Über
-                            Uns<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">F.A.Q.</a></li>
-                            <li><a href="#">Presse</a></li>
-                            <li><a href="#">Kontakt</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Entdecken<span
-                                class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">Höhepunkte</a></li>
-                            <li><a href="#">Archiv</a></li>
-                        </ul>
-                    </li>
-
+                    <li class="active"><a href="#">Startseite</a></li>
+                    <li><a href="#">Entdecken</a></li>
+                    <li><a href="highlights.html">Highlights</a></li>
+                    <li><a href="#">Über Uns</a></li>
+                    <li><a href="#">F.A.Q.</a></li>
+                    <li><a href="#">Presse</a></li>
+                    <li><a href="#">Archiv</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -76,8 +60,7 @@
                 <p class="text-justify">
                     Die Idee hinter NewsDiffs.de ist es, Änderungen an Nachrichtenartikeln sichtbar und nachvollziehbar
                     zu machen. NewsDiffs.de trackt alle Änderungen an Artikeln der Titelseiten der 10 größten
-                    deutschsprachigen Nachrichtenportale. Nutze die Suchfunktion, um nach Artikeln zu suchen oder sieh
-                    dir unsere Highlights an.
+                    deutschsprachigen Nachrichtenportale. Nutze die Suchfunktion, um nach Artikeln zu suchen oder sieh dir unsere <a href="highlights.html">Highlights</a> an.
                 </p>
             </div>
         </div>
@@ -85,7 +68,7 @@
         <div class="row" id ="search-total">
             <div class="col-sm-6 col-sm-offset-3">
                 <div id="search-input">
-                    <input type="text" placeholder="Suche" id="search-input-line"><button type="button" id="search-input-btn"><span class="glyphicon glyphicon-search" ></span></button>
+                    <input type="text" placeholder="Suche" id="search-input-line"><button type="button" id="search-input-btn" onclick="location.href='article-list-page.html'"><span class="glyphicon glyphicon-search" ></span></button>
                 </div>
 
                 <div id="search-foldout">

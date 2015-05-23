@@ -16,7 +16,7 @@
 }
 
 #search-foldout {
-	display: none;
+	/*display: none;*/
 	width: 90%
 }
 
@@ -25,9 +25,12 @@
 }
 
 #search-input #search-input-btn {
-	width: 10%;
+	/*	custom width, margin and padding important because the glow of the search input
+		would get cut by the button*/
+	width: 9%;
 	height: 26px;
-	padding: 1px;
+	padding: 1px 1px 1px;
+	margin-left: 3px;
 	border-left: 0px;
 	border-right: 1px;
 	border-right-color: #000;
@@ -39,4 +42,9 @@
 
 #search-total {
 	margin: 20px 0;
+}
+
+#search-input input {
+	/*has height of foldout rows*/
+	line-height: 2.5;
 }
