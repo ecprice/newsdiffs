@@ -1,10 +1,20 @@
 /* *****************************************************************************
+ Body 
+ **************************************************************************** */
+
+body {
+	color: #333333;
+}
+
+
+/* *****************************************************************************
  Navbar 
  **************************************************************************** */
 
 .navbar-default {
 	height: 80px;
 	border: none;
+	border-radius: 0px;
 	background-color: #FFFFFF;
 	margin-bottom: 0px;
 }
@@ -28,6 +38,20 @@ ul.nav.navbar-nav.navbar-right li > a{
 
 #bs-example-navbar-collapse-1 {
 	margin-top: 15px;
+}
+
+.nav > li > a {
+	padding: 5px 15px;
+	margin: 10px 0px;
+	border-right: 1px solid transparent;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #333333;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+  color: #000000;
 }
 
 /* *****************************************************************************
