@@ -26,18 +26,12 @@ table td>ul {
 	
 }
 
-ul.article-options {
-	list-style: none;
-
-}
-
-ul.article-options>li {
+td>p, td>a {
 	float: left;
-	padding-right: 5%;
+	margin-right: 5%;
 }
 
-ul.article-options>li p {
-	margin: 0;
+td p {
 	padding: 5px 0;
 }
 
