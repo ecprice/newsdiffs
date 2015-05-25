@@ -9,30 +9,30 @@
 .sort h5 {
 	float: left;
 	padding-right: 5px;
+	margin-top: 7px;
+	margin-bottom: 7px;
 }
 
-table {
+.table-condensed {
 	clear:both;
 }
 
-table h3 {
+.table-condensed > tbody > tr > td > h3 {
 	margin-top: 10px;
 }
 
-table td>ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	
+.table-condensed > tbody > tr > td {
+  padding: 10px;
 }
 
-td>p, td>a {
+.table-condensed > tbody > tr > td > p, 
+.table-condensed > tbody > tr > td > a {
 	float: left;
 	margin-right: 5%;
 }
 
-td p {
-	padding: 5px 0;
+.table-condensed > tbody > tr > td p {
+	padding: 7px 0;
 }
 
 ul.pages {
@@ -46,13 +46,14 @@ ul.pages>li {
 }
 
 ul.pages>li label, input{
-	margin-top: 24px;
+	margin-top: 21px;
 }
 
 ul.pages>li label {
 	font-weight: normal;
 }
 
-input#pageNo {
+input#pageNr {
   max-width: 50px;
+    border-radius: 4px;
 }
