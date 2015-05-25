@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <title>NewsDiffs DE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords"
+          content="Die Idee hinter NewsDiffs.de ist es, Änderungen an Nachrichtenartikeln sichtbar und nachvollziehbar zu machen. NewsDiffs.de trackt alle Änderungen an Artikeln der Titelseiten der 10 größten deutschsprachigen Nachrichtenportale. Nutze die Suchfunktion, um nach Artikeln zu suchen oder sieh dir unsere Highlights an."/>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="../../assets/js/html5shiv.js"></script>
+    <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!--Bootstrap CSS-->
+    <link href="css/bootstrap.css" rel='stylesheet' type='text/css'/>
+    <link href="css/sticky-footer-navbar.css" rel='stylesheet' type='text/css'/>
+    <!--Custom CSS-->
+    <link href="css/custom.css" rel="stylesheet" type="text/css">
+    <link href="css/custom-searchbar.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid col-md-8 col-md-offset-2">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"><img src="images/logo_nd_neu.png" alt="NewsDiffs Logo"></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="index.html">Startseite</a></li>
+                    <li><a href="#">Entdecken</a></li>
+                    <li class="active"><a href="highlights.html">Highlights</a></li>
+                    <li><a href="#">Archiv</a></li>
+                    <li><a href="#">Über Uns</a></li>
+                    <li><a href="#">F.A.Q.</a></li>
+                    <li><a href="#">Presse</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <!-- Begin page content -->
+    <div class="container">
+        <div class="row" id="description">
+            <div class="col-md-6 col-md-offset-3">
+                <p class="text-justify">
+                    Die Idee hinter NewsDiffs.de ist es, Änderungen an Nachrichtenartikeln sichtbar und nachvollziehbar
+                    zu machen. NewsDiffs.de trackt alle Änderungen an Artikeln der Titelseiten der 10 größten
+                    deutschsprachigen Nachrichtenportale. Nutze die Suchfunktion, um nach Artikeln zu suchen oder sieh dir unsere <a href="highlights.html">Highlights</a> an.
+                </p>
+            </div>
+        </div>
+
+        <div class="row" id ="search-total">
+            <div class="col-sm-6 col-sm-offset-3">
+                <div id="search-input">
+                    <input type="text" placeholder="Suche" id="search-input-line"><button type="button" id="search-input-btn" onclick="location.href='article-list-page.html'"><span class="glyphicon glyphicon-search" ></span></button>
+                </div>
+
+                <div id="search-foldout">
+                    <ul class="list-group">
+                        <li class="list-group-item"><span class="glyphicon glyphicon-paperclip"></span>Stichwort</li>
+                        <li class="list-group-item"><span class="glyphicon glyphicon-link"></span>URL</li>
+                        <li class="list-group-item"><span class="glyphicon glyphicon-file"></span>Zeitung</li>
+                        <li class="list-group-item"><span class="glyphicon glyphicon-calendar"></span>Datum</li>
+                        <li class="list-group-item"><span class="glyphicon glyphicon-user"></span>Autor</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+    <footer class="footer">
+        <div class="container-fluid col-md-8 col-md-offset-2">
+            <p class="copy">© 2015 <a href="#">NewsDiffs DE</a></p>
+            <ul class="footer-social">
+                <li><a href="https://github.com/NewsdiffsDE"><img src="images/GitHub_logo_white.png" alt="NewsdiffsDE bei GitHub">NewsdiffsDE</a></li>
+                <li><a href="http://twitter.com/newsdiffs_de"><img src="images/Twitter_logo_white.png" alt="@newsdiffs_de auf Twitter">@newsdiffs_de</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/search.js"></script>
+
+</body>
+</html>
