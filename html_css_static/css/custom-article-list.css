@@ -31,16 +31,16 @@ ul.pages {
 	margin: 0 auto;
 }
 
-ul.pages>li {
+ul.pages > li {
 	float: left;
 	padding-right: 5%
 }
 
-ul.pages>li label, input{
+ul.pages > li label, input{
 	margin-top: 21px;
 }
 
-ul.pages>li label {
+ul.pages > li label {
 	font-weight: normal;
 }
 
