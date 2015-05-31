@@ -21,18 +21,9 @@
 	margin-top: 10px;
 }
 
-.table-condensed > tbody > tr > td {
-  padding: 10px;
-}
-
-.table-condensed > tbody > tr > td > p, 
-.table-condensed > tbody > tr > td > a {
+.table-condensed > tbody > tr > td > p {
 	float: left;
 	margin-right: 5%;
-}
-
-.table-condensed > tbody > tr > td p {
-	padding: 7px 0;
 }
 
 ul.pages {
