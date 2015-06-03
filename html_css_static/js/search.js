@@ -8,3 +8,8 @@ $(window).load(function () {
 		$("#search-foldout").hide();
 	});
 });
+
+document.getElementById("stichwort-link").addEventListener("click", function(){
+	console.log("hey");
+	document.getElementById("search-input-line").placeholder = "Stichwort";
+});
