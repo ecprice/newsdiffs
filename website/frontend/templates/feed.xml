@@ -15,8 +15,8 @@
 		<id>http://{{request.META.HTTP_HOST}}{% url 'article_history' article.filename%}"</id>
 		<published>{{article.initial_date|date:"r"}}</published>
 		<updated>{{last_version.date|date:"r"}}</updated>
-		<content type="text">This article has been modified {{versions|length}} times.</content>
-		<summary>This article has been modified {{versions|length}} times.</summary>
+		<content type="text">Dieser Artikel wurde {{versions|length}} mal geändert.</content>
+		<summary>Dieser Artikel wurde {{versions|length}} mal geändert.</summary>
 	</entry>
         {% endfor %}
 	{% if page < page_list|length %}

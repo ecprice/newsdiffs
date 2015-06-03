@@ -1,0 +1,58 @@
+#main {
+	margin: 20px auto;
+}
+
+.sort {
+	margin: 10px 0;
+}
+
+.sort h5 {
+	float: left;
+	padding-right: 5px;
+	margin-top: 7px;
+	margin-bottom: 7px;
+}
+
+a img:hover {
+	text-decoration: none;
+}
+
+a img {
+	padding-right: 2px;
+}
+
+.table-condensed {
+	clear:both;
+}
+
+.table-condensed > tbody > tr > td > h3 {
+	margin-top: 10px;
+}
+
+.table-condensed > tbody > tr > td > p {
+	float: left;
+	margin-right: 5%;
+}
+
+ul.pages {
+	list-style: none;
+	margin: 0 auto;
+}
+
+ul.pages > li {
+	float: left;
+	padding-right: 5%
+}
+
+ul.pages > li label, input{
+	margin-top: 21px;
+}
+
+ul.pages > li label {
+	font-weight: normal;
+}
+
+input#pageNr {
+  max-width: 50px;
+    border-radius: 4px;
+}
