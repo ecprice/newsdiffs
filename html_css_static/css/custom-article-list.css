@@ -13,6 +13,14 @@
 	margin-bottom: 7px;
 }
 
+a img:hover {
+	text-decoration: none;
+}
+
+a img {
+	padding-right: 2px;
+}
+
 .table-condensed {
 	clear:both;
 }

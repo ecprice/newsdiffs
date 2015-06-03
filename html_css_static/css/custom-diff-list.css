@@ -2,6 +2,14 @@
 	margin: 20px auto;
 }
 
+a img:hover {
+	text-decoration: none;
+}
+
+a img {
+	padding-right: 2px;
+}
+
 /* 
 
 From: https://css-tricks.com/responsive-data-tables/
