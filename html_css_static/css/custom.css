@@ -43,7 +43,6 @@ ul.nav.navbar-nav.navbar-right li > a{
 .nav > li > a {
 	padding: 5px 15px;
 	margin: 10px 0px;
-	border-right: 1px solid transparent;
 }
 
 .navbar-default .navbar-nav > li > a {
