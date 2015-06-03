@@ -1,7 +1,8 @@
 $(window).load(function () {
 	
-	$( "#search-input #search-input-line" ).focus(function() {
-		console.log("helloo");
+	$("#search-input-line").focus(function(e) {
+		console.log(e);
+		console.log(e.target);
 		$("#search-foldout").show();
 	}).blur(function()	{
 		$("#search-foldout").hide();
