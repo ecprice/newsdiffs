@@ -1,0 +1,8 @@
+#submenu, #faq {
+	background-color: #e7e7e7;
+}
+
+#intro, #faq, #press {
+	min-height: 600px;
+	margin-top: 50px;
+}
