@@ -6,6 +6,17 @@ body {
 	color: #333333;
 }
 
+body a {
+	color: #65C928;
+	text-decoration: none;
+}
+
+body a:hover {
+	color: #4A8E21;
+	text-decoration: none;
+	
+}
+
 
 /* *****************************************************************************
  Navbar 
@@ -85,6 +96,10 @@ footer {
 
 footer a {
 	color: #fff;
+}
+
+footer a:hover {
+	color: #CFCFCF;
 }
 
 .footer-social img{
