@@ -20,8 +20,9 @@
 	width: 90%
 }
 
-#search-input #search-input-line {
+#search-input-line {
 	width: 90%;
+	padding-left: 13px;
 }
 
 #search-input #search-input-btn {
@@ -47,4 +48,8 @@
 #search-input input {
 	/*has height of foldout rows*/
 	line-height: 2.5;
+}
+
+#search-foldout a, a:hover {
+	color: #A9A9A9;
 }
