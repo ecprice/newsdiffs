@@ -42,7 +42,7 @@
 }
 
 #search-total {
-	margin: 20px 0;
+	margin: 20px 0 40px;
 }
 
 #search-input input {
@@ -52,4 +52,16 @@
 
 #search-foldout a, a:hover {
 	color: #A9A9A9;
+}
+
+/* *****************************************************************************
+ Description
+ **************************************************************************** */
+
+#description {
+	margin: 0px;
+}
+
+p.text-justify {
+	margin-top: 40px;
 }
