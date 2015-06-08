@@ -154,7 +154,7 @@ class BaseParser(object):
 
             all_urls = all_urls + [url for url in urls if
                                    re.search(cls.feeder_pat, url)]
-        return all_urls
+        return set(all_urls)
 
         #removes all non-content
     def remove_non_content(self, html):
