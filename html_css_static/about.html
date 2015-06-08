@@ -25,7 +25,7 @@
 <body>
 
     <nav class="navbar navbar-default navbar-static-top">
-        <div class="container-fluid col-md-8 col-md-offset-2">
+        <div class="container-fluid col-md-8 col-md-offset-2" id="top">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -83,12 +83,10 @@
             </div>
         </div>
 
-        <div class="row" id ="submenu">
+        <div class="row" id ="submenu-row">
             <div class="container-fluid col-md-8 col-md-offset-2">
-
-                <h1>Über NewsDiffs</h1>
-                <ul class="nav nav-pills nav-stacked">
-                    <li role="presentation" class="active"><a href="#intro">Einführung</a></li>
+                <ul class="nav nav-pills" id="submenu">
+                    <li role="presentation"><a href="#intro">Einführung</a></li>
                     <li role="presentation"><a href="#faq">F.A.Q.</a></li>
                     <li role="presentation"><a href="#press">Presse</a></li>
                 </ul>
@@ -99,7 +97,15 @@
 
         <div class="row" id="intro">
             <div class="container-fluid col-md-8 col-md-offset-2">
-                <h2>Einführung</h2>
+
+                <h2>
+                    Einführung
+                    <a href="#top">
+                        <button type="button" class="btn btn-default btn-md go-up-btn">
+                            <span class="glyphicon glyphicon-arrow-up"></span>
+                        </button>
+                    </a>
+                </h2>
 
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus euismod aliquet feugiat. Nullam iaculis purus quis blandit lacinia. 
                 Suspendisse feugiat pretium lorem, in porttitor tortor convallis nec. Integer eget auctor nulla. Donec rhoncus purus metus, non rhoncus lorem posuere at. 
@@ -111,7 +117,14 @@
 
         <div class="row" id="faq">
             <div class="container-fluid col-md-8 col-md-offset-2">
-                <h2>F.A.Q.</h2>
+                <h2>
+                    F.A.Q.
+                    <a href="#top">
+                        <button type="button" class="btn btn-default btn-md go-up-btn">
+                            <span class="glyphicon glyphicon-arrow-up"></span>
+                        </button>
+                    </a>
+                </h2>
 
 
 
@@ -135,10 +148,30 @@
 
         <div class="row" id="press">
             <div class="container-fluid col-md-8 col-md-offset-2">
-                <h2>Presse</h2>
+                <h2>
+                    Presse
+                    <a href="#top">
+                        <button type="button" class="btn btn-default btn-md go-up-btn">
+                            <span class="glyphicon glyphicon-arrow-up"></span>
+                        </button>
+                    </a>
+                </h2>
 
                 <h4>Zeitung XYZ</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus euismod aliquet feugiat. Nullam iaculis purus quis blandit lacinia. 
+            Suspendisse feugiat pretium lorem, in porttitor tortor convallis nec. Integer eget auctor nulla. Donec rhoncus purus metus, non rhoncus lorem posuere at. 
+            Phasellus eget purus elementum, congue augue eu, porta tortor. Integer quis volutpat libero, a malesuada libero. 
+            Donec cursus euismod placerat. Donec quis elit sit amet mi mattis efficitur. Pellentesque metus nisl, pellentesque nec dignissim et, 
+            convallis eget lorem. Aliquam id consectetur nulla, et semper nisl.</p>
+
                 <h4>Zeitung ABC</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus euismod aliquet feugiat. Nullam iaculis purus quis blandit lacinia. 
+            Suspendisse feugiat pretium lorem, in porttitor tortor convallis nec. Integer eget auctor nulla. Donec rhoncus purus metus, non rhoncus lorem posuere at. 
+            Phasellus eget purus elementum, congue augue eu, porta tortor. Integer quis volutpat libero, a malesuada libero. 
+            Donec cursus euismod placerat. Donec quis elit sit amet mi mattis efficitur. Pellentesque metus nisl, pellentesque nec dignissim et, 
+            convallis eget lorem. Aliquam id consectetur nulla, et semper nisl.</p>
+                
+ 
             </div>
         </div>
 
@@ -158,6 +191,8 @@
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/search.js"></script>
+    <script src="js/about-scroll.js"></script>
+
 
 </body>
 </html>
