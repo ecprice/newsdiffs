@@ -5,7 +5,7 @@ from BeautifulSoup import BeautifulSoup, Tag
 class NTVParser(BaseParser):
     domains = ['www.n-tv.de']
 
-    feeder_pat = '^http://www.n-tv.de/(politik|wirtschaft|panorama|technik|wissen)/[a-z]'
+    feeder_pat = '^http://www.n-tv.de/(politik|wirtschaft|panorama|technik|wissen)/.*article\d*'
     feeder_pages = ['http://www.n-tv.de']
 
     def _parse(self, html):
