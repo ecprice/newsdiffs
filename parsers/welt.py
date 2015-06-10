@@ -6,8 +6,19 @@ class WeltParser(BaseParser):
 
     domains = ['www.welt.de']
 
-    feeder_pat   = 'article\d*'
-    feeder_pages = ['http://www.welt.de/']
+    feeder_pat   = '^http://www.welt.de/(politik|wirtschaft|regionales|vermischtes|kultur|debatte|finanzen|gesundheit|satire|wissenschaft)/article\d*.*\.html$'
+    feeder_pages = ['http://www.welt.de/politik/',
+                    'http://www.welt.de/wirtschaft/',
+                    'http://www.welt.de/politik/',
+		    'http://www.welt.de/regionales/',
+                    'http://www.welt.de/vermischtes/',
+		    'http://www.welt.de/kultur/',
+                    'http://www.welt.de/debatte/',
+		    'http://www.welt.de/finanzen/',
+                    'http://www.welt.de/gesundheit/',
+                    'http://www.welt.de/satire/',
+                    'http://www.welt.de/wissenschaft/'
+                    ]
 
     def _parse(self, html):
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES,
