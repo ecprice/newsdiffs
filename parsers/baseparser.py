@@ -5,6 +5,7 @@ import socket
 import sys
 import time
 import urllib2
+from BeautifulSoup import BeautifulSoup, Comment
 
 # Define a logger
 
@@ -153,4 +154,13 @@ class BaseParser(object):
 
             all_urls = all_urls + [url for url in urls if
                                    re.search(cls.feeder_pat, url)]
-        return all_urls
+        return set(all_urls)
+
+        #removes all non-content
+    def remove_non_content(self, html):
+        map(lambda x: x.extract(), html.findAll('script'))
+        map(lambda x: x.extract(), html.findAll('style'))
+        map(lambda x: x.extract(), html.findAll('embed'))
+        comments = html.findAll(text=lambda text:isinstance(text, Comment))
+        [comment.extract() for comment in comments]
+        return html

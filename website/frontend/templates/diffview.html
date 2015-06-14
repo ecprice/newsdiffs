@@ -47,44 +47,36 @@
     </style>
 
 <div class="search-banner">
-<h3>Welcome to <a href="{% url 'root' %}">NewsDiffs</a>!</h3>
+<h3>Willkommen auf <a href="{% url 'root' %}">NewsDiffs</a>!</h3>
 
-NewsDiffs tracks post-publication changes to articles in online news
-media.  Below, you can see edits made to an article after it was
-published.  You can browse through many such edits in our <a href=
-"{% url 'browse' %}" > archive</a>.
+NewsDiffs verfolgt Änderungen an Artikeln von Onlinezeitungen nach
+deren Veröffentlichung.  Unten kannst du die Nachbearbeitungen an einem
+bereits veröffentlichten Artikel sehen. Du kannst in unserem <a href=
+"{% url 'browse' %}" >Archiv</a> nach vielen solchen Änderungen suchen.
 </div>
 {% endif %}
 
-    <h2>Comparing: {{title}}</h2>
+    <h2>Vergleiche: {{title}}</h2>
     <h3><a href="{{article_url}}">{{article_url}}</a></h3>
     <ul>
-      <li><del>Pink: Archived {{date1}}</del></li>
-      <li><ins>Green: Archived {{date2}}</ins></li>
+      <li><del>Pink: Archiviert am {{date1}}</del></li>
+      <li><ins>Grün: Archiviert am {{date2}}</ins></li>
     </ul>
     <p>
       {% if prev %}
-      <a href="{{prev}}"><= Previous revision</a>
+      <a href="{{prev}}"><= Vorherige Version</a>
       {% else %}
-      No previous revision
+      Keine vorherige Version
       {% endif %} |
-      <a href="{% url 'article_history' article_shorturl %}">All changes</a>
+      <a href="{% url 'article_history' article_shorturl %}">Alle Versionen</a>
       |
       {% if next %}
-      <a href="{{next}}">Later revision =></a>
+      <a href="{{next}}">Spätere Version =></a>
       {% else %}
-      No later revision
+      Keine spätere Version
       {% endif %}
     </p>
 
-<!--
-Are these changes interesting?   <form action="{% url 'upvote' %}" method=POST>
-      <input type=hidden name=article_url value={{article_url}}>
-      <input type=hidden name=diff_v1 value={{v1}}>
-      <input type=hidden name=diff_v2 value={{v2}}>
-      <input type=submit name=submit value="Yes">
-    </form>
--->
 <hr>
     <div>
       <div id="compare">
@@ -92,4 +84,4 @@ Are these changes interesting?   <form action="{% url 'upvote' %}" method=POST>
     </div>
 {% endblock content%}
 
-{% block title %}Diffing: {{title}}{% endblock %}
+{% block title %}Diff von: {{title}}{% endblock %}

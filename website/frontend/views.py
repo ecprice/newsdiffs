@@ -104,8 +104,7 @@ def get_articles(source=None, distance=0):
     return articles
 
 
-SOURCES = '''nytimes.com cnn.com politico.com washingtonpost.com
-bbc.co.uk'''.split()
+SOURCES = '''zeit.de bild.de focus.de spiegel.de stern.de faz.de rponline.de sueddeutsche.de'''.split()
 
 def is_valid_domain(domain):
     """Cheap method to tell whether a domain is being tracked."""
@@ -342,15 +341,6 @@ def json_view(request, vid):
         )
     return HttpResponse(json.dumps(data), mimetype="application/json")
 
-def upvote(request):
-    article_url = request.REQUEST.get('article_url')
-    diff_v1 = request.REQUEST.get('diff_v1')
-    diff_v2 = request.REQUEST.get('diff_v2')
-    remote_ip = request.META.get('REMOTE_ADDR')
-    article_id = Article.objects.get(url=article_url).id
-    models.Upvote(article_id=article_id, diff_v1=diff_v1, diff_v2=diff_v2, creation_time=datetime.datetime.now(), upvoter_ip=remote_ip).save()
-    return render_to_response('upvote.html')
-
 def about(request):
     return render_to_response('about.html', {})
 
@@ -363,9 +353,4 @@ def contact(request):
 def front(request):
     return render_to_response('front.html', {'sources': SOURCES})
 
-def subscribe(request):
-    return render_to_response('subscribe.html', {})
-
-def press(request):
-    return render_to_response('press.html', {})
 
