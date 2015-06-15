@@ -25,7 +25,8 @@ body {
 
 }
 
-.navbar-collapse {
+.navbar-brand {
+	padding-left: 0px;
 }
 
 ul.dropdown-menu{
@@ -52,6 +53,9 @@ ul.nav.navbar-nav.navbar-right li > a{
 
 .navbar-default .navbar-nav > li > a:hover {
   color: #000000;
+}
+
+#nav-container {
 }
 
 
