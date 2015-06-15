@@ -19,17 +19,18 @@ body {
 -------------------------------------------------- */
 /* Not required for template or sticky footer method. */
 
-body > .container {
+/*body > .container {
   padding: 60px 15px 0;
-}
+}*/
+
 .container .text-muted {
   margin: 20px 0;
 }
 
-.footer > .container {
+/*.footer > .container {
   padding-right: 15px;
   padding-left: 15px;
-}
+}*/
 
 code {
   font-size: 80%;
