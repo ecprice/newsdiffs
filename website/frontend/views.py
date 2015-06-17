@@ -234,7 +234,7 @@ def diffview(request, vid1, vid2, urlarg):
         else:
             links.append('')
 
-    return render_to_response('diffview.html', {
+    return render_to_response('article.html', {
             'title': title,
             'date1':dates[0], 'date2':dates[1],
             'text1':texts[0], 'text2':texts[1],
@@ -316,7 +316,7 @@ def article_history(request, urlarg=''):
         return HttpResponseRedirect(reverse(article_history, args=[article.filename()]))
 
     rowinfo = get_rowinfo(article)
-    return render_to_response('article_history.html', {'article':article,
+    return render_to_response('diff-list-page.html', {'article':article,
                                                        'versions':rowinfo,
             'display_search_banner': came_from_search_engine(request),
                                                        })
@@ -346,12 +346,14 @@ def about(request):
     return render_to_response('about.html', {})
 
 def examples(request):
-    return render_to_response('examples.html', {})
+    return render_to_response('highlights.html', {})
 
 def contact(request):
     return render_to_response('contact.html', {})
 
 def front(request):
-    return render_to_response('front.html', {'sources': SOURCES})
+    return render_to_response('index.html', {'sources': SOURCES})
+
+
 
 
