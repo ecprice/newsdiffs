@@ -6,42 +6,42 @@
 
 {% block content %}
 
-    <div class="container-fluid">
+    <div class="container" id="main"">
 
-	<ul id="myTab" class="nav nav-tabs">
-            <li {% if not source  %} class="active" {% endif %} ><a href="{% url 'browse' %}" data-toggle="tab">Alle</a></li>
-            {% for sourceopt in sources %}
-            <li {% ifequal source sourceopt %}class="active"{% endifequal %}><a href="{% url 'browse' sourceopt %}" data-toggle="tab">{{sourceopt}}</a></li>
-            {% endfor %}
+        <ul id="myTab" class="nav nav-tabs">
+                <li {% if not source  %} class="active" {% endif %} ><a href="{% url 'browse' %}" data-toggle="tab">Alle</a></li>
+                {% for sourceopt in sources %}
+                <li {% ifequal source sourceopt %}class="active"{% endifequal %}><a href="{% url 'browse' sourceopt %}" data-toggle="tab">{{sourceopt}}</a></li>
+                {% endfor %}
+                  </ul>
+                </li>
               </ul>
-            </li>
-          </ul>
 
-      <h1>Veränderte Artikel {% block browse_fromline %}{% endblock browse_fromline %}</h1>
-      <p>Erstmals gespeichert {{first_update|date:"F d, Y"}} (mit vereinzelten Ausfallzeiten)</p>
-      <p>
+          <h1>Pupukacka Artikel {% block browse_fromline %}{% endblock browse_fromline %}</h1>
+          <p>Erstmals gespeichert {{first_update|date:"F d, Y"}} (mit vereinzelten Ausfallzeiten)</p>
+          <p>
 
-    <table class="table table-condensed"  style="width:100%">
-      <thead><tr><th text-align:"left";>Artikel</th><th>Version</th><th>Diff</th></tr></thead>
-      {% for article, last_version, versions in articles %}
-      <tr><td rowspan="{{versions|length}}" valign="top"><a href="{% url 'article_history' article.filename %}">{{last_version.title}}</a> (<a href="{{article.url}}">{{article.publication}}</a>)<br>{{last_version.byline}}</td>
-        {% for difflink, version in versions %}
-        <td>{{version.date}}</td>
-        {% if difflink %}
-        <td><a href="{{difflink}}">(Vergleichen)</a></td></tr><tr>
+        <table class="table table-condensed"  style="width:100%">
+          <thead><tr><th text-align:"left";>Artikel</th><th>Version</th><th>Diff</th></tr></thead>
+          {% for article, last_version, versions in articles %}
+          <tr><td rowspan="{{versions|length}}" valign="top"><a href="{% url 'article_history' article.filename %}">{{last_version.title}}</a> (<a href="{{article.url}}">{{article.publication}}</a>)<br>{{last_version.byline}}</td>
+            {% for difflink, version in versions %}
+            <td>{{version.date}}</td>
+            {% if difflink %}
+            <td><a href="{{difflink}}">(Vergleichen)</a></td></tr><tr>
+            {% else %}
+            <td></td></tr>
+            {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </table>
+        {% for i in page_list %}
+        {% if i == page %}
+        {{i}}
         {% else %}
-        <td></td></tr>
+        <a href="{% url 'browse' source %}?page={{i}}">{{i}}</a>
         {% endif %}
         {% endfor %}
-      {% endfor %}
-    </table>
-    {% for i in page_list %}
-    {% if i == page %}
-    {{i}}
-    {% else %}
-    <a href="{% url 'browse' source %}?page={{i}}">{{i}}</a>
-    {% endif %}
-    {% endfor %}
     </div>
 
 
