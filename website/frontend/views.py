@@ -319,7 +319,7 @@ def article_history(request, urlarg=''):
 
     # was article-history
     rowinfo = get_rowinfo(article)
-    return render_to_response('diff-list-page.html', {'article':article,
+    return render_to_response('article_history.html', {'article':article,
                                                        'versions':rowinfo,
             'display_search_banner': came_from_search_engine(request),
                                                        })

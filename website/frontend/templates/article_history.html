@@ -1,33 +1,62 @@
-{% extends 'template.html' %}
-
-{% block title %}Artikelansicht{% endblock %}
-
+{% extends 'headerfooter.html' %}
+{% load url from future %}
+{% block title %}Änderungsübersicht des Artikels{% endblock %}
+{% block css_import %}<link href="{% url 'static' 'css/custom-article-history.css' %}" rel="stylesheet" type="text/css">{% endblock %}
+{% block active_entdecken %}class="active"{% endblock %}
 {% block content %}
 
-{% include "find_by_uri.html" %}
+	<div class="container" id="main">
+	
+		<div class="row" id ="search-total">
+            <div class="col-md-6 col-md-offset-3">
+                <div id="search-input">
+                    <input type="text" placeholder="Suche" id="search-input-line"><button type="button" id="search-input-btn" onclick="location.href='{% url 'browse' %}'"><span class="glyphicon glyphicon-search" ></span></button>
+                </div>
+                <div id="search-foldout">
+                    <ul class="list-group">
+                        <li class="list-group-item" id="stichwort-link"><a><span class="glyphicon glyphicon-paperclip"></span>Stichwort</a></li>
+                        <li class="list-group-item"><a><span class="glyphicon glyphicon-link"></span>URL</a></li>
+                        <li class="list-group-item"><a><span class="glyphicon glyphicon-file"></span>Zeitung</a></li>
+                        <li class="list-group-item"><a><span class="glyphicon glyphicon-calendar"></span>Datum</a></li>
+                        <li class="list-group-item"><a><span class="glyphicon glyphicon-user"></span>Autor</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-<h1>{{article.latest_version.title}} ({{article.publication}}), Änderungsübersicht</h1>
-<h3><a href="{{article.url}}">{{article.url}}</a></h3> 
-<h3>{{article.latest_version.byline}} | Zuerst archiviert am {{article.initial_date}}</h3> 
-<p>
-<table class="table table-condensed"  style="width:100%">
-     <thead><tr>
-	<td>Schlagzeile</td>
-	<td>Datum/Zeit der Archivierung</td>
-	<td>Diff</td>
-    </tr> </thead>
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1">
+				
+				<h1>{{ article.latest_version.title }}</h1>
+				<h5>{{ article.latest_version.title }} | Erste Archivierung: {{ article.initial_date }}</h5>
+				<h5>Änderungsübersicht:</h5>
+				
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th>Schlagzeile</th>
+							<th>Datum/Zeit (UMT+1) der Archivierung</th>
+							<th>Diff</th>
+						</tr>
+					</thead>
 
-    {% for difflink, version in versions %}
-    <tr>
-      <td><a href="{{link}}">{{version.title}}</a></td>
-      <td>{{version.date}}</td>
-      {% if difflink %}
-      <td><a href="{{difflink}}">(Vergleich mit vorheriger Version)</a></td>
-    {% else %}
-    <td></td>
-    {% endif %}
-    </tr>
-  {% endfor %}
-</table>
+                    {% for difflink, version in versions %}
+                        <tr>
+                          <td><a href="{{link}}">{{version.title}}</a></td>
+                          <td>{{version.date}}</td>
+                          {% if difflink %}
+                            <td><a href="{{difflink}}"><img src=".{% url 'static' 'images/Icon_Vergleichen16px.png' %}" alt="Vergleichen-Icon">Vergleichen mit vorheriger Version</a></td>
+                          {% else %}
+                            <td></td>
+                          {% endif %}
+                        </tr>
+                    {% endfor %}
 
+				</table>
+
+				<h3>(<a href="article.url">Original-Artikel bei {{article.publication}} lesen</a>)</h3>
+			</div>
+		</div>
+		
+	</div>
 {% endblock %}
