@@ -351,7 +351,7 @@ def about(request):
 def entdecken(request):
     return render_to_response('entdecken.html', {})
 
-def examples(request):
+def highlights(request):
     return render_to_response('highlights.html', {})
 
 def contact(request):

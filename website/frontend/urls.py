@@ -13,7 +13,7 @@ urlpatterns = [
   url(r'^browse/(.*)$', 'frontend.views.browse', name='browse'),
   url(r'^feed/browse/(.*)$', 'frontend.views.feed', name='feed'),
   url(r'^contact/$', 'frontend.views.contact', name='contact'),
-  url(r'^examples/$', 'frontend.views.examples', name='examples'),
+  url(r'^highlights/$', 'frontend.views.highlights', name='highlights'),
   url(r'^feed/article-history/(.*)$', 'frontend.views.article_history_feed', name='article_history_feed'),
   url(r'^article-history/(?P<urlarg>.*)$', 'frontend.views.article_history', name='article_history'),
   url(r'^json/view/(?P<vid>\d+)/?$', 'frontend.views.json_view'),
