@@ -1,0 +1,36 @@
+.form-section {
+	 background-color: #e8e8e8;
+	 padding:50px;
+	 margin-top: 15px;
+}
+
+.form{
+	font-size: 16px;
+	line-height: 120%;
+}
+
+input {
+	width: 100%;
+	height: 40px;
+	padding-left: 10px;
+}
+
+textarea {
+	width: 100%;
+	height: 250px;
+	padding: 5px 10px;
+	resize: vertical;
+}
+
+
+#sendbutton {
+	background-color: #B8B8B8;
+	color: white;
+	border: 4px solid #B8B8B8 ;
+	font-weight: 600;
+	font-size:18px;
+}
+
+#sendbutton:hover{
+	background-color: #808080;
+}
