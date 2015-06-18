@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
      <meta charset="utf-8">
-    <title>NewsDiffsDE | {% block title %}Veränderungen in Zeitungsartikel sichtbar machen{% endblock %}</title>
+    <title>NewsDiffsDE | {% block title %}redaktionelle Änderungen an Nachrichten verfolgen{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Die Idee hinter NewsDiffs.de ist es, Änderungen an Nachrichtenartikeln sichtbar und nachvollziehbar zu machen. NewsDiffs.de trackt alle Änderungen an Artikeln der Titelseiten der 10 größten deutschsprachigen Nachrichtenportale. Nutze die Suchfunktion, um nach Artikeln zu suchen oder sieh dir unsere Highlights an.">
     <meta name="author" content="Robert, Cat, Relana, Shenglin, Paula, Anja, Moreno">
@@ -47,8 +47,8 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li {% block active_front %}{% endblock %}><a href="{% url 'root' %}">Startseite</a></li>
-                    <li {% block active_browse %}{% endblock %}><a href="{% url 'entdecken' %}">Entdecken</a></li>
-                    <li {% block active_examples %}{% endblock %}><a href="{% url 'examples' %}">Highlights</a></li>
+                    <li {% block active_entdecken %}{% endblock %}><a href="{% url 'entdecken' %}">Entdecken</a></li>
+                    <li {% block active_highlights %}{% endblock %}><a href="{% url 'highlights' %}">Highlights</a></li>
                     <li {% block active_archive %}{% endblock %}><a href="{% url 'browse' %}">Archiv</a></li>
                     <li {% block active_about %}{% endblock %}><a href="{% url 'about' %}">Über NewsDiffs</a></li>
                 </ul>
@@ -77,5 +77,6 @@
 	<script src="{% url 'static' 'js/jquery.js'%}"></script>
 	<script src="{% url 'static' 'js/bootstrap.js'%}"></script>
 	<script src="{% url 'static' 'js/search.js'%}"></script>
+     {% block js_scripts %} {% endblock %}
 </body>
 </html>

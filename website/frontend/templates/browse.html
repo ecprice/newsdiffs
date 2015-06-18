@@ -1,7 +1,5 @@
 {% extends 'browse_base.html' %}
 
-{% block active_browse %}class="active"{% endblock %}
-
 {% block title %}Änderungen{% endblock %}
 
 {% block browse_fromline %}|  {% if source %}<a href="http://{{source}}">{{source}}</a>{% else %}Alle Quellen{% endif %}{% endblock %}
