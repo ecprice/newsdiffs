@@ -1,9 +1,12 @@
-{% extends 'template.html' %}
+{% extends 'headerfooter.html' %}
 {% load url from future %}
+{% block css_import %}    <link href="{% url 'static' 'css/custom-searchbar.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block active_front %}class="active"{% endblock %}
 
 {% block content %}
 
-{% include "find_by_uri.html" %}
+    <div class="container-fluid">
 
 	<ul id="myTab" class="nav nav-tabs">
             <li {% if not source  %} class="active" {% endif %} ><a href="{% url 'browse' %}" data-toggle="tab">Alle</a></li>
@@ -16,7 +19,7 @@
 
       <h1>Veränderte Artikel {% block browse_fromline %}{% endblock browse_fromline %}</h1>
       <p>Erstmals gespeichert {{first_update|date:"F d, Y"}} (mit vereinzelten Ausfallzeiten)</p>
-      <p>  
+      <p>
 
     <table class="table table-condensed"  style="width:100%">
       <thead><tr><th text-align:"left";>Artikel</th><th>Version</th><th>Diff</th></tr></thead>
@@ -39,5 +42,7 @@
     <a href="{% url 'browse' source %}?page={{i}}">{{i}}</a>
     {% endif %}
     {% endfor %}
+    </div>
+
 
 {% endblock %}
