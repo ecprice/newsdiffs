@@ -1,10 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
+     <meta charset="utf-8">
+    <title>NewsDiffsDE | {% block title %}Veränderungen in Zeitungsartikel sichtbar machen{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Die Idee hinter NewsDiffs.de ist es, Änderungen an Nachrichtenartikeln sichtbar und nachvollziehbar zu machen. NewsDiffs.de trackt alle Änderungen an Artikeln der Titelseiten der 10 größten deutschsprachigen Nachrichtenportale. Nutze die Suchfunktion, um nach Artikeln zu suchen oder sieh dir unsere Highlights an.">
+    <meta name="author" content="Robert, Cat, Relana, Shenglin, Paula, Anja, Moreno">
+
+    <!-- CSS -->
+    <link href="{% url 'static' 'styles/bootstrap.css' %}" rel="stylesheet" media ="screen">
+    <link href="{% url 'static' 'styles/sticky-footer-navbar.css' %}" rel="stylesheet" media ="screen">
+    <link href="{% url 'static' 'styles/custom.css' %}" rel="stylesheet" media ="screen">
+    <!-- for individula styles of the pages: -->
+    {% block css_import %} {% endblock %}
+
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="{% url 'static' 'js/respond.min.js'%}"></script>
+    <![endif]-->
+        <!-- oder src normal via ordnerstruktur verlinken? /../..-->
+
+
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="{% url 'root' %}assets/ico/favicon.ico">
+
 </head>
 <body>
 
+	<script src="{% url 'static' 'js/jquery.js'%}"></script>
+	<script src="{% url 'static' 'js/bootstrap.js'%}"></script>
+	<script src="{% url 'static' 'js/search.js'%}"></script>
 </body>
 </html>
