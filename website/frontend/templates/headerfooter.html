@@ -41,7 +41,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url 'root' %}"><img src=" {% url 'root' %}images/logo_nd_neu.png" alt="NewsDiffs Logo"></a>
+                <a class="navbar-brand" href="{% url 'root' %}"><img src="{% url 'static' 'images/logo_nd_neu.png' %} alt="NewsDiffs Logo"></a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -61,7 +61,7 @@
 
     <!-- Begin page content -->
     <div class="container-fluid">
-    <img src=" {% url 'root' %}images/logo_nd_neu.png" alt="NewsDiffs Logo">
+            <img src="{% url 'static' 'images/logo_nd_neu.png' %} alt="NewsDiffs Logo">
            {% block content %} {% endblock %}
 
     </div>
