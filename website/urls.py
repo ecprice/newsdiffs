@@ -15,7 +15,9 @@ urlpatterns = [
             'document_root': ROOT_DIR+'/website/static',
         }, name='static'),
   url(r'^(assets/ico/)?favicon\.ico$', RedirectView.as_view(url='/static/images/favicon.ico')),
-  url(r'^images/$', RedirectView.as_view(url='/static/images/')),
+  url(r'^static/images/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': ROOT_DIR+'/website/static/images',
+        }, name='images'),
   url(r'^robots.txt$', RedirectView.as_view(url='/static/robots.txt')),
   url(r'^', include('website.frontend.urls')),
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
