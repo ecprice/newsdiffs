@@ -47,7 +47,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li {% block active_front %}{% endblock %}><a href="{% url 'root' %}">Startseite</a></li>
-                    <li {% block active_browse %}{% endblock %}><a href="{% url 'browse' %}">Entdecken</a></li>
+                    <li {% block active_browse %}{% endblock %}><a href="{% url 'entdecken' %}">Entdecken</a></li>
                     <li {% block active_examples %}{% endblock %}><a href="{% url 'examples' %}">Highlights</a></li>
                     <li {% block active_archive %}{% endblock %}><a href="{% url 'browse' %}">Archiv</a></li>
                     <li {% block active_about %}{% endblock %}><a href="{% url 'about' %}">Über NewsDiffs</a></li>

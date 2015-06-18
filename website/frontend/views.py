@@ -348,6 +348,9 @@ def json_view(request, vid):
 def about(request):
     return render_to_response('about.html', {})
 
+def entdecken(request):
+    return render_to_response('entdecken.html', {})
+
 def examples(request):
     return render_to_response('highlights.html', {})
 
