@@ -355,7 +355,7 @@ def contact(request):
     return render_to_response('contact.html', {})
 
 def front(request):
-    return render_to_response('headerfooter.html', {'sources': SOURCES})
+    return render_to_response('index.html', {'sources': SOURCES})
 
 
 
