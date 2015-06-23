@@ -43,9 +43,13 @@ audio:not([controls]) {
 template {
   display: none;
 }
+
 a {
   background-color: transparent;
 }
+
+
+
 a:active,
 a:hover {
   outline: 0;

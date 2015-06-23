@@ -135,4 +135,8 @@ code {
   font-size: 80%;
 }
 
+p a{
+    border-bottom: 1px dotted grey;
+    color: inherit;
+}
 
