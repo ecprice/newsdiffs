@@ -8,15 +8,12 @@ urlpatterns = [
   # These are current:
   url(r'^diff/(?P<vid1>\d+)/(?P<vid2>\d+)/(?P<urlarg>.*)$', 'frontend.views.diffview', name='diffview'),
   url(r'^about/$', 'frontend.views.about', name='about'),
-    url(r'^entdecken/$', 'frontend.views.entdecken', name='entdecken'),
-      url(r'^entdecken/$', 'frontend.views.entdecken', name='entdecken'),
-
-    url(r'^entdecken/$', 'frontend.views.entdecken', name='entdecken'),
-
+  url(r'^entdecken/$', 'frontend.views.entdecken', name='entdecken'),
+  url(r'^kontakt/$', 'frontend.views.kontakt', name='kontakt'),
+  url(r'^impressum/$', 'frontend.views.impressum', name='impressum'),
   url(r'^browse/$', 'frontend.views.browse', name='browse'),
   url(r'^browse/(.*)$', 'frontend.views.browse', name='browse'),
   url(r'^feed/browse/(.*)$', 'frontend.views.feed', name='feed'),
-  url(r'^contact/$', 'frontend.views.contact', name='contact'),
   url(r'^highlights/$', 'frontend.views.highlights', name='highlights'),
   url(r'^feed/article-history/(.*)$', 'frontend.views.article_history_feed', name='article_history_feed'),
   url(r'^article-history/(?P<urlarg>.*)$', 'frontend.views.article_history', name='article_history'),

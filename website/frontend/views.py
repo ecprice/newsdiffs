@@ -354,8 +354,11 @@ def entdecken(request):
 def highlights(request):
     return render_to_response('highlights.html', {})
 
-def contact(request):
-    return render_to_response('contact.html', {})
+def kontakt(request):
+    return render_to_response('kontakt.html', {})
+
+def impressum(request):
+    return render_to_response('impressum.html', {})
 
 def front(request):
     return render_to_response('index.html', {'sources': SOURCES})
