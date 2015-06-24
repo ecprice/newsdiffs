@@ -2,7 +2,6 @@
 {% load url from future %}
 {% block css_import %}
     <link href="{% url 'static' 'css/custom-about.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% url 'static' 'css/custom-searchbar.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block title %}Über NewsDiffsDE?{% endblock %}
 {% block active_about %}class="active"{% endblock %}
@@ -10,17 +9,7 @@
 {% block content %}
     <!-- Begin page content -->
     <div class="container-fluid maincontent">
-    <!--div class="row" id="description">
-        <div class="col-md-6 col-md-offset-3">
-            <p class="text-justify">
-                Die Idee hinter NewsDiffs Deutschland ist es, Änderungen an Nachrichtenartikeln sichtbar und nachvollziehbar
-                zu machen. NewsDiffs Deutschland trackt alle Änderungen an Artikeln der Titelseiten der 10 größten
-                deutschsprachigen Nachrichtenportale. Nutze die Suchfunktion, um nach Artikeln zu suchen oder sieh dir unsere <a href="highlights.html">Highlights</a> an.
-            </p>
-        </div>
-    </div-->
-
-
+        {% include "searchbar.html" %}
         <div class="row" id ="submenu-row">
             <div class="col-md-8 col-md-offset-2">
                 <h1>Über NewsDiffs</h1>
