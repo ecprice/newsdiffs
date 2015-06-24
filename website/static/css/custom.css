@@ -7,19 +7,17 @@ code {
 }
 
 
-
-p a{
-    border-bottom: 1px dotted grey;
-    color: inherit;
-    text-decoration: none;
+.maincontent a{
+	color: #333333;
+	text-decoration: none;
+	border-bottom: 1px #333333 dotted;
 }
 
-p a:hover{
-    border-bottom: none;
-    color: inherit;
-    text-decoration: none;
+.maincontent a:hover {
+	color: #333333;
+	text-decoration: none;
+	border-bottom: none;
 }
-
 
 /* *****************************************************************************
  Navbar
