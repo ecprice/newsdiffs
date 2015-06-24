@@ -4,7 +4,7 @@ from baseparser import BaseParser
 from BeautifulSoup import BeautifulSoup, Tag
 
 
-class SDParser(BaseParser):
+class TAZParser(BaseParser):
     domains = ['www.taz.de']
 
     feeder_pat   = '.+\/!\d{7}'
@@ -22,20 +22,26 @@ class SDParser(BaseParser):
         else:
             self.title = elt['content']
         # byline / author
-        author = soup.find('a', {'class': 'author person objlink'}) #darin noch ein h4 div> a> h4
-        self.byline = author.getText() if author else ''
+        author = soup.find('meta', {'name': 'author'})
+        self.title = author['content'] if author else ''
         # article date
         created_at = soup.find('span', {'class': 'date'})
         if created_at is None:
             self.real_article = False
             return
-        self.date = created_at['datetime']
+        self.date = created_at.getText() if created_at else ''
+        #category
+        self.category = ""
+
+        #self.date = created_at['datetime']
         #article content
-        div = soup.find('div', {'class': 'odd sect sect_article news report'})
+        div = soup.find('div', {'class': 'odd sect sect_article news report'}).find('div', {'class': 'sectbody'})
         if div is None:
             self.real_article = False
             return
         div = self.remove_non_content(div)
+        map(lambda x: x.extract(), div.findAll('p', {'class':'caption'}))
+
         if div is None:
             self.real_article = False
             return

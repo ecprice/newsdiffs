@@ -347,6 +347,12 @@ def json_view(request, vid):
 def about(request):
     return render_to_response('about.html', {})
 
+def history(request):
+    return render_to_response('article_history.html', {})
+
+def artikel(request):
+    return render_to_response('diffview.html', {})
+
 def entdecken(request):
     return render_to_response('entdecken.html', {})
 
