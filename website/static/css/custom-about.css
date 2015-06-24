@@ -18,8 +18,17 @@
 	color: #333333;
 	background-color: #E7E7E7;
 	border-radius: 0px;
+    border-bottom: none;
 }
 
 #submenu a:hover {
 	color: #000000;
+}
+
+#submenu-row h1 {
+	float: left;
+}
+
+ul#submenu {
+	margin-top: 15px;
 }
