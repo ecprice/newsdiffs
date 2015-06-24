@@ -1,22 +1,24 @@
 {% extends 'headerfooter.html' %}
 {% load url from future %}
 {% block title %}Änderungen im Artikel{% endblock %}
-{% block css_import %}<link href="{% url 'static' 'css/custom-article.css' %}" rel="stylesheet" type="text/css">{% endblock %}
+{% block css_import %}
+    <link href="{% url 'static' 'css/custom-diffview.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
 {% block active_entdecken %}class="active"{% endblock %}
 {% block content %}
 	
 	
-	<div class="container" id="main">
+	<div class="container-fluid maincontent">
 		
 		{% include "searchbar.html" %}
 
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1">
+			<div class="col-sm-8 col-sm-offset-2">
 				<h2>"Cameron muss ein anderer werden"</h2>
 			</div>
 			 
 			 
-			<div class="col-sm-8 col-sm-offset-1">
+			<div class="col-sm-8 col-sm-offset-2">
 				Aktualisiert: 8. Mai 2015  17:32 Uhr
 				<a href="http://www.zeit.de/politik/ausland/2015-05/grossbritannien-cameron-kommentar" target="_blank"><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-link"></span> Quelle</button></a>
 				<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-question-sign"></span></button>
@@ -35,7 +37,7 @@
 		
 
 		<div class="row">
-			<div class = "col-sm-10 col-sm-offset-1">
+			<div class = "col-sm-8 col-sm-offset-2">
                 <a href="http://www.zeit.de/politik/ausland/2015-05/grossbritannien-cameron-kommentar" target="_blank"><button type="button" class="btn btn-default btn-sm"><img src="images/Arrow_left.png" alt="Ältere Version"> Ältere Version</button></a>
                 <a href="http://www.zeit.de/politik/ausland/2015-05/grossbritannien-cameron-kommentar" target="_blank"><button type="button" class="btn btn-default btn-sm"><img src="images/Arrow_right.png" alt="Neuere Version"> Neuere Version</button></a><a href="http://www.zeit.de/politik/ausland/2015-05/grossbritannien-cameron-kommentar" target="_blank"><button type="button" class="btn btn-default btn-sm"><img src="images/Icon_Artikelverlauf.png" alt="Artikelverlauf"> Artikelverlauf</button></a>
 				
@@ -44,7 +46,30 @@
 		
 		
 		<div class="row">
-			<div class="col-md-7 col-md-offset-1">
+
+            <!-- Share -->
+            <div class="col-md-2">
+					<ul class="share">
+						<li><h4><span class="glyphicon glyphicon-share"></span> Teilen</h4></li>
+
+						<li><a href="https://twitter.com/share?url=http://newsdiffs.de/zeit/2838329292&via=NewsdiffsDE %40zeitonline &text=21 Änderungen gefunden im Artikel 'Cameron muss ein anderer werden'"
+							onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+							target="_blank" title="Share on Twitter"><img src="images/Twitter_logo_blue.png">Twitter</a></li>
+						<li><a href="https://www.facebook.com/sharer/sharer.php?u=http://newsdiffs.de/zeit/2838329292&text='Cameron muss ein anderer werden'"
+							onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+							target="_blank" title="Share on Facebook"><img src="images/fb_icon_blue.png">Facebook</a></li>
+						<li><a href="https://plus.google.com/share?url=http://newsdiffs.de/zeit/2838329292 &text=21 Änderungen gefunden im Artikel 'Cameron muss ein anderer werden'"
+							onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=350,width=480');return false;"
+							target="_blank" title="Share on Google+">
+							<img src="images/gplus_logo_red.png">Google+</a></li>
+						<li><a href="mailto:?subject=NewsDiffsDE - Neue Änderungen!&amp;body=21 Änderungen gefunden im Artikel 'Cameron muss ein anderer werden' http://newsdiffs.de/zeit/2838329292."
+							title="Share by Email">
+							<img src="images/mail.png">Email</a></li>
+					</ul>
+			</div>
+
+            <!-- Article -->
+			<div class="col-md-8">
 				<p class = "content">
 				In der Nacht auf Freitag ist Großbritannien ein anderes Land geworden. 
 				David Cameron ist der Sieger der Wahl in England und Wales. Er wird Großbritannien regieren. 
@@ -69,25 +94,7 @@
 				</p>
 			</div>
 			
-			<div class="col-md-3">
-					<ul class="share">
-						<li><h4><span class="glyphicon glyphicon-share"></span> Teilen</h4></li>
-						
-						<li><a href="https://twitter.com/share?url=http://newsdiffs.de/zeit/2838329292&via=NewsdiffsDE %40zeitonline &text=21 Änderungen gefunden im Artikel 'Cameron muss ein anderer werden'"
-							onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
-							target="_blank" title="Share on Twitter"><img src="images/Twitter_logo_blue.png">Twitter</a></li>
-						<li><a href="https://www.facebook.com/sharer/sharer.php?u=http://newsdiffs.de/zeit/2838329292&text='Cameron muss ein anderer werden'"
-							onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
-							target="_blank" title="Share on Facebook"><img src="images/fb_icon_blue.png">Facebook</a></li>
-						<li><a href="https://plus.google.com/share?url=http://newsdiffs.de/zeit/2838329292 &text=21 Änderungen gefunden im Artikel 'Cameron muss ein anderer werden'"
-							onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=350,width=480');return false;"
-							target="_blank" title="Share on Google+">
-							<img src="images/gplus_logo_red.png">Google+</a></li>
-						<li><a href="mailto:?subject=NewsDiffsDE - Neue Änderungen!&amp;body=21 Änderungen gefunden im Artikel 'Cameron muss ein anderer werden' http://newsdiffs.de/zeit/2838329292."
-							title="Share by Email">
-							<img src="images/mail.png">Email</a></li>
-					</ul>
-			</div>
+
 			
 			
 			
