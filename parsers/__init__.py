@@ -6,17 +6,20 @@
 # Test with test_parser.py
 # List of parsers to import and use based on parser.domains
 
+#sueddeutsche.SDParser
+#stern.SternParser
+#bild.BildParser
+#focus.FocusParser
+#spiegel.SpiegelParser
+#zeit.ZeitParser
+#RPOnline.RPOParser
+#faz.FAZParser
+#welt.WeltParser
+#n-tv.NTVParser
+#taz.TAZParser
+
 parsers = """
-sueddeutsche.SDParser
-stern.SternParser
-bild.BildParser
-focus.FocusParser
-spiegel.SpiegelParser
-zeit.ZeitParser
-RPOnline.RPOParser
-faz.FAZParser
-welt.WeltParser
-n-tv.NTVParser
+taz.TAZParser
 """.split()
 
 parser_dict = {}
