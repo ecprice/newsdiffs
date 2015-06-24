@@ -235,8 +235,7 @@ def diffview(request, vid1, vid2, urlarg):
         else:
             links.append('')
 
-    # was diffviews
-    return render_to_response('article.html', {
+    return render_to_response('diffview.html', {
             'title': title,
             'date1':dates[0], 'date2':dates[1],
             'text1':texts[0], 'text2':texts[1],
