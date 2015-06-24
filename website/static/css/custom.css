@@ -2,12 +2,27 @@
  Body 
  **************************************************************************** */
 
-body {
-	color: #333333;
+code {
+  font-size: 80%;
 }
 
+
+
+p a{
+    border-bottom: 1px dotted grey;
+    color: inherit;
+    text-decoration: none;
+}
+
+p a:hover{
+    border-bottom: none;
+    color: inherit;
+    text-decoration: none;
+}
+
+
 /* *****************************************************************************
- Navbar 
+ Navbar
  **************************************************************************** */
 
 .navbar-default {
@@ -20,16 +35,17 @@ body {
 
 .navbar-brand img{
 	height: 50px;
+	margin: 15px 15px 15px 0;
 
 }
 
 .navbar-brand {
-	padding-left: 0px;
+	padding: 0px;
 }
 
 ul.dropdown-menu{
 	border: none;
-	
+
 }
 
 ul.nav.navbar-nav.navbar-right li > a{
@@ -55,47 +71,84 @@ ul.nav.navbar-nav.navbar-right li > a{
 
 
 /* *****************************************************************************
- Footer 
+ Footer
  **************************************************************************** */
 
-.footer {
-	background-color: #666;
-}
-
-.copy, .footer-social {
-	padding: 10px 0 0 0;
-}
-
-.copy{
-	float: left;
-}
-
-.footer-social {
-	list-style: none;
-}
-
-.footer-social li {
-	float: right;
-	padding: 0 10px;
-}
-
 footer {
+	background-color: #666;
+	padding-top: 10px;
 	color: #fff;
 }
 
+footer img {
+	height: 20px;
+}
 footer a {
 	color: #fff;
+	text-decoration: underline;
+    border-bottom:none;
 
 }
 
 footer a:hover {
-	color: #CFCFCF;
+	color: #ffffff;
+    text-decoration: none;
+    border-bottom: none;
 }
 
 .footer-social img{
 	height: 20px;
 	padding: 0 5px;
 }
+
+.footer-left p {
+	float: left;
+	padding-right: 10px;
+}
+
+.footer-social{
+    list-style-type: none;
+    float: right;
+}
+
+.footer-social li {
+    display: inline;
+}
+
+.footer-right p{
+	float: right;
+	padding-left: 10px;
+}
+
+
+
+
+
+/* *****************************************************************************
+ Buttons
+ **************************************************************************** */
+
+.ownbtn{
+	/*secures regular button height of 30px*/
+	height: 25px;
+	padding: 0px 2px;
+}
+
+
+/*******************************************************************************
+ Content
+ ******************************************************************************/
+
+/*.maincontent a{
+	text-decoration: none;
+	border-bottom: 1px #333333 dotted;
+}
+
+.maincontent a:hover {
+	text-decoration: none;
+	border-bottom: none;
+}*/
+
 
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -107,6 +160,7 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
 .footer {
   position: absolute;
   bottom: 0;
@@ -131,12 +185,5 @@ body {
   padding-left: 15px;
 }*/
 
-code {
-  font-size: 80%;
-}
 
-p a{
-    border-bottom: 1px dotted grey;
-    color: inherit;
-}
 
