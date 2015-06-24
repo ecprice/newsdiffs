@@ -52,7 +52,6 @@
 
         <div class="row" id="intro">
             <div class="col-md-8 col-md-offset-2">
-
                 <h2>
                     Einführung
                     <a href="#top">
@@ -62,13 +61,16 @@
                     </a>
                 </h2>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus euismod aliquet feugiat. Nullam iaculis purus quis blandit lacinia. 
-                Suspendisse feugiat pretium lorem, in porttitor tortor convallis nec. Integer eget auctor nulla. Donec rhoncus purus metus, non rhoncus lorem posuere at. 
-                Phasellus eget purus elementum, congue augue eu, porta tortor. Integer quis volutpat libero, a malesuada libero. 
-                Donec cursus euismod placerat. Donec quis elit sit amet mi mattis efficitur. Pellentesque metus nisl, pellentesque nec dignissim et, 
-                convallis eget lorem. Aliquam id consectetur nulla, et semper nisl.</p>
+                <p>
+                    In einer Welt, in der Nachrichten im Sekundentakt verbreitet werden, stellt sich die Problematik einer übersichtlichen/demokratischen/fairen/transparenten/offenen Archivierung von Artikeln. Artikel auf Online-Nachrichtenportalen werden heute auch nach ihrer Veröffentlichung redigiert. Hierbei handelt es sich nicht nur um Korrekturen von Grammatik- oder Rechtschreibfehlern: auch neue Erkenntnisse über den Verlauf einer Geschichte oder gar andere Sichtweisen fließen in ein- und denselben Artikel ein. Im Gegensatz zur Welt der Printmedien werden diese Änderungen aber selten gekennzeichnet. Noch seltener ist es, dass Leser die ursprüngliche gegen die korrigierte Version abgleichen können.<br>
+                    <br>
+                    NewsDiffs DE nimmt sich dieser Problematik an und macht Änderungen an Artikeln nachvollziehbar. Wir beobachten die Titelseiten der zehn größten Online-Nachrichtenportale, speichern Artikel und machen die Änderungen mithilfe von Diff-Technologie sichtbar. <br>
+                    <br>
+                    Folge uns auf <a href="https://github.com/NewsdiffsDE/newsdiffs">Twitter</a>, um über interessante Neuigkeiten informiert zu bleiben, oder besuche uns auf <a href="https://github.com/NewsdiffsDE">GitHub</a>, um einen Blick hinter die Kulissen zu werfen.
+                </p>
             </div>
         </div>
+
 
         <div class="row" id="faq">
             <div class="col-md-8 col-md-offset-2">
@@ -81,23 +83,75 @@
                     </a>
                 </h2>
 
+                <h4>Wofür kann ich NewsDiffs DE benutzen?</h4>
+                <p>
+                    Du kannst NewsDiffs DE benutzen, um durch die Artikel zu stöbern und interessante Änderungen zu <a href="contact.html">melden</a>. Hilf uns dabei, für mehr Transparenz im alltäglichen Nachrichtenbusiness zu sorgen. <br>
+                    Oder du benutzt NewsDiffs DE, um gezielt nach Artikeln zu einem Thema zu suchen, z.B. "G7-Gipfel". Neben Stichwörtern kannst du auch nach einer URL, Zeitung, Datum oder Autor suchen.
+                </p>
+
+                <h4>Wie kann ich NewsDiffs DE benutzen?</h4>
+                <p>
+                    Wenn du unser Archiv nach bestimmten Artikeln durchsuchen möchtest, dann nutze unsere Suchleiste. Möchtest du stöbern, dann nutze den Menüpunkt Entdecken.
+                </p>
+
+<!--
+                <h4>Warum gibt es NewsDiffs DE?</h4>
+                <p>
+                     NewsDiffs DE zeigt Artikel an, an denen nach ihrer Veröffentlichung Änderungen vorgenommen wurden. Auf den Nachrichtenportalen selbst werden diese Änderungen fast nie gekennzeichnet. Und selbst im Falle einer Kennzeichnung kann man die frühere Version des Artikels nicht mehr einsehen. NewsDiffs DE sorgt für mehr Transparenz im Online-Nachrichten-Dschungel.
+                </p>
+ -->
+                <h4>Wie funktioniert NewsDiffs DE?</h4>
+                <p>
+                    NewsDiffs DE nutzt Web Scraping, um in regelmäßigen Abständen die Titelseiten von Online-Nachrichtenportalen abzulaufen und die dort verlinkten Artikel in einer Datenbank zu speichern. Sobald bei einem Artikel Änderungen festzustellen sind, wird der Artikel auf NewsDiffs DE angezeigt.
+                </p>
 
 
-                <strong>Lorem ipsum dolor sit amet?</strong>
+                <h4>Was sind die Kriterien dafür, dass ein Artikel auf NewsDiffs DE erscheint?</h4>
+                <p>
+                    Der Artikel muss auf der Titelseite einer der momentan bedienten Online-Nachrichtenportale verlinkt sein und bereits mindestens einmal geändert worden sein. Diese Seiten sind: BILD, FOCUS, DER SPIEGEL, DIE WELT, stern, DIE ZEIT, Süddeutsche Zeitung, F.A.Z., n-tv und RP online – laut <a href="http://meedia.de/2015/04/23/n24-bricht-ein-news-de-und-b-z-legen-zu-die-neueste-agof-news-top-50/">MEEDIA.de</a> die zehn Seiten mit den meisten Unique Usern in Deutschland (Stand Februar 2015).
+                </p>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus euismod aliquet feugiat. Nullam iaculis purus quis blandit lacinia. 
-                Suspendisse feugiat pretium lorem, in porttitor tortor convallis nec. Integer eget auctor nulla. Donec rhoncus purus metus, non rhoncus lorem posuere at. 
-                Phasellus eget purus elementum, congue augue eu, porta tortor. Integer quis volutpat libero, a malesuada libero. 
-                Donec cursus euismod placerat. Donec quis elit sit amet mi mattis efficitur. Pellentesque metus nisl, pellentesque nec dignissim et, 
-                convallis eget lorem. Aliquam id consectetur nulla, et semper nisl.</p>
+                <h4>Warum gibt es keine Archivierung für [anderes Online-Nachrichtenportal]?</h4>
+                <p>
+                    Für NewsDiffs DE wurden lediglich Parser für die zehn meistbesuchten Online-Nachrichtenportale in Deutschland geschrieben.<br>
+                    Als Entwickler kannst du aber vom <a href="https://github.com/ecprice/newsdiffs">ursprünglichen Github-Repository</a> oder vom <a href="https://github.com/NewsdiffsDE/newsdiffs">NewsDiffs DE Github-Repository</a> forken und deine eigenen Parser schreiben.
+                </p>
 
-                <strong>Lorem ipsum dolor sit amet?</strong>
+                <h4>Wie ist NewsDiffs DE entstanden?</h4>
+                <p>
+                    NewsDiffs DE entstand im Sommer 2015 im Rahmen eines studentischen Projekts an der Hochschule für Technik und Wirtschaft. <br>
+                    NewsDiffs DE basiert auf Open-Source-Software, welche im Jahr 2012 auf dem Knight Mozilla MIT Hackaton von Eric Price, Jennifer 8. Lee und Greg Price geschaffen wurde. Die Originalseite befindet sich unter <a href="http://www.newsdiffs.org">newsdiffs.org</a> und der Quellcode unter <a href="https://github.com/ecprice/newsdiffs">https://github.com/ecprice/newsdiffs</a>. <br>
+                    Im Rahmen des Projektes wurden die bestehende Software adaptiert und Optimierungen hinsichtlich Usability und Erscheinungsbild umgesetzt.
+                </p>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus euismod aliquet feugiat. Nullam iaculis purus quis blandit lacinia. 
-                Suspendisse feugiat pretium lorem, in porttitor tortor convallis nec. Integer eget auctor nulla. Donec rhoncus purus metus, non rhoncus lorem posuere at. 
-                Phasellus eget purus elementum, congue augue eu, porta tortor. Integer quis volutpat libero, a malesuada libero. 
-                Donec cursus euismod placerat. Donec quis elit sit amet mi mattis efficitur. Pellentesque metus nisl, pellentesque nec dignissim et, 
-                convallis eget lorem. Aliquam id consectetur nulla, et semper nisl.</p>
+                <h4>Wofür steht der Name NewsDiffs DE?</h4>
+                <p>
+                    Der Namensbestandteil "Diff" bezieht sich auf ein in der Programmierwelt viel genutztes Tool, das die Unterschiede (engl.: differences) zwischen zwei Dateien aufzeigt. Normalerweise wird das Tool dazu genutzt, die Unterschiede zwischen der jetzigen und einer früheren Version einer Datei sichtbar zu machen. Diese Idee der Versionskontrolle ist in der Softwareentwicklung altbekannt und sollte auch im Journalismus benutzt werden, da der Journalismus sich auf sich ständig weiterentwickelnde Versionen von Nachrichtenartikeln hinbewegt.
+                </p>
+
+                <h4>Was ist die URL-Suche und wie kann ich sie verwenden?</h4>
+                <p>
+                    Im allgemeinen Sprachgebrauch bezeichnet URL (Uniform Resource Locator) die Webadresse einer Seite. Zum Beispiel könntest du auf der Titelseite einer Zeitung einen Artikel auswählen und dann NewsDiffs DE gezielt nutzen, um zu recherchieren, ob an diesem Artikel bereits Änderungen vorgenommen wurden.<br>
+                    So gehst du vor:<br>
+                    <ol>
+                        <li>Besuche die Titelseite eines der Online-Nachrichtenportale. Bsp: http://www.spiegel.de</li>
+                        <li>Klicke auf einen dort verlinkten Artikel.</li>
+                        <li>Kopiere* die URL des Artikels aus der Adressleiste deines Browsers in deine Zwischenablage. Bsp: http://www.spiegel.de/politik/ausland/griechenland-das-sind-die-opfer-von-tsipras-streichliste-a-1040237.html</li>
+                        <li>Besuche NewsDiffs DE und füge die URL des Artikels in die Suchleiste ein*.</li>
+                        <li>Klicke auf das Lupensymbol oder drücke Enter, um die Suche zu starten.</li>
+                    </ol>
+                    * <a href="http://praxistipps.chip.de/tastenkombination-kopieren-und-einfuegen_13193">Hilfe zu "Kopieren und Einfügen"</a>
+                </p>
+
+                <h4>Welche Tools wurden eingesetzt?</h4>
+                <p>
+                    Bootstrap, Django, Python, Diff Match Patch, Open Source NewsDiffs
+                </p>
+
+                <h4>Frage?</h4>
+                <p>
+                    Antwort.
+                </p>
             </div>
         </div>
 
