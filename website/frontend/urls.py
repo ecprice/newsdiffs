@@ -12,6 +12,7 @@ urlpatterns = [
   url(r'^kontakt/$', 'frontend.views.kontakt', name='kontakt'),
   url(r'^impressum/$', 'frontend.views.impressum', name='impressum'),
   url(r'^browse/$', 'frontend.views.browse', name='browse'),
+  url(r'^suchergebnisse/$', 'frontend.views.suchergebnisse', name='suchergebnisse'),
   url(r'^browse/(.*)$', 'frontend.views.browse', name='browse'),
   url(r'^feed/browse/(.*)$', 'frontend.views.feed', name='feed'),
   url(r'^highlights/$', 'frontend.views.highlights', name='highlights'),
