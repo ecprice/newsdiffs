@@ -1,35 +1,18 @@
 {% extends 'headerfooter.html' %}
 {% load url from future %}
-{% block css_import %} <link href="{% url 'static' 'css/custom-searchbar.css' %}" rel="stylesheet" type="text/css">{% endblock %}
-{% block title %}Was ist los auf der Welt?{% endblock %}
+{% block title %}Entdecken{% endblock %}
 {% block active_entdecken %}class="active"{% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
-
-        <div class="row" id="description">
-            <div class="col-md-6 col-md-offset-3">
-                <p class="text-justify">
-                Hier gibts was zu Entdecken.
+    <div class="container-fluid maincontent">
+        {% include "searchbar.html" %}
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h1>Entdecken</h1>
+                <p>
+                    Hier gibts was zu Entdecken: über eine Tag Cloud,
+                    deren Inhalte über die Twitter API generiert werden, und über klickbare Ressort/Kategorien.
                 </p>
-            </div>
-        </div>
-
-        <div class="row" id ="search-total">
-            <div class="col-md-6 col-md-offset-3">
-                <div id="search-input">
-                    <input type="text" placeholder="Suche" id="search-input-line"><button type="button" id="search-input-btn" onclick="location.href='{% url 'browse' %}'"><span class="glyphicon glyphicon-search" ></span></button>
-                </div>
-
-                <div id="search-foldout">
-                    <ul class="list-group">
-                        <li class="list-group-item" id="stichwort-link"><a><span class="glyphicon glyphicon-paperclip"></span>Stichwort</a></li>
-                        <li class="list-group-item"><a><span class="glyphicon glyphicon-link"></span>URL</a></li>
-                        <li class="list-group-item"><a><span class="glyphicon glyphicon-file"></span>Zeitung</a></li>
-                        <li class="list-group-item"><a><span class="glyphicon glyphicon-calendar"></span>Datum</a></li>
-                        <li class="list-group-item"><a><span class="glyphicon glyphicon-user"></span>Autor</a></li>
-                    </ul>
-                </div>
             </div>
         </div>
     </div>
