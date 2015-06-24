@@ -1,6 +1,7 @@
 {% extends 'headerfooter.html' %}
 {% load url from future %}
-{% block css_import %}    <link href="{% url 'static' 'css/custom-article-list.css' %}" rel="stylesheet" type="text/css">
+{% block css_import %}
+    <link href="{% url 'static' 'css/custom-article-list.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block title %}Suchergebnisse{% endblock %}
 {% block active_front %}class="active"{% endblock %}
@@ -8,8 +9,9 @@
 {% block content %}
     <!-- Begin page content -->
 	<div class="container-fluid maincontent">
+        {% include "searchbar.html" %}
 
-		<!-- Breadcrumbs -->
+        <!-- Breadcrumbs -->
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2">
 				<ol class="breadcrumb">
