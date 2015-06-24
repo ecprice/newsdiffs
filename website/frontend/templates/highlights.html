@@ -1,37 +1,19 @@
 {% extends 'headerfooter.html' %}
 {% load url from future %}
-{% block css_import %} <link href="{% url 'static' 'css/custom-searchbar.css' %}" rel="stylesheet" type="text/css">{% endblock %}
 {% block title %}Highlights{% endblock %}
 {% block active_highlights %}class="active"{% endblock %}
 
 {% block content %}
-<!-- Begin page content -->
-    <div class="container-fluid">
-
-        <div class="row" id ="search-total">
-            <div class="col-md-6 col-md-offset-3">
-                <div id="search-input">
-                    <input type="text" placeholder="Suche" id="search-input-line"><button type="button" id="search-input-btn" onclick="location.href='article-list-page.html'"><span class="glyphicon glyphicon-search" ></span></button>
-                </div>
-
-                <div id="search-foldout">
-                    <ul class="list-group">
-                        <li class="list-group-item"><span class="glyphicon glyphicon-paperclip"></span>Stichwort</li>
-                        <li class="list-group-item"><span class="glyphicon glyphicon-link"></span>URL</li>
-                        <li class="list-group-item"><span class="glyphicon glyphicon-file"></span>Zeitung</li>
-                        <li class="list-group-item"><span class="glyphicon glyphicon-calendar"></span>Datum</li>
-                        <li class="list-group-item"><span class="glyphicon glyphicon-user"></span>Autor</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
+    <div class="container-fluid maincontent">
+        {% include "searchbar.html" %}
         <div class="row">
-            <div class="container-fluid col-md-8 col-md-offset-2">
+            <div class="col-md-8 col-md-offset-2">
                 <h1>Highlights</h1>
+                <p>
+                    Hier kommen 3-5 kuratierte Artikel hin und
+                    (je nach Arbeitsaufwand) weitere Artikel, die durch Upvotes von Usern ermittelt werden.
+                </p>
             </div>
         </div>
-
-
     </div>
 {% endblock %}

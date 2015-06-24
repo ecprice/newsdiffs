@@ -1,19 +1,19 @@
 {% extends 'headerfooter.html' %}
 {% load url from future %}
-{% block css_import %}<link href="{% url 'static' 'css/custom-searchbar.css' %}" rel="stylesheet" type="text/css">{% endblock %}
 {% block active_front %}class="active"{% endblock %}
 {% block content %}
     <div class="container-fluid maincontent">
+    {% include "searchbar.html" %}
         <div class="row" id="description">
             <div class="col-md-6 col-md-offset-3">
                 <p class="text-justify">
-                    Die Idee hinter NewsDiffs Deutschland ist es, Änderungen an Nachrichtenartikeln sichtbar und nachvollziehbar
-                    zu machen. NewsDiffs Deutschland trackt alle Änderungen an Artikeln der Titelseiten der 10 größten
-                    deutschsprachigen Nachrichtenportale. Nutze die Suchfunktion, um nach Artikeln zu suchen oder sieh dir unsere <a href="{% url 'highlights' %}">Highlights</a> an.
+                    Die Idee hinter NewsDiffs DE ist es, Änderungen an Nachrichtenartikeln sichtbar und nachvollziehbar
+                    zu machen. NewsDiffs DE trackt alle Änderungen an Artikeln der Titelseiten der zehn größten
+                    Nachrichtenportale in Deutschland. Nutze die Suchfunktion, um nach Artikeln zu suchen oder sieh dir unsere <a href="{% url 'highlights' %}">Highlights</a> an.
                 </p>
             </div>
         </div>
-        {% include "searchbar.html" %}
+
     </div>
 {% endblock %}
 

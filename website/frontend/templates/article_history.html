@@ -1,21 +1,34 @@
 {% extends 'headerfooter.html' %}
 {% load url from future %}
-{% block title %}Änderungsübersicht des Artikels{% endblock %}
-{% block css_import %}<link href="{% url 'static' 'css/custom-article-history.css' %}" rel="stylesheet" type="text/css">{% endblock %}
+{% block title %}Änderungsübersicht{% endblock %}
+{% block css_import %}
+    <link href="{% url 'static' 'css/custom-article-history.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
 {% block active_entdecken %}class="active"{% endblock %}
 {% block content %}
 
-	<div class="container" id="main">
-	
+	<div class="container-fluid maincontent">
 		{% include "searchbar.html" %}
 
+        <!-- Breadcrumbs -->
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Suche</a></li>
+                    <li><a href="suchergebnisse.html">Suchergebnisse</a></li>
+                    <li class="active">Änderungsübersicht</li>
+                </ol>
+            </div>
+        </div>
+
+
 		<div class="row">
-			<div class="col-md-10 col-md-offset-1">
-				
+			<div class="col-md-8 col-md-offset-2">
+
 				<h1>{{ article.latest_version.title }}</h1>
 				<h5>{{ article.latest_version.title }} | Erste Archivierung: {{ article.initial_date }}</h5>
 				<h5>Änderungsübersicht:</h5>
-				
+
 				<table class="table table-condensed">
 					<thead>
 						<tr>
@@ -30,7 +43,7 @@
                           <td><a href="{{link}}">{{version.title}}</a></td>
                           <td>{{version.date}}</td>
                           {% if difflink %}
-                            <td><a href="{{difflink}}"><img src=".{% url 'static' 'images/Icon_Vergleichen16px.png' %}" alt="Vergleichen-Icon">Vergleichen mit vorheriger Version</a></td>
+                            <td><a href="{{difflink}}"><img src=".{% url 'static' 'images/Icon_Vergleichen16px.png' %}" alt="Vergleichen-Icon">Änderungs ansehen</a></td>
                           {% else %}
                             <td></td>
                           {% endif %}
@@ -42,6 +55,7 @@
 				<h3>(<a href="article.url">Original-Artikel bei {{article.publication}} lesen</a>)</h3>
 			</div>
 		</div>
-		
+
 	</div>
+
 {% endblock %}

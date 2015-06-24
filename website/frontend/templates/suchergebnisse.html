@@ -1,7 +1,9 @@
 {% extends 'headerfooter.html' %}
 {% load url from future %}
-{% block css_import %}    <link href="{% url 'static' 'css/custom-article-list.css' %}" rel="stylesheet" type="text/css">
+{% block css_import %}
+    <link href="{% url 'static' 'css/custom-article-list.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
+<<<<<<< HEAD
 {% block title %}{% endblock %}
 {% block active_entdecken %}class="active"{% endblock %}
 
@@ -9,10 +11,17 @@
 
 {% block content %}
 
+=======
+{% block title %}Suchergebnisse{% endblock %}
+{% block active_front %}class="active"{% endblock %}
+
+{% block content %}
+>>>>>>> 5df821923f8d32a814334623cc4813c568ba08b3
     <!-- Begin page content -->
 	<div class="container-fluid maincontent">
+        {% include "searchbar.html" %}
 
-		<!-- Breadcrumbs -->
+        <!-- Breadcrumbs -->
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2">
 				<ol class="breadcrumb">
@@ -50,22 +59,22 @@
 							<tr>
 								<td>
 									<h3>Fahimi stellt Merkel Ultimatum (<a href="http://www.bild.de/politik/inland/nsa/fahimi-uebt-druck-auf-merkel-aus-41074484.bild.html">Bild.de</a>)</h3>
-									<p><a href="article_history.html"><img class="ownbtn" src="./images/Icon_Artikelverlauf.png" alt="Artikelverlauf-Icon">Änderungsübersicht</a></p>
-									<p><a href="diffview.html"><img class="ownbtn" src="./images/Icon_Vergleichen.png" alt="Vergleichen-Icon">neueste Änderung</a></p>
+									<p><a href="article_history.html"><img class="ownbtn" src="../static/images/Icon_Artikelverlauf.png" alt="Artikelverlauf-Icon">Änderungsübersicht</a></p>
+									<p><a href="diffview.html"><img class="ownbtn" src="../static/images/Icon_Vergleichen.png" alt="Vergleichen-Icon">neueste Änderung</a></p>
 								</td>
 							</tr>
 							<tr>
 								<td>
 									<h3>SPD setzt Merkel Frist in BND-Affäre (<a href="http://www.spiegel.de/politik/deutschland/spd-stellt-merkel-frist-in-nsa-affaere-a-1035350.html">Spiegel Online</a>)</h3>
-									<p><a href="article_history.html"><img class="ownbtn" src="./images/Icon_Artikelverlauf.png" alt="Artikelverlauf-Icon">Änderungsübersicht</a></p>
-									<p><a href="diffview.html"><img class="ownbtn" src="./images/Icon_Vergleichen.png" alt="Vergleichen-Icon">neueste Änderung</a></p>
+									<p><a href="article_history.html"><img class="ownbtn" src="../static/images/Icon_Artikelverlauf.png" alt="Artikelverlauf-Icon">Änderungsübersicht</a></p>
+									<p><a href="diffview.html"><img class="ownbtn" src="../static/images/Icon_Vergleichen.png" alt="Vergleichen-Icon">neueste Änderung</a></p>
 								</td>
 							</tr>
 							<tr>
 								<td>
 									<h3>SPD stellt Merkel ein Ultimatum (<a href="http://www.faz.net/aktuell/politik/inland/bnd-affaere-spd-stellt-merkel-ein-ultimatum-13609669.html">FAZ.net</a>)</h3>
-									<p><a href="article_history.html"><img class="ownbtn" src="./images/Icon_Artikelverlauf.png" alt="Artikelverlauf-Icon">Änderungsübersicht</a></p>
-									<p><a href="diffview.html"><img class="ownbtn" src="./images/Icon_Vergleichen.png" alt="Vergleichen-Icon">neueste Änderung</a></p>
+									<p><a href="article_history.html"><img class="ownbtn" src="../static/images/Icon_Artikelverlauf.png" alt="Artikelverlauf-Icon">Änderungsübersicht</a></p>
+									<p><a href="diffview.html"><img class="ownbtn" src="../static/images/Icon_Vergleichen.png" alt="Vergleichen-Icon">neueste Änderung</a></p>
 								</td>
 							</tr>
 						</tbody>
@@ -111,4 +120,8 @@
 
 	</div>
 	<!-- /.container-fluid -->
+<<<<<<< HEAD
 {% endblock %}
+=======
+{% endblock %}
+>>>>>>> 5df821923f8d32a814334623cc4813c568ba08b3
