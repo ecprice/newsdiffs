@@ -4,15 +4,19 @@
 #  - create a parser class in another file, based off (say) bbc.BBCParser
 #  - add it to parsers (below)
 # Test with test_parser.py
-
 # List of parsers to import and use based on parser.domains
 
 parsers = """
-nyt.NYTParser
-cnn.CNNParser
-politico.PoliticoParser
-bbc.BBCParser
-washpo.WashPoParser
+sueddeutsche.SDParser
+stern.SternParser
+bild.BildParser
+focus.FocusParser
+spiegel.SpiegelParser
+zeit.ZeitParser
+RPOnline.RPOParser
+faz.FAZParser
+welt.WeltParser
+n-tv.NTVParser
 """.split()
 
 parser_dict = {}

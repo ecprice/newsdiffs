@@ -9,6 +9,10 @@ urlpatterns = [
   url(r'^diff/(?P<vid1>\d+)/(?P<vid2>\d+)/(?P<urlarg>.*)$', 'frontend.views.diffview', name='diffview'),
   url(r'^about/$', 'frontend.views.about', name='about'),
     url(r'^entdecken/$', 'frontend.views.entdecken', name='entdecken'),
+      url(r'^entdecken/$', 'frontend.views.entdecken', name='entdecken'),
+
+    url(r'^entdecken/$', 'frontend.views.entdecken', name='entdecken'),
+
   url(r'^browse/$', 'frontend.views.browse', name='browse'),
   url(r'^browse/(.*)$', 'frontend.views.browse', name='browse'),
   url(r'^feed/browse/(.*)$', 'frontend.views.feed', name='feed'),
