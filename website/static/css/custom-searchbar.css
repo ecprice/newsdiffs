@@ -52,6 +52,9 @@
 
 #search-foldout a, a:hover {
 	color: #A9A9A9;
+    border: none;
+    text-decoration: none;
+	cursor: pointer;
 }
 
 /* *****************************************************************************
