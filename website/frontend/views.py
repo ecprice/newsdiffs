@@ -356,10 +356,13 @@ def highlights(request):
 def kontakt(request):
     return render_to_response('kontakt.html', {})
 
+def suchergebnisse(request):
+    return render_to_response('suchergebnisse.html', {})
+
 def impressum(request):
     return render_to_response('impressum.html', {})
 
-def front(request):
+def index(request):
     return render_to_response('index.html', {'sources': SOURCES})
 
 
