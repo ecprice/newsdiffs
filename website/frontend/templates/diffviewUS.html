@@ -1,0 +1,95 @@
+{% extends "template.html" %}
+{% load url from future %}
+
+{% block head %}
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+
+<script src="{% url 'static' 'lib/diff_match_patch_uncompressed.js'%}" type="text/javascript"></script>
+
+<script type="text/javascript">
+  var text1 = '{{text1|escapejs}}';
+  var text2 = '{{text2|escapejs}}';
+  $(document).ready(function () {
+    var dmp = new diff_match_patch();
+    dmp.Diff_ShowPara = false;
+    var diff = dmp.diff_main(text1, text2);
+    dmp.diff_cleanupSemantic(diff);
+    $('#compare')[0].innerHTML = dmp.diff_prettyHtml(diff);
+  });
+</script>
+
+  <style type="text/css">
+  del {
+    background-color: #ffa0a0;
+  }
+  ins {
+    background-color: #a0ffa0;
+  }
+  </style>
+
+{% endblock head %}
+
+{% block content %}
+{% if display_search_banner %}
+    <style>
+      .search-banner h3{
+        text-align: center;
+        padding-bottom: .5em;
+      }
+      .search-banner {
+        background-color: #ffffa0;
+        border: 2px solid black;
+        padding: .5em;
+        margin: 0.4em 1em 1em 1em;
+        font-size: 14pt;
+      }
+    </style>
+
+<div class="search-banner">
+<h3>Willkommen auf <a href="{% url 'root' %}">NewsDiffs</a>!</h3>
+
+NewsDiffs verfolgt Änderungen an Artikeln von Onlinezeitungen nach
+deren Veröffentlichung.  Unten kannst du die Nachbearbeitungen an einem
+bereits veröffentlichten Artikel sehen. Du kannst in unserem <a href=
+"{% url 'browse' %}" >Archiv</a> nach vielen solchen Änderungen suchen.
+</div>
+{% endif %}
+
+    <h2>Vergleiche: {{title}}</h2>
+    <h3><a href="{{article_url}}">{{article_url}}</a></h3>
+    <ul>
+      <li><del>Pink: Archiviert am {{date1}}</del></li>
+      <li><ins>Grün: Archiviert am {{date2}}</ins></li>
+    </ul>
+    <p>
+      {% if prev %}
+      <a href="{{prev}}"><= Vorherige Version</a>
+      {% else %}
+      Keine vorherige Version
+      {% endif %} |
+      <a href="{% url 'article_history' article_shorturl %}">Alle Versionen</a>
+      |
+      {% if next %}
+      <a href="{{next}}">Spätere Version =></a>
+      {% else %}
+      Keine spätere Version
+      {% endif %}
+    </p>
+
+<!--
+Are these changes interesting?   <form action="{% url 'upvote' %}" method=POST>
+      <input type=hidden name=article_url value={{article_url}}>
+      <input type=hidden name=diff_v1 value={{v1}}>
+      <input type=hidden name=diff_v2 value={{v2}}>
+      <input type=submit name=submit value="Yes">
+    </form>
+-->
+<hr>
+    <div>
+      <div id="compare">
+      </div>
+    </div>
+{% endblock content%}
+
+{% block title %}Diff von: {{title}}{% endblock %}
