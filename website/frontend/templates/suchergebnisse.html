@@ -3,20 +3,12 @@
 {% block css_import %}
     <link href="{% url 'static' 'css/custom-article-list.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
-<<<<<<< HEAD
-{% block title %}{% endblock %}
-{% block active_entdecken %}class="active"{% endblock %}
 
-
-
-{% block content %}
-
-=======
 {% block title %}Suchergebnisse{% endblock %}
 {% block active_front %}class="active"{% endblock %}
 
 {% block content %}
->>>>>>> 5df821923f8d32a814334623cc4813c568ba08b3
+
     <!-- Begin page content -->
 	<div class="container-fluid maincontent">
         {% include "searchbar.html" %}
@@ -48,7 +40,7 @@
 					</div>
 				</div>
 
-				<div class="table-responsive">
+				<div class="table">
 					<table class="table table-condensed">
 						<thead>
 							<tr>
@@ -120,8 +112,6 @@
 
 	</div>
 	<!-- /.container-fluid -->
-<<<<<<< HEAD
+
 {% endblock %}
-=======
-{% endblock %}
->>>>>>> 5df821923f8d32a814334623cc4813c568ba08b3
+
