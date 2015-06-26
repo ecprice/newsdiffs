@@ -3,7 +3,7 @@
 {% block css_import %}
     <link href="{% url 'static' 'css/custom-about.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
-{% block title %}Über NewsDiffsDE?{% endblock %}
+{% block title %}Über NewsDiffsDE{% endblock %}
 {% block active_about %}class="active"{% endblock %}
 
 {% block content %}
@@ -20,8 +20,6 @@
                 </ul>
             </div>
         </div>
-
-
 
         <div class="row" id="intro">
             <div class="col-md-8 col-md-offset-2">
@@ -43,8 +41,7 @@
                 </p>
             </div>
         </div>
-
-
+        
         <div class="row" id="faq">
             <div class="col-md-8 col-md-offset-2">
                 <h2>
@@ -77,8 +74,7 @@
                 <p>
                     NewsDiffs DE nutzt Web Scraping, um in regelmäßigen Abständen die Titelseiten von Online-Nachrichtenportalen abzulaufen und die dort verlinkten Artikel in einer Datenbank zu speichern. Sobald bei einem Artikel Änderungen festzustellen sind, wird der Artikel auf NewsDiffs DE angezeigt.
                 </p>
-
-
+                
                 <h4>Was sind die Kriterien dafür, dass ein Artikel auf NewsDiffs DE erscheint?</h4>
                 <p>
                     Der Artikel muss auf der Titelseite einer der momentan bedienten Online-Nachrichtenportale verlinkt sein und bereits mindestens einmal geändert worden sein. Diese Seiten sind: BILD, FOCUS, DER SPIEGEL, DIE WELT, stern, DIE ZEIT, Süddeutsche Zeitung, F.A.Z., n-tv und RP online – laut <a href="http://meedia.de/2015/04/23/n24-bricht-ein-news-de-und-b-z-legen-zu-die-neueste-agof-news-top-50/">MEEDIA.de</a> die zehn Seiten mit den meisten Unique Usern in Deutschland (Stand Februar 2015).
@@ -152,7 +148,6 @@
             Phasellus eget purus elementum, congue augue eu, porta tortor. Integer quis volutpat libero, a malesuada libero. 
             Donec cursus euismod placerat. Donec quis elit sit amet mi mattis efficitur. Pellentesque metus nisl, pellentesque nec dignissim et, 
             convallis eget lorem. Aliquam id consectetur nulla, et semper nisl.</p>
-                
  
             </div>
         </div>
@@ -162,7 +157,5 @@
 
 {% endblock %}
 
-
    {% block js_scripts %}	<script src="{% url 'static' 'about-scroll.js'%}"></script>
    {% endblock %}
-
