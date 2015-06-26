@@ -1,29 +1,29 @@
-.tag12{
+a.tag12{
     font-size: 1.4em;
 	font-weight: 300;
 	color: #666666;
 }
 
 
-.tag15{
+a.tag15{
     font-size:1.8em;
 	color: #9f9f9f;
 	font-weight: 400;
 }
 
-.tag2{
+a.tag2{
     font-size:2em;
     font-weight:400;
     color:#c9c9c9;
 }
 
-.tag3{
+a.tag3{
     font-size:3em;
     font-weight:700;
     color:#a8a8a8;
 }
 
-.tag35{
+a.tag35{
     font-size: 3.5em;
 	font-weight: 700;
 	color:#6c6c6c;
@@ -42,6 +42,7 @@
 }
 
 .cloud a{
+border: none;
 	 -webkit-transition: all 1s ease; /* Safari and Chrome */
     -moz-transition: all 1s ease; /* Firefox */
     -o-transition: all 1s ease; /* IE 9 */
