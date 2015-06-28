@@ -13,6 +13,7 @@
 
 a img:hover {
 	text-decoration: none;
+    border: none;
 }
 
 .table-condensed {
@@ -60,8 +61,4 @@ ul.pages > li {
 input#pageNr {
   	max-width: 50px;
     border-radius: 4px;
-}
-
-#display-options, #pagination-nav {
-
 }
