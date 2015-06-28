@@ -23,22 +23,131 @@
 			</div>
 		</div>
 
-        <!-- Suchergebnisse -->
 		<div class="row">
-			<div class="col-md-8 col-md-offset-2">
-
-				<h1>Suchergebnisse für "Merkel"</h1>
-
-				<div class="sort" id="wrapper">
-					<h5>Sortieren nach</h5>
-					<div class="btn-group">
-						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Neueste <span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">Meiste Änderungen </a></li>
-						</ul>
+			<!--Filter-->
+			<div class="col-md-2 col-md-offset-2">
+				<div class="sidebar">
+					<h5>Sortieren nach:</h5>
+					<div class="radio">
+						<label>
+							<input type="radio" name="sortierenOptionsRadios" id="sortierenNeueste" value="neueste" checked>
+							Neueste
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" name="sortierenOptionsRadios" id="sortierenMeiste" value="meiste">
+							Meiste Änderungen
+						</label>
+					</div>
+					<h5>Filtern nach:</h5>
+					<p>Zeitungen</p>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="bildCheckbox" value="">
+							Bild.de
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="focusCheckbox" value="">
+							Focus Online
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="spiegelCheckbox" value="">
+							Spiegel Online
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="weltCheckbox" value="">
+							Die Welt
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="sternCheckbox" value="">
+							stern.de
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="zeitCheckbox" value="">
+							Zeit Online
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="sueddeutscheCheckbox" value="">
+							Süddeutsche.de
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="fazCheckbox" value="">
+							FAZ.net
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="ntvCheckbox" value="">
+							n-tv.de
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="rpCheckbox" value="">
+							RP Online
+						</label>
+					</div>
+					<p>Ressorts</p>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="allgemeinCheckbox" value="">
+							Allgemein
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="politikCheckbox" value="">
+							Politik
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="wirtschaftCheckbox" value="">
+							Wirtschaft
+						</label>
+					</div><div class="checkbox">
+						<label>
+							<input type="checkbox" id="regionalCheckbox" value="">
+							Regional
+						</label>
+					</div><div class="checkbox">
+						<label>
+							<input type="checkbox" id="technikCheckbox" value="">
+							Technik
+						</label>
+					</div><div class="checkbox">
+						<label>
+							<input type="checkbox" id="wissenschaftCheckbox" value="">
+							Wissenschaft
+						</label>
+					</div><div class="checkbox">
+						<label>
+							<input type="checkbox" id="gesellschaftCheckbox" value="">
+							Gesellschaft
+						</label>
 					</div>
 				</div>
+			</div>
+			
+			<!-- Suchergebnisse -->
+			<div class="col-md-6">
+
+				<h1>Suchergebnisse für "Merkel"</h1>
 
 				<div class="table">
 					<table class="table table-condensed">
