@@ -8,8 +8,6 @@
 
 /**	overrides bootstrap's built-in style for having rounded corners on inputs and lists
 	for search-input and foldout-list**/
-#search-input .input-group-addon,
-#search-input .form-control,
 .list-group-item:last-child, 
 .list-group-item:first-child {
 	border-radius: 0px;

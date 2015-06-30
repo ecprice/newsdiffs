@@ -41,11 +41,6 @@ code {
 	padding: 0px;
 }
 
-ul.dropdown-menu{
-	border: none;
-
-}
-
 ul.nav.navbar-nav.navbar-right li > a{
 	text-align: center;
 }
@@ -113,11 +108,6 @@ footer a:hover {
     display: inline;
 }
 
-.footer-right p{
-	float: right;
-	padding-left: 10px;
-}
-
 
 
 
@@ -133,23 +123,11 @@ footer a:hover {
 }
 
 
-/*******************************************************************************
- Content
- ******************************************************************************/
 
-/*.maincontent a{
-	text-decoration: none;
-	border-bottom: 1px #333333 dotted;
-}
+/* *****************************************************************************
+ Sticky Footer Styles
+ **************************************************************************** */
 
-.maincontent a:hover {
-	text-decoration: none;
-	border-bottom: none;
-}*/
-
-
-/* Sticky footer styles
--------------------------------------------------- */
 html {
   position: relative;
   min-height: 100%;
@@ -164,24 +142,5 @@ body {
   bottom: 0;
   width: 100%;
 }
-
-
-/* Custom page CSS
--------------------------------------------------- */
-/* Not required for template or sticky footer method. */
-
-/*body > .container {
-  padding: 60px 15px 0;
-}*/
-
-.container .text-muted {
-  margin: 20px 0;
-}
-
-/*.footer > .container {
-  padding-right: 15px;
-  padding-left: 15px;
-}*/
-
 
 

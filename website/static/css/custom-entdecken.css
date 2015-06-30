@@ -111,23 +111,35 @@ border: none;
 
 }
 
-span.glyphicon-globe{
+/*More specific than:
+.span.glyphicon-globe*/
+.subtitle .glyphicon-globe{
 	padding-top: 20px;
     font-size: 4em;
 	color: #898989;
 }
 
-/* Katgeorien */
+/* Kategorien */
 
-.glyphicon.glyphicon-globe, .glyphicon.glyphicon-object-align-bottom, .glyphicon.glyphicon-euro, .glyphicon.glyphicon-home, .glyphicon.glyphicon-camera, .glyphicon.glyphicon-user, .glyphicon.glyphicon-tree-deciduous, .glyphicon.glyphicon-th-list{
-font-size: 32px;
-position: center;
-line-height: 40px;
 
+/*More specific than:
+.glyphicon.glyphicon-globe,
+.glyphicon.glyphicon-object-align-bottom,
+.glyphicon.glyphicon-euro,
+.glyphicon.glyphicon-home,
+.glyphicon.glyphicon-camera,
+.glyphicon.glyphicon-user,
+.glyphicon.glyphicon-tree-deciduous,
+.glyphicon.glyphicon-th-list
+*/
+.categories_list .glyphicon{
+    font-size: 32px;
+    position: center;
+    line-height: 40px;
 }
 
 .categories_list{
-margin-top: 30px;
+    margin-top: 30px;
 }
 
 .categories_list ul {
