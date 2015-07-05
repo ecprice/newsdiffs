@@ -1,83 +1,208 @@
-{% extends 'template.html' %}
-
+{% extends 'headerfooter.html' %}
 {% load url from future %}
-
+{% block css_import %}
+    <link href="{% url 'static' 'css/custom-about.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block title %}Über NewsDiffsDE{% endblock %}
 {% block active_about %}class="active"{% endblock %}
 
 {% block content %}
-<a 
-href="http://www.newsdiffs.org/diff/192021/192137/www.nytimes.com/2013/03/31/science/space/yvonne-brill-rocket-scientist-dies-at-88.html"><img  
-src="{% url 'static' 'images/brill.png' %}" 
-width="450" align="right" style="padding:15px; margin:15px"/></a>
-      <h1>About NewsDiffs</h1>
-      <p>
-    		
-			<div class="boldhead">Why NewsDiffs Exists</div> 
+    <!-- Begin page content -->
+    <div class="container-fluid maincontent">
+        {% include "searchbar.html" %}
+        <div class="row" id ="submenu-row">
+            <div class="col-md-8 col-md-offset-2">
+                <h1>Über NewsDiffs</h1>
+                <ul class="nav nav-pills" id="submenu">
+                    <li role="presentation"><a href="#intro">Einführung</a></li>
+                    <li role="presentation"><a href="#faq">F.A.Q.</a></li>
+                    <li role="presentation"><a href="#press">Presse</a></li>
+                </ul>
+            </div>
+        </div>
 
-			<p>In the age of rapid reporting and digital news, there is rarely a single "final" version of an article. 	
-<p>NewsDiffs watches different versions of highly-placed articles on online news sites, starting with <a href="http://nytimes.com">nytimes.com</a>. 
+        <div class="row" id="intro">
+            <div class="col-md-8 col-md-offset-2">
+                <h2>
+                    Einführung
+                    <a href="#top">
+                        <button type="button" class="btn btn-default btn-md go-up-btn">
+                            <span class="glyphicon glyphicon-arrow-up"></span>
+                        </button>
+                    </a>
+                </h2>
 
-			<p>For better or worse, readers can now view "the making of the sausage" that historically was discreetly 
-tucked away from view with dead-tree editions. Some of those changes <a 
-href="http://blogs.villagevoice.com/runninscared/2011/10/why_did_the_new_1.php">provoke criticism</a>.
-<p>NewsDiffs was born of the <a 
-href="http://opennews-mit.eventbrite.com/">Knight Mozilla MIT hackathon</a> on June 17, 2012.<p>
-		
-<div class="boldhead">What Types of Changes?</div>
-			<p>Updates to articles on major news web sites happen all the time.</p>
-			<p>Often the changes to articles are simply minor, small edits that are tightening up (such as "most" to "many.")</p>
-			<p>Sometimes the changes are the insertion or the deletion of a section.</p>
-			<p>Sometimes the story changes as a result of a rapidly breaking news, such as <a 
-href="http://www.newsdiffs.org/diffview?url=http://www.nytimes.com/2012/06/18/us/rodney-king-whose-beating-led-to-la-riots-dead-at-47.html&v1=4914b33add01e16c34ed2d066bba5c829bcfdf8b&v2=eed0278b77d633f80398660ed97d8490ac84fc27&pagewanted=all">the 
-death of Rodney King</a>. The story grows and deepens over time as more information comes in. To the right is an <a 
-href="http://www.nytimes.com/2012/06/20/world/middleeast/mubarak-is-on-life-support-egypt-security-officials-say.html&v1=e935fb9e8ce50c90971916796fde2c10f0b8b7ad&v2=99c50b4ba9d0d066c485697d90b0fcd0de0b7b3e&pagewanted=all">example 
-of a story that evolved about the health of former Egyptian president
-Hosni Mubarak</a>, first when it was reported that  he was "clinically dead" and then later that he had suffered a stroke.
- 			<p> Another interesting example would have been <a href="https://www.nytimes.com/2011/05/02/world/asia/osama-bin-laden-is-killed.html?_r=1&pagewanted=all">the killing of Osama Bin Laden</a> on May 1, 2011, which broke at 10:40 p.m. with a sparse report from Helene Cooper: 
-			<blockquote>WASHINGTON — Osama bin Laden has been killed, a United States official said. President Obama is expected to make an announcement on Sunday night, almost 10 years after the Sept. 11 attacks on the World Trade Center and the Pentagon.</blockquote>
+                <p>
+                    In einer Welt, in der Nachrichten im Sekundentakt verbreitet werden, stellt sich die Problematik
+                    einer transparenten Archivierung von Artikeln. Artikel auf Online-Nachrichtenportalen werden heute
+                    auch nach ihrer Veröffentlichung redigiert. Hierbei handelt es sich nicht nur um Korrekturen von
+                    Grammatik- oder Rechtschreibfehlern: auch neue Erkenntnisse über den Verlauf einer Geschichte
+                    oder gar andere Sichtweisen fließen in ein- und denselben Artikel ein. Im Gegensatz zur Welt der
+                    Printmedien werden diese Änderungen aber selten gekennzeichnet. Noch seltener ist es, dass Leser die ursprüngliche gegen die korrigierte Version abgleichen können.<br>
+                    <br>
+                    NewsDiffs DE nimmt sich dieser Problematik an und macht Änderungen an Artikeln nachvollziehbar.
+                    Wir beobachten die Titelseiten der zehn größten Online-Nachrichtenportale, speichern Artikel und
+                    machen die Änderungen mithilfe von Diff-Technologie sichtbar. <br>
+                    <br>
+                    Folge uns auf <a href="https://github.com/NewsdiffsDE/newsdiffs">Twitter</a>, um über
+                    interessante Neuigkeiten informiert zu bleiben, oder besuche uns auf <a href="https://github
+                    .com/NewsdiffsDE">GitHub</a>, um einen Blick hinter die Kulissen zu werfen.
+                </p>
+            </div>
+        </div>
+
+        <div class="row" id="faq">
+            <div class="col-md-8 col-md-offset-2">
+                <h2>
+                    F.A.Q.
+                    <a href="#top">
+                        <button type="button" class="btn btn-default btn-md go-up-btn">
+                            <span class="glyphicon glyphicon-arrow-up"></span>
+                        </button>
+                    </a>
+                </h2>
 
 
-			<p>Also interesting are the language changes that reflect subtle differences in connotation. For example, whether <a href="http://www.newsdiffs.org/diffview/?url=http://www.nytimes.com/2012/06/18/world/middleeast/egyptian-presidential-vote-enters-second-day.html&v1=4a202f72ea55330ea84fd3b814996c92b6e54a5b&v2=492777f287e2d052a96c8b0731e3430228cda905">an election was "democratic" vs. "competitive."</a>
-			<p>In some cases, we can see how a story can substantially change as more reporting comes in, such as <a 
-href="http://cityroom.blogs.nytimes.com/2011/10/01/police-arresting-protesters-on-brooklyn-bridge/">in a story that 
-helped inspired this project</a>: the article about the arrests of Occupy Wall Street protestors on October 1, 2011. Two versions, twenty 
-minutes apart, had substantially different first 
-paragraphs about the arrests of Occupy Wall Street protestors on the Brooklyn Bridge in October 2011. 
-The criticism it received was perhaps unfair, but it's hard to determine since the earlier version is 
-no longer publicly available.</p>
-			
-			<p>
-			<p>
-			<div class="boldhead">Why the name NewsDiffs?</div>
-			
-			A <a href="https://en.wikipedia.org/wiki/Diff">diff</a> is a popular tool in computer programming that outputs the differences between two files. It is typically used to show the changes between one version of a file and a former version of the same file. This idea of version control is well known within software engineering, and <a href="http://www.greglinch.com/2010/07/quick-thoughts-on-journalism-and-version-control.html">should be used in journalism</a> as journalism moves toward constantly evolving versions of news stories.
-			We have had many sessions at many newsy <a href="http://newsfoo.org">foo</a> and bar camps on <a href="http://danielbachhuber.com/2011/04/30/bcni-philly-github-for-news/">"Github for news."</a> Well, this time, we literally put the news into git.
-			<p>
-<div class="boldhead">How NewsDiffs Works</div> 
-			<p>NewsDiffs regularly looks at the stories that are linked to (or have been linked to) 
-from the homepage of major online news publications, starting with <a href="http://nytimes.com">nytimes.com</a> and <a 
-href="http://cnn.com">cnn.com</a>. It parses them and stores them in a <a href="https://en.wikipedia.org/wiki/Git_(software)">git repository</a>. 
-			<p>The records start June 17, 2012. 
-			<p>Not all articles are stored. Only those with changes are displayed. NewsDiffs focuses mostly on ones that 
-are linked from the homepage.
-			<p>
-<div class="boldhead">What Tools Did You Use?</div>
-			<p>The NewsDiffs source code is available on <a href="https://github.com/ecprice/newsdiffs">Github</a>. 
-			<p>The front end used to view the differences is from the open-source <a href="https://code.google.com/p/google-diff-match-patch/">Diff Match Patch</a> library. 
-			<p>The website is built on <a href="https://www.djangoproject.com/">Django</a>.
-			<p>The prettiness is courtesy of <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a>, which 
-has 
-been saving developers from themselves the world 
-over.
+                <h4>Wie funktioniert NewsDiffs DE?</h4>
+                <p>
+                    NewsDiffs DE nutzt Web Scraping, um in regelmäßigen Abständen die Titelseiten von
+                    Online-Nachrichtenportalen abzulaufen und die dort verlinkten Artikel in einer Datenbank zu
+                    speichern. Sobald bei einem Artikel Änderungen festzustellen sind, wird der Artikel auf NewsDiffs
+                    DE angezeigt und ist im Archiv und über die Suche auffindbar.
+                </p>
 
-<div class="boldhead">Who created NewsDiffs?</div> 
-			<p>NewsDiffs is the product of a weekend of work from the <a href="http://opennews-mit.eventbrite.com/">Knight Mozilla MIT 
-hackathon</a>, 
-by <a href="http://www.mit.edu/~ecprice/">Eric Price</a>, <a href="http://jennifer8lee.com">Jennifer 8. Lee</a> and <a href="http://web.mit.edu/~price/">Greg Price</a>. 
+                <h4>Wofür kann ich NewsDiffs DE benutzen?</h4>
+                <p>
+                    Mit NewsDiffs DE kannst du gezielt nach Artikeln zu einem Thema suchen, z.B. "G7-Gipfel".
+                    Inspiration zu aktuellen Themen oder Zeitungsressorts findest du unter <a href={% url 'entdecken'
+                        %}>Entdecken</a>. Neben Stichwörtern wie "G7-Gipfel" kannst du auch
+                    nach einer URL, einer Zeitung, einem Datum oder einem Autor suchen.<br>
+                    Oder du nutzt NewsDiffs DE, um durch die Artikel im Archiv zu stöbern und interessante Änderungen
+                    zu <a href={% url 'kontakt' %}>melden</a>. Hilf uns dabei, für mehr Transparenz im alltäglichen
+                    Nachrichtenbusiness zu sorgen.
+                </p>
 
-<p>Greg, who works at <a href="http://tddium.com/">Tddium</a>, has his masters in theoretical computer science from MIT and a bachelors in 
-mathematics from Harvard. (He also led the <a href="http://youtomb.mit.edu/">YouTomb</a> project, which tracked videos removed from 
-YouTube). Eric is currently in his fourth year of a PhD in theoretical computer science from MIT. Jenny was a reporter at The New York Times for nine years, wonders what it's like to be a product manager and has been 
-tortured by <a 
-href="https://en.wikipedia.org/wiki/Semicolon">missing semicolons</a>. 		      </p>
+                <h4>Wie kann ich NewsDiffs DE benutzen?</h4>
+                <p>
+                    Wenn du unser Archiv nach bestimmten Artikeln durchsuchen möchtest, dann nutze unsere Suchleiste.
+                    Möchtest du stöbern, dann nutze den Menüpunkt <a href={% url 'entdecken' %}>Entdecken</a>.
+                    Für eine chronologische Auflistung aller gespeicherten Artikel nutze das <a
+                        href={% url 'entdecken' %}>Entdecken</a>.
+                </p>
+
+
+                <h4>Was sind die Kriterien dafür, dass ein Artikel auf NewsDiffs DE erscheint?</h4>
+                <p>
+                    Der Artikel muss auf der Titelseite einer der momentan bedienten Online-Nachrichtenportale
+                    verlinkt sein und bereits mindestens einmal geändert worden sein. Diese Seiten sind: BILD,
+                    FOCUS, DER SPIEGEL, DIE WELT, stern, DIE ZEIT, Süddeutsche Zeitung, F.A.Z., n-tv und RP online –
+                    laut <a href="http://meedia.de/2015/04/23/n24-bricht-ein-news-de-und-b-z-legen-zu-die-neueste-agof-news-top-50/">MEEDIA.de</a>
+                    die zehn Seiten mit den meisten Unique Usern in Deutschland (Stand Februar 2015).
+                </p>
+
+                <h4>Warum gibt es keine Archivierung für [anderes Online-Nachrichtenportal]?</h4>
+                <p>
+                    Für NewsDiffs DE wurden lediglich Parser für die zehn meistbesuchten Online-Nachrichtenportale
+                    in Deutschland geschrieben.<br>
+                    Als Entwickler kannst du aber vom <a href="https://github.com/ecprice/newsdiffs">ursprünglichen
+                    Github-Repository</a> oder vom <a href="https://github.com/NewsdiffsDE/newsdiffs">NewsDiffs DE
+                    Github-Repository</a> forken und deine eigenen Parser schreiben.
+                </p>
+
+                <h4>Wie ist NewsDiffs DE entstanden?</h4>
+                <p>
+                    NewsDiffs DE entstand im Sommer 2015 im Rahmen eines studentischen Projekts an der Hochschule
+                    für Technik und Wirtschaft. <br>
+                    NewsDiffs DE basiert auf Open-Source-Software, welche im Jahr 2012 auf dem Knight Mozilla MIT
+                    Hackaton von Eric Price, Jennifer 8. Lee und Greg Price geschaffen wurde. Die Originalseite
+                    befindet sich unter <a href="http://www.newsdiffs.org">newsdiffs.org</a> und der Quellcode unter
+                    <a href="https://github.com/ecprice/newsdiffs">https://github.com/ecprice/newsdiffs</a>. <br>
+                    Im Rahmen des Projektes wurden die bestehende Software adaptiert und Optimierungen hinsichtlich
+                    Usability und Erscheinungsbild umgesetzt.
+                </p>
+
+                <h4>Wofür steht der Name NewsDiffs DE?</h4>
+                <p>
+                    Der Namensbestandteil "Diff" bezieht sich auf ein in der Programmierwelt viel genutztes Tool,
+                    das die Unterschiede (engl.: differences) zwischen zwei Dateien aufzeigt. Normalerweise wird das
+                    Tool dazu genutzt, die Unterschiede zwischen der jetzigen und einer früheren Version einer Datei
+                    sichtbar zu machen. Diese Idee der Versionskontrolle ist in der Softwareentwicklung altbekannt
+                    und sollte auch im Journalismus benutzt werden, da der Journalismus sich auf sich ständig
+                    weiterentwickelnde Versionen von Nachrichtenartikeln hinbewegt.
+                </p>
+
+                <h4>Was ist die URL-Suche und wie kann ich sie verwenden?</h4>
+                <p>
+                    Im allgemeinen Sprachgebrauch bezeichnet URL (Uniform Resource Locator) die Webadresse einer
+                    Seite. Zum Beispiel könntest du auf der Titelseite einer Zeitung einen Artikel auswählen und
+                    dann NewsDiffs DE gezielt nutzen, um zu recherchieren, ob an diesem Artikel bereits Änderungen
+                    vorgenommen wurden.<br>
+                    So gehst du vor:<br>
+                    <ol>
+                        <li>Besuche die Titelseite eines der Online-Nachrichtenportale. Bsp: http://www.spiegel.de</li>
+                        <li>Klicke auf einen dort verlinkten Artikel.</li>
+                        <li>Kopiere* die URL des Artikels aus der Adressleiste deines Browsers in deine
+                            Zwischenablage. Bsp: http://www.spiegel
+                            .de/politik/ausland/griechenland-das-sind-die-opfer-von-tsipras-streichliste-a-1040237.html</li>
+                        <li>Besuche NewsDiffs DE und füge die URL des Artikels in die Suchleiste ein*.</li>
+                        <li>Klicke auf das Lupensymbol oder drücke Enter, um die Suche zu starten.</li>
+                    </ol>
+                    * <a href="http://praxistipps.chip.de/tastenkombination-kopieren-und-einfuegen_13193">Hilfe zu
+                "Kopieren und Einfügen"</a>
+                </p>
+
+                <h4>Welche Tools wurden eingesetzt?</h4>
+                <p>
+                    Bootstrap, Django, Python, Diff Match Patch, Open Source NewsDiffs
+                </p>
+
+                <h4>Frage?</h4>
+                <p>
+                    Antwort.
+                </p>
+            </div>
+        </div>
+
+        <div class="row" id="press">
+            <div class="col-md-8 col-md-offset-2">
+                <h2>
+                    Presse
+                    <a href="#top">
+                        <button type="button" class="btn btn-default btn-md go-up-btn">
+                            <span class="glyphicon glyphicon-arrow-up"></span>
+                        </button>
+                    </a>
+                </h2>
+
+                <h4>Zeitung XYZ</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus euismod aliquet feugiat. Nullam
+                    iaculis purus quis blandit lacinia.
+            Suspendisse feugiat pretium lorem, in porttitor tortor convallis nec. Integer eget auctor nulla. Donec
+                    rhoncus purus metus, non rhoncus lorem posuere at.
+            Phasellus eget purus elementum, congue augue eu, porta tortor. Integer quis volutpat libero, a malesuada
+                    libero.
+            Donec cursus euismod placerat. Donec quis elit sit amet mi mattis efficitur. Pellentesque metus nisl,
+                    pellentesque nec dignissim et,
+            convallis eget lorem. Aliquam id consectetur nulla, et semper nisl.</p>
+
+                <h4>Zeitung ABC</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus euismod aliquet feugiat. Nullam
+                    iaculis purus quis blandit lacinia.
+            Suspendisse feugiat pretium lorem, in porttitor tortor convallis nec. Integer eget auctor nulla. Donec
+                    rhoncus purus metus, non rhoncus lorem posuere at.
+            Phasellus eget purus elementum, congue augue eu, porta tortor. Integer quis volutpat libero, a malesuada
+                    libero.
+            Donec cursus euismod placerat. Donec quis elit sit amet mi mattis efficitur. Pellentesque metus nisl,
+                    pellentesque nec dignissim et,
+            convallis eget lorem. Aliquam id consectetur nulla, et semper nisl.</p>
+
+            </div>
+        </div>
+
+    </div>
+    <script src="{% url 'static' 'about-scroll.js'%}"></script>
+
 {% endblock %}
+
+   {% block js_scripts %}	<script src="{% url 'static' 'js/about-scroll.js'%}"></script>
+   {% endblock %}

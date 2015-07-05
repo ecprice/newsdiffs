@@ -1,0 +1,25 @@
+{% load url from future %}
+
+{% block css_import %}
+    <link href="{% url 'static' 'css/custom-searchbar.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+<div class="row" id ="search-total">
+    <div class="col-md-6 col-md-offset-3">
+        <div id="search-element">
+            <div id="search-input">
+                <input type="text" placeholder="Suche" id="search-input-line"><button type="button" id="search-input-btn" onclick="location.href='article-list-page.html'"><span class="glyphicon glyphicon-search" ></span></button>
+            </div>
+
+            <div id="search-foldout">
+                <ul class="list-group">
+                    <li class="list-group-item"><a><span class="glyphicon glyphicon-paperclip"></span>Stichwort</a></li>
+                    <li class="list-group-item"><a><span class="glyphicon glyphicon-link"></span>URL</a></li>
+                    <li class="list-group-item"><a><span class="glyphicon glyphicon-file"></span>Zeitung</a></li>
+                    <li class="list-group-item"><a><span class="glyphicon glyphicon-calendar"></span>Datum</a></li>
+                    <li class="list-group-item"><a><span class="glyphicon glyphicon-user"></span>Autor</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

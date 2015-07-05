@@ -1,0 +1,21 @@
+{% extends 'headerfooter.html' %}
+{% load url from future %}
+{% block title %}Kontakt{% endblock %}
+
+{% block css_import %}
+    <link href="{% url 'static' 'css/custom-contact.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{# nichts ist active #}
+{#{% block active_entdecken %}class="active"{% endblock %}#}
+
+{% block content %}
+    <div class="container-fluid maincontent">
+        {% include "searchbar.html" %}
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h1>Impressum</h1>
+            </div>
+        </div>
+    </div>
+{% endblock %}

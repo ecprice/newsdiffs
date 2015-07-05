@@ -1,0 +1,51 @@
+{% extends 'headerfooter.html' %}
+{% load url from future %}
+{% block title %}Kontakt{% endblock %}
+
+{% block css_import %}
+    <link href="{% url 'static' 'css/custom-contact.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{# nichts ist active #}
+{#{% block active_entdecken %}class="active"{% endblock %}#}
+
+{% block content %}
+    <div class="container-fluid maincontent">
+        {% include "searchbar.html" %}
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h1>Kontakt</h1>
+            </div>
+        </div>
+
+        <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+
+                    <div class="form-section">
+                        <form class="form">
+                            <p class= "name">
+                            <input name="name" type="text"
+                            placeholder="Name" id="name"/>
+                            </p>
+
+                            <p class= "Email">
+                            <input name="email" type="text"
+                            placeholder="Email" id="email"/>
+                            </p>
+
+                            <p class= "">
+                            <textarea name="msg"
+                            placeholder="Nachricht" id="msg"></textarea>
+                            </p>
+
+                            <div class="send">
+                                <input type="submit" value="SENDEN"
+                                id="sendbutton"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

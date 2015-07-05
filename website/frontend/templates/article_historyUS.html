@@ -1,0 +1,33 @@
+{% extends 'template.html' %}
+
+{% block title %}Artikelansicht{% endblock %}
+
+{% block content %}
+
+{% include "find_by_uri.html" %}
+
+<h1>{{article.latest_version.title}} ({{article.publication}}), Änderungsübersicht</h1>
+<h3><a href="{{article.url}}">{{article.url}}</a></h3> 
+<h3>{{article.latest_version.byline}} | Zuerst archiviert am {{article.initial_date}}</h3> 
+<p>
+<table class="table table-condensed"  style="width:100%">
+     <thead><tr>
+	<td>Schlagzeile</td>
+	<td>Datum/Zeit der Archivierung</td>
+	<td>Diff</td>
+    </tr> </thead>
+
+    {% for difflink, version in versions %}
+    <tr>
+      <td><a href="{{link}}">{{version.title}}</a></td>
+      <td>{{version.date}}</td>
+      {% if difflink %}
+      <td><a href="{{difflink}}">(Vergleich mit vorheriger Version)</a></td>
+    {% else %}
+    <td></td>
+    {% endif %}
+    </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+#search-foldout .glyphicon {
+	padding-right: 10px;
+}
+
+.list-group li {
+	line-height: 1;
+}
+
+/**	overrides bootstrap's built-in style for having rounded corners on inputs and lists
+	for search-input and foldout-list**/
+.list-group-item:last-child, 
+.list-group-item:first-child {
+	border-radius: 0px;
+}
+
+#search-foldout {
+	display: none;
+	width: 90%
+}
+
+#search-input-line {
+	width: 90%;
+	padding-left: 13px;
+}
+
+#search-input #search-input-btn {
+	/*	custom width, margin and padding important because the glow of the search input
+		would get cut by the button*/
+	width: 9%;
+	height: 26px;
+	padding: 1px 1px 1px;
+	margin-left: 3px;
+	border-left: 0px;
+	border-right: 1px;
+	border-right-color: #000;
+	border-top: 1px;
+	border-bottom: 1px;
+	background-color: #FFF;
+	border-color: #000;
+}
+
+#search-total {
+	margin: 20px 0;
+}
+
+#search-input input {
+	/*has height of foldout rows*/
+	line-height: 2.5;
+}
+
+#search-foldout a, a:hover {
+	color: #A9A9A9;
+    border: none;
+    text-decoration: none;
+	cursor: pointer;
+}
+
+/* *****************************************************************************
+ Description
+ **************************************************************************** */
+
+#description {
+	margin: 0px;
+}

@@ -1,0 +1,19 @@
+{% extends 'headerfooter.html' %}
+{% load url from future %}
+{% block title %}Highlights{% endblock %}
+{% block active_highlights %}class="active"{% endblock %}
+
+{% block content %}
+    <div class="container-fluid maincontent">
+        {% include "searchbar.html" %}
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h1>Highlights</h1>
+                <p>
+                    Hier kommen 3-5 kuratierte Artikel hin und
+                    (je nach Arbeitsaufwand) weitere Artikel, die durch Upvotes von Usern ermittelt werden.
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

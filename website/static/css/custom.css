@@ -1,0 +1,146 @@
+/* *****************************************************************************
+ Body 
+ **************************************************************************** */
+
+code {
+  font-size: 80%;
+}
+
+
+.maincontent a{
+	color: #333333;
+	text-decoration: none;
+	border-bottom: 1px #333333 dotted;
+}
+
+.maincontent a:hover {
+	color: #333333;
+	text-decoration: none;
+	border-bottom: none;
+}
+
+/* *****************************************************************************
+ Navbar
+ **************************************************************************** */
+
+.navbar-default {
+	height: 80px;
+	border: none;
+	border-radius: 0px;
+	background-color: #FFFFFF;
+	margin-bottom: 0px;
+}
+
+.navbar-brand img{
+	height: 50px;
+	margin: 15px 15px 15px 0;
+
+}
+
+.navbar-brand {
+	padding: 0px;
+}
+
+ul.nav.navbar-nav.navbar-right li > a{
+	text-align: center;
+}
+
+#bs-example-navbar-collapse-1 {
+	margin-top: 15px;
+}
+
+.nav > li > a {
+	padding: 5px 15px;
+	margin: 10px 0px;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #333333;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+  color: #000000;
+}
+
+
+/* *****************************************************************************
+ Footer
+ **************************************************************************** */
+
+footer {
+	background-color: #666;
+	padding-top: 10px;
+	color: #fff;
+}
+
+footer img {
+	height: 20px;
+}
+footer a {
+	color: #fff;
+	text-decoration: underline;
+    border-bottom:none;
+
+}
+
+footer a:hover {
+	color: #ffffff;
+    text-decoration: none;
+    border-bottom: none;
+}
+
+.footer-social img{
+	height: 20px;
+	padding: 0 5px;
+}
+
+.footer-left p {
+	float: left;
+	padding-right: 10px;
+}
+
+.footer-social{
+    list-style-type: none;
+    float: right;
+}
+
+.footer-social li {
+    display: inline;
+}
+
+
+
+
+
+/* *****************************************************************************
+ Buttons
+ **************************************************************************** */
+
+.ownbtn{
+	/*secures regular button height of 30px*/
+	height: 25px;
+	padding: 0px 2px;
+}
+
+
+
+/* *****************************************************************************
+ Sticky Footer Styles
+ **************************************************************************** */
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+

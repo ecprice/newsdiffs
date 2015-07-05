@@ -1,13 +1,13 @@
-{% extends 'template.html' %}
+{% extends 'headerfooter.html' %}
 
-{% block title %}Article View{% endblock %}
+{% block title %}Suche Fehlgeschlagen{% endblock %}
 
 {% block content %}
 
-{% include "find_by_uri.html" %}
+{% include "searchbar.html" %}
 
-<h1>Article Change Log</h1>
+<h1>Änderungsübersicht</h1>
 <h3><a href="{{url}}">{{url}}</a></h3>
-<p>Alas! We don't seem to know anything about this article. Sorry! :(</p>
+<p>Huch! Diesen Artikel finden wir leider nicht. Sorry!</p>
 
 {% endblock %}

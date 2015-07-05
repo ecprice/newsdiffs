@@ -1,0 +1,83 @@
+{% extends 'headerfooter.html' %}
+{% load url from future %}
+{% block css_import %}
+    <link href="{% url 'static' 'css/custom-entdecken.css' %}" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Oswald:400,700,300" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block title %}Entdecken{% endblock %}
+{% block active_entdecken %}class="active"{% endblock %}
+
+{% block content %}
+    <div class="container-fluid maincontent">
+        {% include "searchbar.html" %}
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+			<div class="slide">
+				Was aktuell die Welt bewegt
+			</div>
+			<div class="subtitle">
+				Klicke dich durch die aktuellen Twitter Trends, global oder deutschlandweit.
+				<br><span class="glyphicon glyphicon-globe"></span>
+			</div>
+		</div>
+		
+		<div class="col-md-4 col-md-offset-4">
+			<div class="cloud">
+
+				<a href="tags.php?tag=1" class="tag12">TerminatorBerlin</a>
+				<a href="tags.php?tag=8" class="tag35">Jurassic World</a>
+				<a href="tags.php?tag=3" class="tag3">Berlin</a>
+				<a href="tags.php?tag=2" class="tag15">Thiago Silva</a>
+				<a href="tags.php?tag=6" class="tag3">Hilary Clinton</a>
+				<a href="tags.php?tag=4" class="tag2">Bundestag</a>
+				<a href="tags.php?tag=5" class="tag15">Obama</a>
+				<a href="tags.php?tag=7" class="tag2">BlackOutDay</a>
+				<a href="tags.php?tag=9" class="tag12">Game of Thrones</a>
+				<a href="tags.php?tag=10" class="tag35">Charleston</a>
+				
+			</div>
+		</div>
+        </div>
+		
+		
+		
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1">
+				<div class="slide">
+					Kategorien
+				</div>
+				<div class="subtitle">
+					Nutze unsere Filter, um interessante Artikeländerungen noch leichter zu finden.
+				
+				</div>
+			</div> 
+			
+			<div class="col-md-9 col-md-offset-2">
+			
+				 
+				 <div class="categories_list">
+					<ul>
+						<li><a href="#allgemein"><span class="glyphicon glyphicon-globe"></span> <p>Allgemein</p></a></li>
+
+						<li><a href="#politik"><span class="glyphicon glyphicon-object-align-bottom"></span> <p>Politik</p></a></li>
+
+						<li><a href="#wirtschaft"><span class="glyphicon glyphicon-euro"></span> <p>Wirtschaft</p></a></li>
+
+						<li><a href="#regional"><span class="glyphicon glyphicon-home"></span> <p>Regional</p></a></li>
+						<hr></hr>
+						<li><a href="#technik"><span class="glyphicon glyphicon-camera"></span> <p>Technik</p></a></li>
+				
+						<li><a href="#wissenschaft"><span class="glyphicon glyphicon-tree-deciduous"></span> <p>Wissenschaft</p></a></li>
+
+						<li><a href="#gesellschaft"><span class="glyphicon glyphicon-user"></span> <p>Gesellschaft</p></a></li>
+				 
+						<li><a href="#"><span class="glyphicon glyphicon-th-list"></span> <p>Alle Kategorien</p></a></li>
+					</ul>
+				</div>
+					
+			</div>
+		</div>
+    </div>
+{% endblock %}
+

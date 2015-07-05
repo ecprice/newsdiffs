@@ -1,0 +1,63 @@
+{% extends 'template.html' %}
+
+{% load url from future %}
+
+{% block active_about %}class="active"{% endblock %}
+
+{% block content %}
+
+      <h1>Über NewsDiffs</h1>
+      <p>
+    		
+			<div class="boldhead">Warum NewsDiffs existiert</div> 
+
+			<p>In einer Zeit, in der es vor Eilmeldungen nur so wimmelt und Nachrichten online abrufbar sind, gibt es kaum noch "endgültige" Versionen von Artikeln. 	
+<p>NewsDiffs beobachtet verschiedene Versionen von Artikeln der Titelseiten von großen Online-Zeitungen, wie z.B. <a href="http://www.zeit.de/index">Zeit Online</a>. 
+
+			<p>So können Leser jetzt das "Making-of" eines Artikels, das früher hinter den Kulissen der Nachrichtenagenturen versteckt war, verfolgen. Einige dieser Änderungen <a 
+href="http://blogs.villagevoice.com/runninscared/2011/10/why_did_the_new_1.php">provozieren Kritik</a>.
+		
+<div class="boldhead">Was für Arten von Änderungen?</div>
+			<p>Artikel aus Online-Zeitungen großer Nachrichtenportale werden ständig aktualisiert.</p>
+			<p>Oft sind diese Änderungen geringfügig, da sie nur dazu dienen den Stil des Artikels zu verbessern (z.B. wird aus einem "jene" ein "diese").</p>
+			<p>Manchmal umfassen die Änderungen das Einfügen oder Löschen eines ganzen Abschnitts.</p>
+			<p>Gelegentlich verändert sich der Artikel aufgrund von schnell hintereinander eintreffenden Eilmeldungen, wie z.B. bei <a 
+href="http://www.newsdiffs.org/diffview?url=http://www.nytimes.com/2012/06/18/us/rodney-king-whose-beating-led-to-la-riots-dead-at-47.html&v1=4914b33add01e16c34ed2d066bba5c829bcfdf8b&v2=eed0278b77d633f80398660ed97d8490ac84fc27&pagewanted=all">Rodney 
+Kings Tod</a>. Mit der Zeit wächst und vertieft sich der Bericht sobald mehr Informationen bekannt werden. Ein weiteres Beispiel hierfür ist die Nachrichtenerstattung über den <a 
+href="http://www.nytimes.com/2012/06/20/world/middleeast/mubarak-is-on-life-support-egypt-security-officials-say.html&v1=e935fb9e8ce50c90971916796fde2c10f0b8b7ad&v2=99c50b4ba9d0d066c485697d90b0fcd0de0b7b3e&pagewanted=all">Gesundheitszustand
+des ehemaligen ägyptischen Präsidenten Husni Mubarak</a>. Zunächst wurde berichtet, er wäre "klinisch tot", später dass er einen Schlaganfall erlitten habe.
+ 			<p> Noch ein interessantes Beispiel ist die <a href="https://www.nytimes.com/2011/05/02/world/asia/osama-bin-laden-is-killed.html?_r=1&pagewanted=all">Tötung von Osama Bin Laden</a>, über die am 01. Mai 2011 um 22:40 Uhr EDT die Berichterstattung mit einem dürftigen Bericht von Helene Cooper begann: 
+			<blockquote>WASHINGTON — Osama bin Laden has been killed, a United States official said. President Obama is expected to make an announcement on Sunday night, almost 10 years after the Sept. 11 attacks on the World Trade Center and the Pentagon.</blockquote>
+
+
+			<p>Außerdem interessant sind Änderungen der Sprache, die subtile Unterschiede der Konnotation nach sich ziehen. Eine Wahl z.B. kann als <a href="http://www.newsdiffs.org/diffview/?url=http://www.nytimes.com/2012/06/18/world/middleeast/egyptian-presidential-vote-enters-second-day.html&v1=4a202f72ea55330ea84fd3b814996c92b6e54a5b&v2=492777f287e2d052a96c8b0731e3430228cda905">"democratic" oder "competitive"</a> bezeichnet werden.
+			<p>In einigen Fällen lässt sich beobachten, wie eine Darstellung sich wesentlich ändert, je weiter die Berichterstattung voranschreitet. So war es bei dem <a 
+href="http://cityroom.blogs.nytimes.com/2011/10/01/police-arresting-protesters-on-brooklyn-bridge/">Bericht, der die Entstehung von NewsDiffs.org ursprünglich inspirierte</a>: der Artikel über die Festnahmen von Occupy Wall Street Demonstranten am 01. Oktober 2011. Zwei Versionen, zwischen denen nur 20 
+Minuten verstrichen, hatten grundsätzlich verschiedene
+Einleitungsparagraphen.
+Die Kritik, die dieser Bericht erfuhr, war eventuell ungerecht, aber das ist schwer zu ermitteln, da die frühere Version nicht mehr öffentlich verfügbar ist.</p>
+			
+			<p>
+			<p>
+			<div class="boldhead">Warum der Name "NewsDiffs"?</div>
+			
+			<p>Das <a href="http://de.wikipedia.org/wiki/Diff">diff</a> ist ein in der Computerprogrammierung viel genutztes Tool, das die Unterschiede (engl.: differences) zwischen zwei Dateien aufzeigt. Es wird normalerweise dazu genutzt die Unterschiede zwischen der jetzigen und einer früheren Version einer Datei sichtbar zu machen. Diese Idee der Versionskontrolle ist in der Softwareentwicklung altbekannt und <a href="http://www.greglinch.com/2010/07/quick-thoughts-on-journalism-and-version-control.html"> sollte auch im Journalismus benutzt werden</a>, da der Journalismus sich auf sich ständig weiterentwickelnde Versionen von Nachrichtenartikeln hinbewegt.
+			<p>
+<div class="boldhead">Wie NewsDiffs funktioniert</div> 
+			<p>NewsDiffs überprüft regelmäßig die Artikel, die auf den Titelseiten von Onlineausgaben einiger großer deutscher Nachrichtenagenturen verlinkt sind (oder einmal verlinkt waren), u.a. 
+<a href="http://www.zeit.de/index">Zeit Online</a> und <a href="http://www.welt.de/">Die Welt</a>. Die Artikel werden von NewsDiffs geparst und in einem <a href="https://en.wikipedia.org/wiki/Git_(software)">git Repository</a> gespeichert. 
+			<p>Diese Speicherung findet seit 2015 statt. 
+			<p>Nicht alle Artikel der Online-Zeitungen werden gespeichert, NewsDiffs konzetriert sich auf die Artikel, die von der Titelseite verlinkt sind. Nur Artikel, an denen Änderungen vorgenommen wurden, werden angezeigt. 
+			<p>
+<div class="boldhead">Welche Tools habt ihr eingesetzt?</div>
+			<p>Der Quelltext zu NewsDiffs ist frei verfügbar auf <a href="https://github.com/NewsdiffsDE/newsdiffs">GitHub</a>. 
+			<p>Das Frontend, das zum Einsehen der Unterschiede verwendet wird, ist aus der Open-Source <a href="https://code.google.com/p/google-diff-match-patch/">Diff Match Patch</a> Library. 
+			<p>Die Webseite wurde mit <a href="https://www.djangoproject.com/">Django</a> gebaut.
+			<p>Das schöne Layout haben wir <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a> zu verdanken
+
+<div class="boldhead">Wer steckt hinter NewsDiffs?</div>
+			<p>NewsDiffs.de ist im Sommersemester 2015 als Projekt einiger IMI-Studenten der <a href="http://www.htw-berlin.de/">HTW Berlin</a> auf der Grundlage von <a href="http://newsdiffs.org/">NewsDiffs.org</a> entstanden.
+			<p>Ziel war das Anpassen der Webseite auf den deutschen Nachrichtenraum und der Ausbau durch neue Features. Dafür wurde zunächst NewsDiffs.org geclont, welches während des <a href="http://opennews-mit.eventbrite.com/">Knight Mozilla MIT 
+hackathons</a> 2012 
+von <a href="http://www.mit.edu/~ecprice/">Eric Price</a>, <a href="http://jennifer8lee.com">Jennifer 8. Lee</a> and <a href="http://web.mit.edu/~price/">Greg Price</a> geschaffen wurde.</p>
+{% endblock %}

@@ -1,0 +1,25 @@
+a img:hover {
+	text-decoration: none;
+    border: none;
+}
+
+.table-condensed {
+	clear:both;
+}
+
+.table-condensed > tbody > tr > td > h3 {
+	margin-top: 10px;
+}
+
+.table-condensed > tbody > tr > td > p {
+	float: left;
+	margin-right: 5%;
+}
+
+
+/* Gehe zu */
+
+#pagination-nav ul{
+	margin-left: auto;
+	margin-right: auto;
+}

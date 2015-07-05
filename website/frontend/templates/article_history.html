@@ -1,33 +1,61 @@
-{% extends 'template.html' %}
-
-{% block title %}Article View{% endblock %}
-
+{% extends 'headerfooter.html' %}
+{% load url from future %}
+{% block title %}Änderungsübersicht{% endblock %}
+{% block css_import %}
+    <link href="{% url 'static' 'css/custom-article-history.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block active_entdecken %}class="active"{% endblock %}
 {% block content %}
 
-{% include "find_by_uri.html" %}
+	<div class="container-fluid maincontent">
+		{% include "searchbar.html" %}
 
-<h1>{{article.latest_version.title}} ({{article.publication}}), Change Log</h1>
-<h3><a href="{{article.url}}">{{article.url}}</a></h3> 
-<h3>{{article.latest_version.byline}} | First archived on {{article.initial_date}}</h3> 
-<p>
-<table class="table table-condensed"  style="width:100%">
-     <thead><tr>
-	<td>Headline</td>
-	<td>Date/Time EST Archived</td>
-	<td>Diff</td>
-    </tr> </thead>
+        <!-- Breadcrumbs -->
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Suche</a></li>
+                    <li><a href="suchergebnisse.html">Suchergebnisse</a></li>
+                    <li class="active">Änderungsübersicht</li>
+                </ol>
+            </div>
+        </div>
 
-    {% for difflink, version in versions %}
-    <tr>
-      <td><a href="{{link}}">{{version.title}}</a></td>
-      <td>{{version.date}}</td>
-      {% if difflink %}
-      <td><a href="{{difflink}}">(Compare with previous)</a></td>
-    {% else %}
-    <td></td>
-    {% endif %}
-    </tr>
-  {% endfor %}
-</table>
+
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+
+				<h1>{{ article.latest_version.title }}</h1>
+				<h5>{{ article.latest_version.title }} | Erste Archivierung: {{ article.initial_date }}</h5>
+				<h5>Änderungsübersicht:</h5>
+
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th>Schlagzeile</th>
+							<th>Datum/Zeit (UMT+1) der Archivierung</th>
+							<th>Diff</th>
+						</tr>
+					</thead>
+
+                    {% for difflink, version in versions %}
+                        <tr>
+                          <td><a href="{{link}}">{{version.title}}</a></td>
+                          <td>{{version.date}}</td>
+                          {% if difflink %}
+                            <td><a href="{{difflink}}"><img src=".{% url 'static' '../static/images/Icon_Vergleichen16px.png' %}" alt="Vergleichen-Icon">Änderung ansehen</a></td>
+                          {% else %}
+                            <td></td>
+                          {% endif %}
+                        </tr>
+                    {% endfor %}
+
+				</table>
+
+				<h3>(<a href="article.url">Original-Artikel bei {{article.publication}} lesen</a>)</h3>
+			</div>
+		</div>
+
+	</div>
 
 {% endblock %}

@@ -1,0 +1,101 @@
+/* *****************************************************************************
+ Body 
+ **************************************************************************** */
+
+body {
+	color: #333333;
+}
+
+
+
+/* *****************************************************************************
+ Navbar 
+ **************************************************************************** */
+
+.navbar-default {
+	height: 80px;
+	border: none;
+	border-radius: 0px;
+	background-color: #FFFFFF;
+	margin-bottom: 0px;
+}
+
+.navbar-brand img{
+	height: 50px;
+
+}
+
+.navbar-brand {
+	padding-left: 0px;
+}
+
+ul.dropdown-menu{
+	border: none;
+	
+}
+
+ul.nav.navbar-nav.navbar-right li > a{
+	text-align: center;
+}
+
+#bs-example-navbar-collapse-1 {
+	margin-top: 15px;
+}
+
+.nav > li > a {
+	padding: 5px 15px;
+	margin: 10px 0px;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #333333;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+  color: #000000;
+}
+
+
+/* *****************************************************************************
+ Footer 
+ **************************************************************************** */
+
+.footer {
+	background-color: #666;
+}
+
+.copy, .footer-social {
+	padding: 10px 0 0 0;
+}
+
+.copy{
+	float: left;
+}
+
+.footer-social {
+	list-style: none;
+}
+
+.footer-social li {
+	float: right;
+	padding: 0 10px;
+}
+
+footer {
+	color: #fff;
+}
+
+footer a {
+	color: #fff;
+
+}
+
+footer a:hover {
+	color: #CFCFCF;
+}
+
+.footer-social img{
+	height: 20px;
+	padding: 0 5px;
+}
+

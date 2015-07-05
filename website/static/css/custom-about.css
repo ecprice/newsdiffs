@@ -1,0 +1,34 @@
+#submenu-row, #faq {
+	/*um sections untereinander abzugrenzen*/
+}
+
+#intro, #faq, #press {
+	padding-bottom: 100px;
+}
+
+.go-up-btn {
+	float: right;
+}
+
+#submenu {
+	float: right;
+}
+
+#submenu a {
+	color: #333333;
+	background-color: #E7E7E7;
+	border-radius: 0px;
+    border-bottom: none;
+}
+
+#submenu a:hover {
+	color: #000000;
+}
+
+#submenu-row h1 {
+	float: left;
+}
+
+ul#submenu {
+	margin-top: 15px;
+}

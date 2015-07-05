@@ -1,3 +1,4 @@
+/.idea
 /articles
 
 *~
@@ -31,3 +32,5 @@ pip-log.txt
 
 newsdiffs.db
 database_settings.py
+
+.DS_Store

@@ -125,6 +125,7 @@ def browse(request, source=''):
     num_pages = (datetime.datetime.now() - first_update).days + 1
     page_list=range(1, 1+num_pages)
 
+    # browse = entdecken = suche *
     articles = get_articles(source=source, distance=page-1)
     return render_to_response('browse.html', {
             'source': source, 'articles': articles,
@@ -315,6 +316,7 @@ def article_history(request, urlarg=''):
     if len(urlarg) == 0:
         return HttpResponseRedirect(reverse(article_history, args=[article.filename()]))
 
+    # was article-history
     rowinfo = get_rowinfo(article)
     return render_to_response('article_history.html', {'article':article,
                                                        'versions':rowinfo,
@@ -342,30 +344,36 @@ def json_view(request, vid):
         )
     return HttpResponse(json.dumps(data), mimetype="application/json")
 
-def upvote(request):
-    article_url = request.REQUEST.get('article_url')
-    diff_v1 = request.REQUEST.get('diff_v1')
-    diff_v2 = request.REQUEST.get('diff_v2')
-    remote_ip = request.META.get('REMOTE_ADDR')
-    article_id = Article.objects.get(url=article_url).id
-    models.Upvote(article_id=article_id, diff_v1=diff_v1, diff_v2=diff_v2, creation_time=datetime.datetime.now(), upvoter_ip=remote_ip).save()
-    return render_to_response('upvote.html')
-
 def about(request):
     return render_to_response('about.html', {})
 
-def examples(request):
-    return render_to_response('examples.html', {})
+def history(request):
+    return render_to_response('article_history.html', {})
 
-def contact(request):
-    return render_to_response('contact.html', {})
+def artikel(request):
+    return render_to_response('diffview.html', {})
 
-def front(request):
-    return render_to_response('front.html', {'sources': SOURCES})
+def entdecken(request):
+    return render_to_response('entdecken.html', {})
 
-def subscribe(request):
-    return render_to_response('subscribe.html', {})
+def highlights(request):
+    return render_to_response('highlights.html', {})
 
-def press(request):
-    return render_to_response('press.html', {})
+def kontakt(request):
+    return render_to_response('kontakt.html', {})
+
+def suchergebnisse(request):
+    return render_to_response('suchergebnisse.html', {})
+
+def impressum(request):
+    return render_to_response('impressum.html', {})
+
+def archiv(request):
+    return render_to_response('archive.html', {})
+
+def index(request):
+    return render_to_response('index.html', {'sources': SOURCES})
+
+
+
 

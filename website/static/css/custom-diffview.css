@@ -1,0 +1,48 @@
+.info{
+	list-style: none;
+}
+
+.info li{
+	padding:0 3px;
+}
+
+.content{
+	text-align: justify;
+	margin: 20px auto 20px;
+}
+
+.share{
+	margin-top: 10px;
+}
+
+.share li{
+	margin-top: 8px;
+	padding-top: 5px;
+	list-style: none;
+}
+
+.share img{
+	width: 18px;
+	margin-right:5px;
+}
+
+.share span{
+	width: 18px;
+}
+
+.deleted{
+	background-color: #ff8080;
+	text-decoration: line-through;
+}
+
+.added{
+	background-color: #a3ffa3;
+	text-decoration: underline;
+}
+
+button[type=button] {
+	margin-top: 5px;
+}
+
+
+
