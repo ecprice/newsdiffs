@@ -61,8 +61,12 @@ class NYTParser(BaseParser):
         except AttributeError:
             self.real_article = False
             return
-        p_tags = sum([list(soup.findAll('p', attrs={'itemprop':x}))
-                      for x in ['articleBody', 'reviewBody']], [])
+        p_tags = sum([list(soup.findAll('p', attrs=restriction))
+                      for restriction in [{'itemprop': 'articleBody'},
+                                          {'itemprop': 'reviewBody'},
+                                          {'class':'story-body-text story-content'}
+                                      ]],
+                     [])
         div = soup.find('div', attrs={'class': 'story-addendum story-content theme-correction'})
         if div:
             p_tags += [div]
