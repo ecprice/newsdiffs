@@ -43,7 +43,14 @@ class Article(models.Model):
         return GIT_DIR + self.git_dir
 
     def filename(self):
-        return self.url[len('http://'):].rstrip('/')
+        ans = self.url.rstrip('/')
+        if ans.startswith('http://'):
+            return ans[len('http://'):]
+        elif ans.startswith('https://'):
+            # Terrible hack for backwards compatibility from when https was stored incorrectly,
+            # perpetuating the problem
+            return 'https:/' + ans[len('https://'):]
+        raise ValueError("Unknown file type '%s'" % self.url)
 
     def publication(self):
         return PublicationDict.get(self.url.split('/')[2])

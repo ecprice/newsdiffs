@@ -115,15 +115,6 @@ def mkdir_p(path):
 def canonicalize_url(url):
     return url.split('?')[0].split('#')[0].strip()
 
-def strip_prefix(string, prefix):
-    if string.startswith(prefix):
-        string = string[len(prefix):]
-    return string
-
-def url_to_filename(url):
-    return strip_prefix(url, 'http://').rstrip('/')
-
-
 class IndexLockError(OSError):
     pass
 
@@ -333,7 +324,7 @@ def update_article(article):
     t = datetime.now()
     logger.debug('Article parsed; trying to store')
     v, boring, diff_info = add_to_git_repo(to_store,
-                                           url_to_filename(article.url),
+                                           article.filename(),
                                            article)
     if v:
         logger.info('Modifying! new blob: %s', v)
