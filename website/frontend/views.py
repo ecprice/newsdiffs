@@ -121,9 +121,15 @@ def browse(request, source=''):
     except ValueError:
         page = 1
 
+    # Temporarily disable browsing past the first page, since it was
+    # overloading the server.
+    if page != 1:
+        return HttpResponseRedirect(reverse(browse))
+
     first_update = get_first_update(source)
     num_pages = (datetime.datetime.now() - first_update).days + 1
     page_list=range(1, 1+num_pages)
+    page_list = []
 
     articles = get_articles(source=source, distance=page-1)
     return render_to_response('browse.html', {
