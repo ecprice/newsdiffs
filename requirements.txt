@@ -1,7 +1,13 @@
-Django <= 1.5
-simplejson
-beautifulsoup4
-beautifulsoup
-South
-html5lib
-python-dateutil
+appdirs==1.4.0
+BeautifulSoup==3.2.1
+beautifulsoup4==4.5.3
+Django==1.5
+gunicorn==19.6.0
+html5lib==0.999999999
+packaging==16.8
+pyparsing==2.1.10
+python-dateutil==2.6.0
+simplejson==3.10.0
+six==1.10.0
+South==1.0.2
+webencodings==0.5
