@@ -20,11 +20,11 @@ class WhitehouseParser(BaseParser):
                              fromEncoding='utf-8')
 
         self.meta = soup.findAll('meta')
-        elt = soup.find('div', 'pane-node-title')
-        if elt is None:
+        title = soup.find('meta', property='og:title')
+        if title is None:
             self.real_article = False
             return
-        self.title = elt.h1.getText()
+        self.title = title['content']
         self.byline = ''
         self.date = ''
         published_time = dateutil.parser.parse(soup.find('meta', property='article:published_time')['content'])
@@ -32,9 +32,6 @@ class WhitehouseParser(BaseParser):
           self.date = published_time.strftime(DATE_FORMAT)
 
         div = soup.find('div', 'pane-node-field-forall-body')
-        if div is None:
-            # Hack for video articles
-            div = soup.find('div', 'emp-decription')
         if div is None:
             self.real_article = False
             return
