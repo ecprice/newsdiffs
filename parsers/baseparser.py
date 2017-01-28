@@ -6,6 +6,8 @@ import sys
 import time
 import urllib2
 
+from sets import Set
+
 # Define a logger
 
 # This formatter is like the default but uses a period rather than a comma
@@ -139,8 +141,12 @@ class BaseParser(object):
 
     @classmethod
     def feed_urls(cls):
-        all_urls = []
+        all_urls = Set()
+        seen_urls = Set()
         for feeder_url in cls.feeder_pages:
+            if feeder_url in seen_urls:
+                continue
+            seen_urls.add(feeder_url)
             html = grab_url(feeder_url)
             soup = cls.feeder_bs(html)
 
@@ -151,6 +157,14 @@ class BaseParser(object):
             domain = '/'.join(feeder_url.split('/')[:3])
             urls = [url if '://' in url else concat(domain, url) for url in urls]
 
-            all_urls = all_urls + [url for url in urls if
-                                   re.search(cls.feeder_pat, url)]
-        return all_urls
+            # Remove fragment.
+            urls = [url.split('#')[0] for url in urls]
+
+            # Filter by pattern.
+            filtered_urls = [url for url in urls if re.search(cls.feeder_pat, url)]
+
+            # Only add URLs that have not already been visited.
+            new_urls = [url for url in filtered_urls if url not in seen_urls]
+            for url in new_urls:
+                all_urls.add(url)
+        return sorted([url for url in all_urls])
