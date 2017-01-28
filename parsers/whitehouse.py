@@ -1,6 +1,10 @@
+import datetime
+import dateutil.parser
+
 from baseparser import BaseParser
 from BeautifulSoup import BeautifulSoup, Tag
 
+DATE_FORMAT = '%A, %B %e %Y, %l:%M %p'
 
 class WhitehouseParser(BaseParser):
     domains = ['www.whitehouse.gov']
@@ -22,7 +26,10 @@ class WhitehouseParser(BaseParser):
             return
         self.title = elt.h1.getText()
         self.byline = ''
-        self.date = soup.find('span', 'date').getText()
+        self.date = ''
+        published_time = dateutil.parser.parse(soup.find('meta', property='article:published_time')['content'])
+        if published_time is not None:
+          self.date = published_time.strftime(DATE_FORMAT)
 
         div = soup.find('div', 'pane-node-field-forall-body')
         if div is None:
@@ -31,5 +38,4 @@ class WhitehouseParser(BaseParser):
         if div is None:
             self.real_article = False
             return
-        self.body = '\n'+'\n\n'.join([x.getText() for x in div.childGenerator()
-                                      if isinstance(x, Tag) and x.name == 'p'])
+        self.body = u'\n\n'.join([unicode(x.getText().strip()) for x in div.findAll('p')])
