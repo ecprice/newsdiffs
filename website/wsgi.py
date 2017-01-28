@@ -11,7 +11,7 @@ ROOT_DIR = os.path.dirname(os.path.join(THIS_DIR, '..'))
 sys.path.append(ROOT_DIR)
 # END UGLY COPY FROM mysite.fcgi
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "website.settings_dev")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "website.settings_heroku")
 
 # This application object is used by the development server
 # as well as any WSGI server configured to use this file.

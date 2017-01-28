@@ -65,15 +65,15 @@ def get_articles(source=None, distance=0):
     version.id, version.article_id, version.v, version.title,
       version.byline, version.date, version.boring, version.diff_json,
       T.age as age,
-      Articles.url as a_url, Articles.initial_date as a_initial_date,
-      Articles.last_update as a_last_update, Articles.last_check as a_last_check
+      "Articles".url as a_url, "Articles".initial_date as a_initial_date,
+      "Articles".last_update as a_last_update, "Articles".last_check as a_last_check
     FROM version,
-     (SELECT Articles.id as article_id, MAX(T3.date) AS age, COUNT(T3.id) AS num_vs
-      FROM Articles LEFT OUTER JOIN version T3 ON (Articles.id = T3.article_id)
-      WHERE (T3.boring=0) GROUP BY Articles.id
-      HAVING (age > %s  AND age < %s  AND num_vs > 1 )) T, Articles
-    WHERE (version.article_id = Articles.id) and
+     (SELECT "Articles".id as article_id, MAX(T3.date) AS age, COUNT(T3.id) AS num_vs
+      FROM "Articles" LEFT OUTER JOIN version T3 ON ("Articles".id = T3.article_id)
+      WHERE (T3.boring=FALSE) GROUP BY "Articles".id) T, "Articles"
+    WHERE (version.article_id = "Articles".id) and
           (version.article_id = T.article_id) and
+          (age > %s AND age < %s AND num_vs > 1) and
           NOT version.boring
     ORDER BY date'''
 
@@ -105,7 +105,7 @@ def get_articles(source=None, distance=0):
 
 
 SOURCES = '''nytimes.com cnn.com politico.com washingtonpost.com
-bbc.co.uk'''.split()
+bbc.co.uk whitehouse.gov'''.split()
 
 def is_valid_domain(domain):
     """Cheap method to tell whether a domain is being tracked."""

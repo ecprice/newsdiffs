@@ -132,3 +132,16 @@ minor edits to two other files: website/frontend/models.py and
 website/frontend/views.py (to define the display name and create a tab
 for the source, respectively).  Search for 'bbc' to find the locations
 to edit.
+
+Note, if you get an error like:
+
+```
+UnicodeEncodeError: 'ascii' codec can't encode character ....
+```
+
+likely your python is miscofigured such that it is refusing to output utf8 to your
+terminal. This happens often on a mac. For a simple workaround, force python into
+UTF-8 mode by exporting the following:
+```
+export PYTHONIOENCODING=utf-8
+```
