@@ -4,7 +4,7 @@ import dj_database_url
 
 ALLOWED_HOSTS = ['newsdiffs-wh.herokuapp.com']
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -81,9 +81,10 @@ INSTALLED_APPS = (
     'frontend',
 )
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'cache_table',
-    }
-}
+# TODO(awong): Need to create a cache table for this to work.
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#        'LOCATION': 'cache_table',
+#    }
+#}

@@ -125,6 +125,8 @@ def make_new_git_repo(full_dir):
 
     try:
         subprocess.check_output([GIT_PROGRAM, 'init',], cwd=full_dir)
+        subprocess.check_output([GIT_PROGRAM, 'config', 'user.name', 'scraper'], cwd=full_dir)
+        subprocess.check_output([GIT_PROGRAM, 'config', 'user.email', 'noreply@example.com'], cwd=full_dir)
         subprocess.check_output([GIT_PROGRAM, 'add', tmpfile], cwd=full_dir)
         subprocess.check_output([GIT_PROGRAM, 'commit', '-m', 'Initial commit'],
                                 cwd=full_dir)
