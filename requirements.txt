@@ -1,10 +1,12 @@
 appdirs==1.4.0
 BeautifulSoup==3.2.1
 beautifulsoup4==4.5.3
+dj-database-url==0.4.2
 Django==1.5
 gunicorn==19.6.0
 html5lib==0.999999999
 packaging==16.8
+psycopg2==2.6.2
 pyparsing==2.1.10
 python-dateutil==2.6.0
 simplejson==3.10.0
