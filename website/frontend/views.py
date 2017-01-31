@@ -176,8 +176,8 @@ def old_diffview(request):
         return HttpResponseRedirect(reverse(front))
 
     try:
-        v1 = Version.objects.get(v=v1tag)
-        v2 = Version.objects.get(v=v2tag)
+        v1 = Version.objects.get(text__pk=v1tag)
+        v2 = Version.objects.get(text__pk=v2tag)
     except Version.DoesNotExist:
         return Http400()
 
@@ -196,8 +196,8 @@ def diffview(request, vid1, vid2, urlarg):
     # urlarg is unused, and only for readability
     # Could be strict and enforce urlarg == article.filename()
     try:
-        v1 = Version.objects.get(id=int(vid1))
-        v2 = Version.objects.get(id=int(vid2))
+        v1 = Version.objects.get(text__pk=int(vid1))
+        v2 = Version.objects.get(text__pk=int(vid2))
     except Version.DoesNotExist:
         raise Http404
 
@@ -215,7 +215,7 @@ def diffview(request, vid1, vid2, urlarg):
     texts = []
 
     for v in (v1, v2):
-        texts.append(v.text())
+        texts.append(v.text.blob())
         dates.append(v.date.strftime(OUT_FORMAT))
 
         indices = [i for i, x in versions.items() if x == v]
@@ -344,7 +344,7 @@ def json_view(request, vid):
         title=version.title,
         byline = version.byline,
         date = version.date.isoformat(),
-        text = version.text(),
+        text = version.text.blob(),
         )
     return HttpResponse(json.dumps(data), mimetype="application/json")
 
