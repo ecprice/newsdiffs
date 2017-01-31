@@ -1,11 +1,10 @@
 {% extends "template.html" %}
-{% load url from future %}
 
 {% block head %}
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
 
-<script src="{% url 'static' 'lib/diff_match_patch_uncompressed.js'%}" type="text/javascript"></script>
+<script src="{% static 'lib/diff_match_patch_uncompressed.js'%}" type="text/javascript"></script>
 
 <script type="text/javascript">
   var text1 = '{{text1|escapejs}}';

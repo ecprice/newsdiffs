@@ -1,13 +1,11 @@
 {% extends 'template.html' %}
 
-{% load url from future %}
-
 {% block active_about %}class="active"{% endblock %}
 
 {% block content %}
 <a 
 href="http://www.newsdiffs.org/diff/192021/192137/www.nytimes.com/2013/03/31/science/space/yvonne-brill-rocket-scientist-dies-at-88.html"><img  
-src="{% url 'static' 'images/brill.png' %}" 
+src="{% static 'images/brill.png' %}" 
 width="450" align="right" style="padding:15px; margin:15px"/></a>
       <h1>About NewsDiffs</h1>
       <p>

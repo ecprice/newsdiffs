@@ -1,4 +1,4 @@
-{% load url from future %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +12,7 @@
     <!-- Le styles -->
 
 
-    <link href="{% url 'static' 'styles/bootstrap.css' %}" rel="stylesheet" media ="screen">
+    <link href="{% static 'styles/bootstrap.css' %}" rel="stylesheet" media ="screen">
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -25,11 +25,11 @@
     <![endif]-->
 
     <!-- Le fav and touch icons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{% url 'static' '/images/ico/apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" href="{% url 'static' '/images/ico/favicon-32x32.png' %}" sizes="32x32">
-    <link rel="icon" type="image/png" href="{% url 'static' '/images/ico/favicon-16x16.png' %}" sizes="16x16">
-    <link rel="manifest" href="{% url 'static' '/images/ico/manifest.json' %}">
-    <link rel="mask-icon" href="{% url 'static' '/images/ico/safari-pinned-tab.svg' %}" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static '/images/ico/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" href="{% static '/images/ico/favicon-32x32.png' %}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{% static '/images/ico/favicon-16x16.png' %}" sizes="16x16">
+    <link rel="manifest" href="{% static '/images/ico/manifest.json' %}">
+    <link rel="mask-icon" href="{% static '/images/ico/safari-pinned-tab.svg' %}" color="#5bbad5">
     <meta name="theme-color" content="#ffffff">
 
 
@@ -46,9 +46,9 @@
     </script>
 
       {% block head %} {% endblock %}
-     <!-- <script src="{% url 'static' 'js/jquery.js' %}"></script> -->
+     <!-- <script src="{% static 'js/jquery.js' %}"></script> -->
      <!--<script src="http://code.jquery.com/jquery-latest.js"></script>-->         
-	<script src="{% url 'static' 'js/bootstrap.js'%}"></script>
+	<script src="{% static 'js/bootstrap.js'%}"></script>
 
   </head>
 
@@ -67,7 +67,7 @@
             <span class="icon-bar"></span>
           </a>
           <a class="brand" href="{% url 'root' %}">
-          <img src="{% url 'static' '/img/logo.png' %}" style="max-height:20px;">
+          <img src="{% static '/img/logo.png' %}" style="max-height:20px;">
           Track Trump's Changes</a>
           <!--<div class="nav-collapse">-->
             <ul class="nav">
@@ -97,16 +97,16 @@
     <!-- Bootstrap javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{% url 'static' 'lib/bootstrap-alert.js' %}"></script>
-    <script src="{% url 'static' 'lib/bootstrap-modal.js' %}"></script>
-    <script src="{% url 'static' 'lib/bootstrap-dropdown.js' %}"></script>
-    <script src="{% url 'static' 'lib/bootstrap-scrollspy.js' %}"></script>
-    <script src="{% url 'static' 'lib/bootstrap-tab.js' %}"></script>
-    <script src="{% url 'static' 'lib/bootstrap-tooltip.js' %}"></script>
-    <script src="{% url 'static' 'lib/bootstrap-popover.js' %}"></script>
-    <script src="{% url 'static' 'lib/bootstrap-button.js' %}"></script>
-    <script src="{% url 'static' 'lib/bootstrap-collapse.js' %}"></script>
-    <script src="{% url 'static' 'lib/bootstrap-carousel.js' %}"></script>
-    <script src="{% url 'static' 'lib/bootstrap-typeahead.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-alert.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-modal.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-dropdown.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-scrollspy.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-tab.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-tooltip.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-popover.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-button.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-collapse.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-carousel.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-typeahead.js' %}"></script>
   </body>
 </html>
