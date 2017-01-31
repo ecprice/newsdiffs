@@ -22,7 +22,7 @@ ancient = datetime(1901, 1, 1)
 # Create your models here.
 class Article(models.Model):
     class Meta:
-        db_table = 'Articles'
+        db_table = 'articles'
 
     url = models.CharField(max_length=255, blank=False, unique=True,
                            db_index=True)
@@ -63,7 +63,7 @@ class Article(models.Model):
 class TextBlob(models.Model):
     """Stores a text blob, most often an article body, indexed by SHA-1 hash."""
     class Meta:
-        db_table: 'text_blob'
+        db_table = 'text_blob'
 
     # Use a Sha256 content hash.
     key = models.CharField(max_length=64, primary_key=True)

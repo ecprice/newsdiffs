@@ -83,6 +83,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'south',
-    'frontend',
+    'website.frontend',  # TODO(awong): This website. prefix is bad.
 )
+
+STATIC_ROOT = '/static/'
