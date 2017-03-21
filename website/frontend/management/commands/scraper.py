@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import errno
 from frontend import models
 import httplib
@@ -371,7 +371,9 @@ def get_update_delay(minutes_since_update):
 
 def update_versions(todays_repo, do_all=False):
     logger.info('Looking for articles to check')
-    articles = list(models.Article.objects.exclude(git_dir='old'))
+    # For memory issues, restrict to the last year of articles
+    article_query = models.Article.objects.exclude(git_dir='old').filter(last_update__gt= datetime.now() - timedelta(days=366))
+    articles = list(article_query)
     total_articles = len(articles)
 
     update_priority = lambda x: x.minutes_since_check() * 1. / get_update_delay(x.minutes_since_update())
