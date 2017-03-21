@@ -286,6 +286,13 @@ def prepend_http(url):
         components[1:1] = ['']
     return '/'.join(components)
 
+def swap_http_https(url):
+    """Get the url with the other of http/https to start"""
+    for (one, other) in [("https:", "http:"),
+                         ("http:", "https:")]:
+        if url.startswith(one):
+            return other+url[len(one):]
+    raise ValueError("URL doesn't start with http or https")
 
 def article_history(request, urlarg=''):
     url = request.REQUEST.get('url') # this is the deprecated interface.
@@ -310,7 +317,10 @@ def article_history(request, urlarg=''):
 
 
     try:
-        article = Article.objects.get(url=url)
+        try:
+            article = Article.objects.get(url=url)
+        except Article.DoesNotExist:
+            article = Article.objects.get(url=swap_http_https(url))
     except Article.DoesNotExist:
         try:
             return render_to_response('article_history_missing.html', {'url': url})
