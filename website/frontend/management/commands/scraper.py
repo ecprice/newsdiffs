@@ -20,6 +20,7 @@ from parsers.baseparser import canonicalize, formatter, logger
 GIT_PROGRAM = 'git'
 
 from django.core.management.base import BaseCommand
+from django.db.models import Q
 from optparse import make_option
 
 class Command(BaseCommand):
@@ -372,7 +373,9 @@ def get_update_delay(minutes_since_update):
 def update_versions(todays_repo, do_all=False):
     logger.info('Looking for articles to check')
     # For memory issues, restrict to the last year of articles
-    article_query = models.Article.objects.exclude(git_dir='old').filter(last_update__gt= datetime.now() - timedelta(days=366))
+    threshold = datetime.now() - timedelta(days=366)
+    article_query = models.Article.objects.exclude(git_dir='old').filter(Q(last_update__gt=threshold) | 
+                                                                         Q(initial_date__gt=threshold))
     articles = list(article_query)
     total_articles = len(articles)
 
