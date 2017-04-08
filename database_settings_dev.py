@@ -1,1 +1,0 @@
-location = 'sqlite:///newsdiffs.db'

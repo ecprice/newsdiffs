@@ -65,15 +65,15 @@ def get_articles(source=None, distance=0):
     version.id, version.article_id, version.v, version.title,
       version.byline, version.date, version.boring, version.diff_json,
       T.age as age,
-      Articles.url as a_url, Articles.initial_date as a_initial_date,
-      Articles.last_update as a_last_update, Articles.last_check as a_last_check
+      articles.url as a_url, articles.initial_date as a_initial_date,
+      articles.last_update as a_last_update, articles.last_check as a_last_check
     FROM version,
-     (SELECT Articles.id as article_id, MAX(T3.date) AS age, COUNT(T3.id) AS num_vs
-      FROM Articles LEFT OUTER JOIN version T3 ON (Articles.id = T3.article_id)
-      WHERE (T3.boring=0) GROUP BY Articles.id
-      HAVING (age > %s  AND age < %s  AND num_vs > 1 )) T, Articles
-    WHERE (version.article_id = Articles.id) and
+     (SELECT articles.id as article_id, MAX(T3.date) AS age, COUNT(T3.id) AS num_vs
+      FROM articles LEFT OUTER JOIN version T3 ON (articles.id = T3.article_id)
+      WHERE (T3.boring=FALSE) GROUP BY articles.id) T, articles
+    WHERE (version.article_id = articles.id) and
           (version.article_id = T.article_id) and
+          (age > %s AND age < %s AND num_vs > 1) and
           NOT version.boring
     ORDER BY date'''
 
@@ -105,7 +105,7 @@ def get_articles(source=None, distance=0):
 
 
 SOURCES = '''nytimes.com cnn.com politico.com washingtonpost.com
-bbc.co.uk'''.split()
+bbc.co.uk whitehouse.gov'''.split()
 
 def is_valid_domain(domain):
     """Cheap method to tell whether a domain is being tracked."""
@@ -176,8 +176,8 @@ def old_diffview(request):
         return HttpResponseRedirect(reverse(front))
 
     try:
-        v1 = Version.objects.get(v=v1tag)
-        v2 = Version.objects.get(v=v2tag)
+        v1 = Version.objects.get(text__pk=v1tag)
+        v2 = Version.objects.get(text__pk=v2tag)
     except Version.DoesNotExist:
         return Http400()
 
@@ -196,8 +196,8 @@ def diffview(request, vid1, vid2, urlarg):
     # urlarg is unused, and only for readability
     # Could be strict and enforce urlarg == article.filename()
     try:
-        v1 = Version.objects.get(id=int(vid1))
-        v2 = Version.objects.get(id=int(vid2))
+        v1 = Version.objects.get(text__pk=int(vid1))
+        v2 = Version.objects.get(text__pk=int(vid2))
     except Version.DoesNotExist:
         raise Http404
 
@@ -215,7 +215,7 @@ def diffview(request, vid1, vid2, urlarg):
     texts = []
 
     for v in (v1, v2):
-        texts.append(v.text())
+        texts.append(v.text.blob())
         dates.append(v.date.strftime(OUT_FORMAT))
 
         indices = [i for i, x in versions.items() if x == v]
@@ -354,7 +354,7 @@ def json_view(request, vid):
         title=version.title,
         byline = version.byline,
         date = version.date.isoformat(),
-        text = version.text(),
+        text = version.text.blob(),
         )
     return HttpResponse(json.dumps(data), mimetype="application/json")
 

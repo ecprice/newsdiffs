@@ -1,26 +1,22 @@
-# Django settings for newsdiffer project.
+# Django settings for the newsdiffs project.
 
-import os.path
+import dj_database_url
+
+ALLOWED_HOSTS = ['newsdiffs-wh.herokuapp.com']
 
 DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-     ('Eric Price', 'ecprice@mit.edu'),
-     ('Jennifer 8. Lee', 'jenny8lee@gmail.com'),
-     ('Gregory Price', 'price@mit.edu'),
+     ('Albert J. Wong', 'awong.dev@gmail.com'),
 )
 
 MANAGERS = ADMINS
-
-WEBAPP_ROOT = os.path.dirname(os.path.abspath(__file__))
+SERVER_EMAIL = "noreply@example.com"
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.dirname(WEBAPP_ROOT)+'/newsdiffs.db',
-    }
+    'default': dj_database_url.config()
 }
-
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -28,6 +24,8 @@ DATABASES = {
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
 TIME_ZONE = 'America/New_York'
+
+DATETIME_FORMAT = 'F j, Y, g:i a'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -56,44 +54,37 @@ ADMIN_MEDIA_PREFIX = '/media/'
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '%p^2v#afb+ew#3en+%r55^gm4av_=e+s7w6a5(#ky92yp*56+l'
 
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            # insert your TEMPLATE_DIRS here
-        ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
-                # list if you haven't customized them:
-                'django.contrib.auth.context_processors.auth',
-                'django.template.context_processors.debug',
-                'django.template.context_processors.i18n',
-                'django.template.context_processors.media',
-                'django.template.context_processors.static',
-                'django.template.context_processors.tz',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
+# List of callables that know how to import templates from various sources.
+TEMPLATE_LOADERS = (
+  'django.template.loaders.filesystem.Loader',
+  'django.template.loaders.app_directories.Loader',
+)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'website.urls'
+
+TEMPLATE_DIRS = (
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+)
 
 INSTALLED_APPS = (
-    'frontend',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'django.contrib.staticfiles',
+    'south',
+    'frontend',
 )
 
-STATIC_ROOT = '/Users/awong/src/Digital44/newsdiffs-wh/website'
-STATIC_URL = '/static/'
+# TODO(awong): Need to create a cache table for this to work.
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#        'LOCATION': 'cache_table',
+#    }
+#}

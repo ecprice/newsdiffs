@@ -1,16 +1,8 @@
-import re
-import subprocess
-import os
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import json
-from django.db import models, IntegrityError
-
-THIS_DIR = os.path.dirname(os.path.realpath(__file__))
-ROOT_DIR = os.path.dirname(os.path.dirname(THIS_DIR))
-GIT_DIR = ROOT_DIR+'/articles/'
-
-GIT_PROGRAM = 'git'
+import hashlib
+from django.db import models
 
 def strip_prefix(string, prefix):
     if string.startswith(prefix):
@@ -22,6 +14,7 @@ PublicationDict = {'www.nytimes.com': 'NYT',
                    'www.bbc.co.uk': 'BBC',
                    'www.politico.com': 'Politico',
                    'www.washingtonpost.com': 'Washington Post',
+                   'whitehouse.gov': 'The White House',
                    }
 
 ancient = datetime(1901, 1, 1)
@@ -29,18 +22,13 @@ ancient = datetime(1901, 1, 1)
 # Create your models here.
 class Article(models.Model):
     class Meta:
-        db_table = 'Articles'
+        db_table = 'articles'
 
     url = models.CharField(max_length=255, blank=False, unique=True,
                            db_index=True)
     initial_date = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(default=ancient)
     last_check = models.DateTimeField(default=ancient)
-    git_dir = models.CharField(max_length=255, blank=False, default='old')
-
-    @property
-    def full_git_dir(self):
-        return GIT_DIR + self.git_dir
 
     def filename(self):
         ans = self.url.rstrip('/')
@@ -72,26 +60,36 @@ class Article(models.Model):
         delta = datetime.now() - self.last_check
         return delta.seconds // 60 + 24*60*delta.days
 
+class TextBlob(models.Model):
+    """Stores a text blob, most often an article body, indexed by SHA-1 hash."""
+    class Meta:
+        db_table = 'text_blob'
+
+    # Use a Sha256 content hash.
+    key = models.CharField(max_length=64, primary_key=True)
+    blob = models.TextField()
+
+    @classmethod
+    def create_or_get(cls, text_to_insert):
+        content_hash = hashlib.sha256(text_to_insert)
+        result = cls.objects.filter(key=content_hash)
+        if len(result) == 0:
+            return cls(key=content_hash, blob=text_to_insert)
+        return result[0]
+
+
 class Version(models.Model):
     class Meta:
         db_table = 'version'
         get_latest_by = 'date'
 
-    article = models.ForeignKey('Article', null=False)
-    v = models.CharField(max_length=255, blank=False, unique=True)
+    article = models.ForeignKey(Article, null=False)
     title = models.CharField(max_length=255, blank=False)
     byline = models.CharField(max_length=255,blank=False)
-    date = models.DateTimeField(blank=False)
+    date = models.DateTimeField(db_index=True, blank=False)
     boring = models.BooleanField(blank=False, default=False)
     diff_json = models.CharField(max_length=255, null=True)
-
-    def text(self):
-        try:
-            return subprocess.check_output([GIT_PROGRAM, 'show',
-                                            self.v+':'+self.article.filename()],
-                                           cwd=self.article.full_git_dir)
-        except subprocess.CalledProcessError as e:
-            return None
+    text = models.ForeignKey(TextBlob, null=False)
 
     def get_diff_info(self):
         if self.diff_json is None:
@@ -114,42 +112,3 @@ class Upvote(models.Model):
     diff_v2 = models.CharField(max_length=255, blank=False)
     creation_time = models.DateTimeField(blank=False)
     upvoter_ip = models.CharField(max_length=255)
-
-
-# subprocess.check_output appeared in python 2.7.
-# backport it to 2.6
-def check_output(*popenargs, **kwargs):
-    r"""Run command with arguments and return its output as a byte string.
-
-    If the exit code was non-zero it raises a CalledProcessError.  The
-    CalledProcessError object will have the return code in the returncode
-    attribute and output in the output attribute.
-
-    The arguments are the same as for the Popen constructor.  Example:
-
-    >>> check_output(["ls", "-l", "/dev/null"])
-    'crw-rw-rw- 1 root root 1, 3 Oct 18  2007 /dev/null\n'
-
-    The stdout argument is not allowed as it is used internally.
-    To capture standard error in the result, use stderr=STDOUT.
-
-    >>> check_output(["/bin/sh", "-c",
-    ...               "ls -l non_existent_file ; exit 0"],
-    ...              stderr=STDOUT)
-    'ls: non_existent_file: No such file or directory\n'
-    """
-    from subprocess import PIPE, CalledProcessError, Popen
-    if 'stdout' in kwargs:
-        raise ValueError('stdout argument not allowed, it will be overridden.')
-    process = Popen(stdout=PIPE, *popenargs, **kwargs)
-    output, unused_err = process.communicate()
-    retcode = process.poll()
-    if retcode:
-        cmd = kwargs.get("args")
-        if cmd is None:
-            cmd = popenargs[0]
-        raise CalledProcessError(retcode, cmd, output=output)
-    return output
-
-if not hasattr(subprocess, 'check_output'):
-    subprocess.check_output = check_output
