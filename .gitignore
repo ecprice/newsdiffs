@@ -8,6 +8,7 @@
 *.egg-info
 dist
 build
+venv
 eggs
 parts
 bin
