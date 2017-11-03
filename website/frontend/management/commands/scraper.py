@@ -8,6 +8,7 @@ import logging
 import os
 import subprocess
 import sys
+import textwrap
 import time
 import traceback
 import urllib2
@@ -34,14 +35,14 @@ class Command(BaseCommand):
             default=False,
             help='Update _all_ stored articles'),
         )
-    help = '''Scrape websites.
+    help = textwrap.dedent('''Scrape websites.
 
-By default, scan front pages for new articles, and scan
-existing and new articles to archive their current contents.
-
-Articles that haven't changed in a while are skipped if we've
-scanned them recently, unless --all is passed.
-'''.strip()
+    By default, scan front pages for new articles, and scan
+    existing and new articles to archive their current contents.
+    
+    Articles that haven't changed in a while are skipped if we've
+    scanned them recently, unless --all is passed.
+    '''.strip())
 
     def handle(self, *args, **options):
         ch = logging.FileHandler('/tmp/newsdiffs_logging', mode='w')
@@ -61,6 +62,9 @@ scanned them recently, unless --all is passed.
 
         update_articles(todays_repo)
         update_versions(todays_repo, options['all'])
+
+
+        logger.info('Done scraping!')
 
 # Begin utility functions
 
@@ -121,7 +125,9 @@ class IndexLockError(OSError):
 
 def make_new_git_repo(full_dir):
     mkdir_p(full_dir)
-    tmpfile = os.path.join(full_dir, 'x')
+
+    # Create a file so that there is something to commit
+    tmpfile = os.path.join(full_dir, 'initial-commit-file')
     open(tmpfile, 'w').close()
 
     try:
@@ -263,9 +269,11 @@ def add_to_git_repo(data, filename, article):
 
             number_equal = sum(1 for h in hashes if h == my_hash)
 
-            logger.debug('Got %s', number_equal)
+            logger.debug('Got %s previous version files have an identical hash', number_equal)
 
             if number_equal >= 2: #Refuse to list a version more than twice
+
+                # Overwrite the file
                 run_git_command(['checkout', filename], article.full_git_dir)
                 return None, None, None
 
@@ -351,7 +359,7 @@ def update_articles(todays_git_dir):
         if len(url) > 255:  #Icky hack, but otherwise they're truncated in DB.
             continue
         if not models.Article.objects.filter(url=url).count():
-            logger.debug('Adding!')
+            logger.debug('Adding Article {}'.format(url))
             models.Article(url=url, git_dir=todays_git_dir).save()
     logger.info('Done storing to database')
 
@@ -397,7 +405,8 @@ def update_versions(todays_repo, do_all=False):
         print >> sys.stderr, '"""'
         raise
 
-    logger.info('Done!')
+    logger.info('Done with gc!')
+
     for i, article in enumerate(articles):
         logger.debug('Woo: %s %s %s (%s/%s)',
                      article.minutes_since_update(),
@@ -422,7 +431,6 @@ def update_versions(todays_repo, do_all=False):
         article.save()
     #logger.info('Ending with gc:')
     #run_git_command(['gc'])
-    logger.info('Done!')
 
 #Remove index.lock if 5 minutes old
 def cleanup_git_repo(git_dir):

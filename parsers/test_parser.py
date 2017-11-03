@@ -26,7 +26,10 @@ parser = getattr(__import__(module, globals(), fromlist=[classname]), classname)
 
 if url:
     parsed_article = parser(url)
-    print unicode(parsed_article)
+    if parsed_article.real_article:
+        print unicode(parsed_article)
+    else:
+        print 'Not a real article'
 else:
     links = parser.feed_urls()
     print '\n'.join(links)

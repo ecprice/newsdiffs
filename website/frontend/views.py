@@ -7,9 +7,7 @@ import models
 import json
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
-import urllib
 import django.db
-import time
 from django.template import Context, RequestContext, loader
 from django.views.decorators.cache import cache_page
 
@@ -61,21 +59,39 @@ def get_articles(source=None, distance=0):
     start_date = end_date - pagelength
 
     print 'Asking query'
-    version_query = '''SELECT
-    version.id, version.article_id, version.v, version.title,
-      version.byline, version.date, version.boring, version.diff_json,
+    version_query = '''
+    SELECT
+      version.id, 
+      version.article_id, 
+      version.v, 
+      version.title,
+      version.byline, 
+      version.date, 
+      version.boring, 
+      version.diff_json,
       T.age as age,
-      Articles.url as a_url, Articles.initial_date as a_initial_date,
-      Articles.last_update as a_last_update, Articles.last_check as a_last_check
+      Articles.url as a_url, 
+      Articles.initial_date as a_initial_date,
+      Articles.last_update as a_last_update, 
+      Articles.last_check as a_last_check
     FROM version,
-     (SELECT Articles.id as article_id, MAX(T3.date) AS age, COUNT(T3.id) AS num_vs
-      FROM Articles LEFT OUTER JOIN version T3 ON (Articles.id = T3.article_id)
-      WHERE (T3.boring=0) GROUP BY Articles.id
-      HAVING (age > %s  AND age < %s  AND num_vs > 1 )) T, Articles
+     (
+       SELECT 
+         Articles.id as article_id, 
+         MAX(version_3.date) AS age, 
+         COUNT(version_3.id) AS num_vs
+      FROM Articles LEFT OUTER JOIN version version_3 ON (Articles.id = version_3.article_id)
+      WHERE version_3.boring = 0 
+      GROUP BY Articles.id 
+      -- isn't 'age' here actually latest_version_date?
+      HAVING (age > %s  AND age < %s  AND num_vs > 1 )
+      ) T, 
+      Articles
     WHERE (version.article_id = Articles.id) and
           (version.article_id = T.article_id) and
           NOT version.boring
-    ORDER BY date'''
+    ORDER BY date
+    '''
 
     all_versions = models.Version.objects.raw(version_query,
                                               (start_date, end_date))

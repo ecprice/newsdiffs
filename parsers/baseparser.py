@@ -28,15 +28,17 @@ logger.addHandler(ch)
 # Utility functions
 
 def grab_url(url, max_depth=5, opener=None):
+    timeout = 5
     if opener is None:
         cj = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
     retry = False
     try:
-        text = opener.open(url, timeout=5).read()
+        text = opener.open(url, timeout=timeout).read()
         if '<title>NY Times Advertisement</title>' in text:
             retry = True
     except socket.timeout:
+        logger.warn('Timed out while requesting {} (timeout: {})'.format(url, timeout))
         retry = True
     if retry:
         if max_depth == 0:
