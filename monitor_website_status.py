@@ -13,7 +13,7 @@ if datetime.now().hour < 8: #Overnight, less frequent updates
 else:
     MAX_TIME = timedelta(minutes=60)
     
-EMAILS = 'ecprice@mit.edu jenny8lee@gmail.com price@mit.edu'.split()
+EMAILS = 'ecprice@mit.edu jenny8lee@gmail.com price@mit.edu carl.gieringer@gmail.com'.split()
 
 def send_alert_email(subject, body):
     email = 'Subject: %s\n\n%s' % (subject, body)
