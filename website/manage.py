@@ -11,7 +11,9 @@ except OSError:
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "website.settings")
-    sys.path.append(os.path.dirname(os.getcwd()))
+    project_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
+    print('Appending {} to sys.path'.format(project_dir))
+    sys.path.append(project_dir)
     from django.core.management import execute_from_command_line
 
     execute_from_command_line(sys.argv)
