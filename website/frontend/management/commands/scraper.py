@@ -18,7 +18,10 @@ import diff_match_patch
 import parsers
 from parsers.baseparser import canonicalize, formatter, logger
 
+from website import settings
+
 GIT_PROGRAM = 'git'
+ERROR_FILE_PATH = '/tmp/newsdiffs_logging_errs'
 
 from django.core.management.base import BaseCommand
 from django.db.models import Q
@@ -50,7 +53,8 @@ class Command(BaseCommand):
         ch.setFormatter(formatter)
         logger.addHandler(ch)
 
-        ch = logging.FileHandler('/tmp/newsdiffs_logging_errs', mode='a')
+
+        ch = logging.FileHandler(ERROR_FILE_PATH, mode='a')
         ch.setLevel(logging.WARNING)
         ch.setFormatter(formatter)
         logger.addHandler(ch)
@@ -63,10 +67,27 @@ class Command(BaseCommand):
         update_articles(todays_repo)
         update_versions(todays_repo, options['all'])
 
-
         logger.info('Done scraping!')
+        notify_admins_of_errors()
 
 # Begin utility functions
+
+def notify_admins_of_errors():
+    with open(ERROR_FILE_PATH, 'r') as error_file:
+        errors = error_file.read().strip()
+        if errors:
+            logger.error('Error file is non-empty at end of run; emailing contents to admins')
+            admin_emails = map(lambda e: e[1], settings.ADMINS)
+            send_email(admin_emails, 'NewsDiffs scraper errors', errors)
+
+def send_email(recipients, subject, body):
+    contents = 'Subject: %s\n\n%s' % (subject, body)
+
+    p = subprocess.Popen(['/usr/bin/msmtp', '-t'] + recipients,
+                         stdin=subprocess.PIPE)
+    p.communicate(contents)
+    if p.wait():
+        logger.error('Bad return code:', p.returncode)
 
 # subprocess.check_output appeared in python 2.7.
 # Linerva only has 2.6
@@ -198,12 +219,16 @@ def is_boring(old, new):
 
     def extra_canonical(s):
         """Ignore changes in whitespace or the date line"""
+        # This is fragile: depending on the text looking a particular way!
         nondate_portion = s.split('\n', 1)[1]
         return nondate_portion.split()
 
     if extra_canonical(oldu) == extra_canonical(newu):
         return True
 
+    # This seems kind of fragile.  Are we 100% sure that differences between
+    # these encodings are unimportant?  Also, how does this relate to non-latin
+    # text?
     for charset in CHARSET_LIST:
         try:
             if oldu.encode(charset) == new:
@@ -244,7 +269,7 @@ def add_to_git_repo(data, filename, article):
     else:
         already_exists = True
 
-
+    # When close this file?
     open(filename, 'w').write(data)
 
     if already_exists:
@@ -256,7 +281,9 @@ def add_to_git_repo(data, filename, article):
         my_hash = run_git_command(['hash-object', filename],
                                   article.full_git_dir).strip()
 
+        # This is going to look this up separately each time
         commits = [v.v for v in article.versions()]
+        # Why > 2?  Why not > 1?
         if len(commits) > 2:
             logger.debug('Checking for duplicates among %s commits',
                           len(commits))
@@ -265,12 +292,15 @@ def add_to_git_repo(data, filename, article):
                 output = run_git_command(['ls-tree', '-r', version, filename],
                                          article.full_git_dir)
                 return output.split()[2]
+            # What's the difference between `hashes` and `commits`?
+            # `hashes` is the file hash, `commits` are the commit hashes
             hashes = map(get_hash, commits)
 
             number_equal = sum(1 for h in hashes if h == my_hash)
 
             logger.debug('Got %s previous version files have an identical hash', number_equal)
 
+            # So if the version has reverted to a previous version, the system might not show it...
             if number_equal >= 2: #Refuse to list a version more than twice
 
                 # Overwrite the file
@@ -356,8 +386,10 @@ def update_articles(todays_git_dir):
     logger.info('Got all %s urls; storing to database' % len(all_urls))
     for i, url in enumerate(all_urls):
         logger.debug('Woo: %d/%d is %s' % (i+1, len(all_urls), url))
+        # Looks like it skips URLs longer than 255?
         if len(url) > 255:  #Icky hack, but otherwise they're truncated in DB.
             continue
+        # Is there an index on this column?
         if not models.Article.objects.filter(url=url).count():
             logger.debug('Adding Article {}'.format(url))
             models.Article(url=url, git_dir=todays_git_dir).save()
@@ -413,6 +445,7 @@ def update_versions(todays_repo, do_all=False):
                      article.minutes_since_check(),
                      update_priority(article), i+1, len(articles))
         delay = get_update_delay(article.minutes_since_update())
+        # isn't this inherent in update_priority being > 1 above?
         if article.minutes_since_check() < delay and not do_all:
             continue
         logger.info('Considering %s', article.url)
