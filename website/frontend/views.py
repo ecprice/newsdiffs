@@ -7,9 +7,7 @@ import models
 import json
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
-import urllib
 import django.db
-import time
 from django.template import Context, RequestContext, loader
 from django.views.decorators.cache import cache_page
 
@@ -61,21 +59,39 @@ def get_articles(source=None, distance=0):
     start_date = end_date - pagelength
 
     print 'Asking query'
-    version_query = '''SELECT
-    version.id, version.article_id, version.v, version.title,
-      version.byline, version.date, version.boring, version.diff_json,
+    version_query = '''
+    SELECT
+      version.id, 
+      version.article_id, 
+      version.v, 
+      version.title,
+      version.byline, 
+      version.date, 
+      version.boring, 
+      version.diff_json,
       T.age as age,
-      Articles.url as a_url, Articles.initial_date as a_initial_date,
-      Articles.last_update as a_last_update, Articles.last_check as a_last_check
+      Articles.url as a_url, 
+      Articles.initial_date as a_initial_date,
+      Articles.last_update as a_last_update, 
+      Articles.last_check as a_last_check
     FROM version,
-     (SELECT Articles.id as article_id, MAX(T3.date) AS age, COUNT(T3.id) AS num_vs
-      FROM Articles LEFT OUTER JOIN version T3 ON (Articles.id = T3.article_id)
-      WHERE (T3.boring=0) GROUP BY Articles.id
-      HAVING (age > %s  AND age < %s  AND num_vs > 1 )) T, Articles
+     (
+       SELECT 
+         Articles.id as article_id, 
+         MAX(version_3.date) AS age, 
+         COUNT(version_3.id) AS num_vs
+      FROM Articles LEFT OUTER JOIN version version_3 ON (Articles.id = version_3.article_id)
+      WHERE version_3.boring = 0 
+      GROUP BY Articles.id 
+      -- isn't 'age' here actually latest_version_date?
+      HAVING (age > %s  AND age < %s  AND num_vs > 1 )
+      ) T, 
+      Articles
     WHERE (version.article_id = Articles.id) and
           (version.article_id = T.article_id) and
           NOT version.boring
-    ORDER BY date'''
+    ORDER BY date
+    '''
 
     all_versions = models.Version.objects.raw(version_query,
                                               (start_date, end_date))
@@ -292,7 +308,13 @@ def swap_http_https(url):
                          ("http:", "https:")]:
         if url.startswith(one):
             return other+url[len(one):]
-    raise ValueError("URL doesn't start with http or https")
+    raise ValueError("URL doesn't start with http: or https: ({0})".format(url))
+
+def decode_scheme_colon(url):
+    # Sometimes the colon of http: or https: is URL-encoded.
+    # Sometimes the encoding percent sign is itself encoded (multiple times!)
+    # So replace as many %25 as necessary to get to the colon
+    return re.sub('http(s?)%(25)*3A', 'http\g<1>:', url)
 
 def article_history(request, urlarg=''):
     url = request.REQUEST.get('url') # this is the deprecated interface.
@@ -306,24 +328,25 @@ def article_history(request, urlarg=''):
     url = prepend_http(url)
 
     # This is a hack to deal with unicode passed in the URL.
-    # Otherwise gives an error, since our table character set is latin1.
+    # Otherwise gives an error, since our table character set is latin1. (Why not encode the table as unicode?)
     url = url.encode('ascii', 'ignore')
 
     # Give an error on urls with the wrong hostname without hitting the
     # database.  These queries are usually spam.
     domain = url.split('/')[2]
     if not is_valid_domain(domain):
+        # Should really tell the users that it is missing
         return render_to_response('article_history_missing.html', {'url': url})
 
-
+    decoded_url = decode_scheme_colon(url)
     try:
         try:
-            article = Article.objects.get(url=url)
+            article = Article.objects.get(url=decoded_url)
         except Article.DoesNotExist:
-            article = Article.objects.get(url=swap_http_https(url))
+            article = Article.objects.get(url=swap_http_https(decoded_url))
     except Article.DoesNotExist:
         try:
-            return render_to_response('article_history_missing.html', {'url': url})
+            return render_to_response('article_history_missing.html', {'url': decoded_url})
         except (TypeError, ValueError):
             # bug in django + mod_rewrite can cause this. =/
             return HttpResponse('Bug!')

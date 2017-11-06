@@ -10,6 +10,7 @@ ADMINS = (
      ('Eric Price', 'ecprice@mit.edu'),
      ('Jennifer 8. Lee', 'jenny8lee@gmail.com'),
      ('Gregory Price', 'price@mit.edu'),
+     ('Carl Gieringer', 'carl.gieringer@gmail.com'),
 )
 
 MANAGERS = ADMINS
