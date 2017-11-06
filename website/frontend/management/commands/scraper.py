@@ -6,6 +6,7 @@ from frontend import models
 import httplib
 import logging
 import os
+import smtplib
 import subprocess
 import sys
 import textwrap
@@ -83,11 +84,15 @@ def notify_admins_of_errors():
 def send_email(recipients, subject, body):
     contents = 'Subject: %s\n\n%s' % (subject, body)
 
-    p = subprocess.Popen(['/usr/bin/msmtp', '-t'] + recipients,
-                         stdin=subprocess.PIPE)
-    p.communicate(contents)
-    if p.wait():
-        logger.error('Bad return code:', p.returncode)
+    msmtp_path = '/usr/bin/msmtp'
+    if os.path.exists(msmtp_path):
+        p = subprocess.Popen([msmtp_path, '-t'] + recipients,
+                             stdin=subprocess.PIPE)
+        p.communicate(contents)
+        if p.wait():
+            logger.error('Bad return code:', p.returncode)
+    else:
+        logger.error('%s does not exist; cannot email errors to admins' % (msmtp_path,))
 
 # subprocess.check_output appeared in python 2.7.
 # Linerva only has 2.6
