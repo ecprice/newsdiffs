@@ -308,7 +308,7 @@ def swap_http_https(url):
                          ("http:", "https:")]:
         if url.startswith(one):
             return other+url[len(one):]
-    raise ValueError("URL doesn't start with http: or https: ({})".format(url))
+    raise ValueError("URL doesn't start with http: or https: ({0})".format(url))
 
 def decode_scheme_colon(url):
     # Sometimes the colon of http: or https: is URL-encoded.

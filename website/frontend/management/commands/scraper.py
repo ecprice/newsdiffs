@@ -391,7 +391,7 @@ def update_articles(todays_git_dir):
             continue
         # Is there an index on this column?
         if not models.Article.objects.filter(url=url).count():
-            logger.debug('Adding Article {}'.format(url))
+            logger.debug('Adding Article {0}'.format(url))
             models.Article(url=url, git_dir=todays_git_dir).save()
     logger.info('Done storing to database')
 
