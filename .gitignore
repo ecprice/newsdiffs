@@ -31,3 +31,6 @@ pip-log.txt
 
 newsdiffs.db
 database_settings.py
+
+/.pytest_cache/
+.python-version

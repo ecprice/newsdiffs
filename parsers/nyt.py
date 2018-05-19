@@ -1,5 +1,10 @@
+import re
+
 from baseparser import BaseParser
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
+
+
+paragraph_wrapper_re = re.compile('.*StoryBodyCompanionColumn.*')
 
 class NYTParser(BaseParser):
     SUFFIX = '?pagewanted=all'
@@ -43,30 +48,40 @@ class NYTParser(BaseParser):
 
 
     def _parse(self, html):
-        soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES)
+        soup = BeautifulSoup(html, 'html.parser')
         self.meta = soup.findAll('meta')
-        try:
-            seo_title = soup.find('meta', attrs={'name':'hdl'}).get('content')
-        except AttributeError:
-            self.real_article = False
-            return
+
+        seo_title = soup.find('meta', attrs={'name':'hdl'})
+        if seo_title:
+            seo_title = seo_title.get('content')
+        else:
+            seo_title = soup.find('title').getText()
+
         tmp = soup.find('meta', attrs={'name':'hdl_p'})
         if tmp and tmp.get('content'):
             self.title = tmp.get('content')
         else:
             self.title = seo_title
+
         try:
             self.date = soup.find('meta', attrs={'name':'dat'}).get('content')
             self.byline = soup.find('meta', attrs={'name':'byl'}).get('content')
         except AttributeError:
-            self.real_article = False
-            return
+            try:
+                self.date = soup.find('time').getText()
+                self.byline = soup.find('p', attrs={'itemprop': 'author creator'}).getText()
+            except:
+                self.real_article = False
+                return
         p_tags = sum([list(soup.findAll('p', attrs=restriction))
                       for restriction in [{'itemprop': 'articleBody'},
                                           {'itemprop': 'reviewBody'},
                                           {'class':'story-body-text story-content'}
                                       ]],
                      [])
+        if not p_tags:
+            p_tags = soup.findAll('div', attrs={'class': paragraph_wrapper_re})
+
         div = soup.find('div', attrs={'class': 'story-addendum story-content theme-correction'})
         if div:
             p_tags += [div]
@@ -76,12 +91,13 @@ class NYTParser(BaseParser):
 
         main_body = '\n\n'.join([p.getText() for p in p_tags])
         authorids = soup.find('div', attrs={'class':'authorIdentification'})
-        authorid = authorids.getText() if authorids else ''
+        authorid = authorids.getText() if authorids else self.byline
 
         top_correction = '\n'.join(x.getText() for x in
                                    soup.findAll('nyt_correction_top')) or '\n'
         bottom_correction = '\n'.join(x.getText() for x in
                                    soup.findAll('nyt_correction_bottom')) or '\n'
+
         self.body = '\n'.join([top_correction,
                                main_body,
                                authorid,

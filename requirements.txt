@@ -4,3 +4,6 @@ beautifulsoup4
 beautifulsoup
 South
 html5lib
+python-dateutil==2.7.3
+pytest==3.5.1
+mock==2.0.0
