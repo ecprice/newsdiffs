@@ -46,7 +46,6 @@ class NYTParser(BaseParser):
                     'http://www.nytimes.com/pages/todayspaper/',
                     'http://topics.nytimes.com/top/opinion/thepubliceditor/']
 
-
     def _parse(self, html):
         soup = BeautifulSoup(html, 'html.parser')
         self.meta = soup.findAll('meta')
@@ -80,7 +79,7 @@ class NYTParser(BaseParser):
                                       ]],
                      [])
         if not p_tags:
-            p_tags = soup.findAll('div', attrs={'class': paragraph_wrapper_re})
+            p_tags = sum([div.findAll('p') for div in soup.findAll('div', attrs={'class': paragraph_wrapper_re})], [])
 
         div = soup.find('div', attrs={'class': 'story-addendum story-content theme-correction'})
         if div:

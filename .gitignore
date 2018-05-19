@@ -33,4 +33,7 @@ newsdiffs.db
 database_settings.py
 
 /.pytest_cache/
-.python-version
+# pyenv
+/.python-version
+# IntelliJ
+/.idea/
