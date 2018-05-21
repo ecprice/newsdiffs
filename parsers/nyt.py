@@ -4,7 +4,7 @@ from baseparser import BaseParser
 from bs4 import BeautifulSoup
 
 
-paragraph_wrapper_re = re.compile('.*StoryBodyCompanionColumn.*')
+paragraph_wrapper_re = re.compile('.*\bStoryBodyCompanionColumn\b.*')
 
 class NYTParser(BaseParser):
     SUFFIX = '?pagewanted=all'
@@ -90,7 +90,7 @@ class NYTParser(BaseParser):
 
         main_body = '\n\n'.join([p.getText() for p in p_tags])
         authorids = soup.find('div', attrs={'class':'authorIdentification'})
-        authorid = authorids.getText() if authorids else self.byline
+        authorid = authorids.getText() if authorids else ''
 
         top_correction = '\n'.join(x.getText() for x in
                                    soup.findAll('nyt_correction_top')) or '\n'
