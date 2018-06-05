@@ -50,16 +50,20 @@ class NYTParser(BaseParser):
         soup = BeautifulSoup(html, 'html.parser')
         self.meta = soup.findAll('meta')
 
-        seo_title = soup.find('meta', attrs={'name':'hdl'})
+        seo_title = soup.find('meta', attrs={'name': 'hdl'})
         if seo_title:
             seo_title = seo_title.get('content')
         else:
             seo_title = soup.find('title').getText()
 
-        tmp = soup.find('meta', attrs={'name':'hdl_p'})
+        tmp = soup.find('meta', attrs={'name': 'hdl_p'})
         if tmp and tmp.get('content'):
             self.title = tmp.get('content')
         else:
+            meta_og_title = soup.find('meta', attrs={'property': 'og:title'})
+            if meta_og_title:
+                self.title = meta_og_title.get('content')
+        if not self.title:
             self.title = seo_title
 
         try:
@@ -75,11 +79,17 @@ class NYTParser(BaseParser):
         p_tags = sum([list(soup.findAll('p', attrs=restriction))
                       for restriction in [{'itemprop': 'articleBody'},
                                           {'itemprop': 'reviewBody'},
-                                          {'class':'story-body-text story-content'}
+                                          {'class': 'story-body-text story-content'}
                                       ]],
                      [])
         if not p_tags:
             p_tags = sum([div.findAll('p') for div in soup.findAll('div', attrs={'class': paragraph_wrapper_re})], [])
+        if not p_tags:
+            article = soup.find('article', attrs={'id': 'story'})
+            article_p_tags = article.findAll('p')
+            header_p_tags = article.find('header').findAll('p')
+            p_tags = [p_tag for p_tag in article_p_tags if p_tag not in header_p_tags]
+            p_tags = [p_tag for p_tag in p_tags if p_tag.getText() != 'Advertisement']
 
         div = soup.find('div', attrs={'class': 'story-addendum story-content theme-correction'})
         if div:
