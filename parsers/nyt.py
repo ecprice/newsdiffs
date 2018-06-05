@@ -4,7 +4,8 @@ from baseparser import BaseParser
 from bs4 import BeautifulSoup
 
 
-paragraph_wrapper_re = re.compile('.*\bStoryBodyCompanionColumn\b.*')
+paragraph_wrapper_re = re.compile(r'.*\bStoryBodyCompanionColumn\b.*')
+footer_re = re.compile(r'.*\bExtendedInformation\b.*')
 
 class NYTParser(BaseParser):
     SUFFIX = '?pagewanted=all'
@@ -54,7 +55,7 @@ class NYTParser(BaseParser):
         if seo_title:
             seo_title = seo_title.get('content')
         else:
-            seo_title = soup.find('title').getText()
+            seo_title = soup.find('meta', attrs={'property':"og:title"}).get('content')
 
         tmp = soup.find('meta', attrs={'name': 'hdl_p'})
         if tmp and tmp.get('content'):
@@ -83,7 +84,7 @@ class NYTParser(BaseParser):
                                       ]],
                      [])
         if not p_tags:
-            p_tags = sum([div.findAll('p') for div in soup.findAll('div', attrs={'class': paragraph_wrapper_re})], [])
+            p_tags = sum([div.findAll(['p', 'h2']) for div in soup.findAll('div', attrs={'class': paragraph_wrapper_re})], [])
         if not p_tags:
             article = soup.find('article', attrs={'id': 'story'})
             article_p_tags = article.findAll('p')
@@ -91,7 +92,7 @@ class NYTParser(BaseParser):
             p_tags = [p_tag for p_tag in article_p_tags if p_tag not in header_p_tags]
             p_tags = [p_tag for p_tag in p_tags if p_tag.getText() != 'Advertisement']
 
-        div = soup.find('div', attrs={'class': 'story-addendum story-content theme-correction'})
+        div = soup.find('div', attrs={'class': footer_re})
         if div:
             p_tags += [div]
         footer = soup.find('footer', attrs={'class':'story-footer story-content'})
