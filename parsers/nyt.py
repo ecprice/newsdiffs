@@ -88,14 +88,26 @@ class NYTParser(BaseParser):
         if not p_tags:
             article = soup.find('article', attrs={'id': 'story'})
             article_p_tags = article.findAll('p')
+
             header_p_tags = article.find('header').findAll('p')
-            p_tags = [p_tag for p_tag in article_p_tags if p_tag not in header_p_tags]
-            p_tags = [p_tag for p_tag in p_tags if p_tag.getText() != 'Advertisement']
+            bottom_of_article = article.find('div', attrs={'class': 'bottom-of-article'})
+
+            p_tags = [
+                p_tag for p_tag in article_p_tags
+                if (
+                    p_tag.getText() and
+                    # Remove header p_tags because it duplicates the title
+                    p_tag not in header_p_tags and
+                    # Remove bottom of article p_tags because we add them as the correction
+                    bottom_of_article not in p_tag.parents and
+                    p_tag.getText() != 'Advertisement'
+                )
+            ]
 
         div = soup.find('div', attrs={'class': footer_re})
         if div:
             p_tags += [div]
-        footer = soup.find('footer', attrs={'class':'story-footer story-content'})
+        footer = soup.find('footer', attrs={'class': 'story-footer story-content'})
         if footer:
             p_tags += list(footer.findAll(lambda x: x.get('class') != 'story-print-citation' and x.name == 'p'))
 
@@ -105,10 +117,21 @@ class NYTParser(BaseParser):
 
         top_correction = '\n'.join(x.getText() for x in
                                    soup.findAll('nyt_correction_top')) or '\n'
-        bottom_correction = '\n'.join(x.getText() for x in
-                                   soup.findAll('nyt_correction_bottom')) or '\n'
 
-        self.body = '\n'.join([top_correction,
-                               main_body,
-                               authorid,
-                               bottom_correction,])
+        bottom_correction = ''
+        correction_bottom_tags = soup.findAll('nyt_correction_bottom')
+        if correction_bottom_tags:
+            bottom_correction = '\n'.join(x.getText() for x in correction_bottom_tags)
+        if not correction_bottom_tags:
+            bottom_of_article = soup.find('div', attrs={'class': 'bottom-of-article'})
+            if bottom_of_article:
+                bottom_correction = bottom_of_article.getText()
+        if not bottom_correction:
+            bottom_correction = '\n'
+
+        self.body = '\n'.join([
+            top_correction,
+            main_body,
+            authorid,
+            bottom_correction,
+        ])
