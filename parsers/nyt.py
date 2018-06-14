@@ -83,11 +83,9 @@ class NYTParser(BaseParser):
                                       ]],
                      [])
 
-        is_new_format = False
         if not p_tags:
             p_tags = sum([div.findAll(['p', 'h2']) for div in soup.findAll('div', attrs={'class': paragraph_wrapper_re})], [])
         if not p_tags:
-            is_new_format = True
             article = soup.find('article', attrs={'id': 'story'})
             article_p_tags = article.findAll('p')
 
