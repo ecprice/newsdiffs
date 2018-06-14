@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 
 
 paragraph_wrapper_re = re.compile(r'.*\bStoryBodyCompanionColumn\b.*')
-footer_re = re.compile(r'.*\bExtendedInformation\b.*')
 
 class NYTParser(BaseParser):
     SUFFIX = '?pagewanted=all'
@@ -83,9 +82,12 @@ class NYTParser(BaseParser):
                                           {'class': 'story-body-text story-content'}
                                       ]],
                      [])
+
+        is_new_format = False
         if not p_tags:
             p_tags = sum([div.findAll(['p', 'h2']) for div in soup.findAll('div', attrs={'class': paragraph_wrapper_re})], [])
         if not p_tags:
+            is_new_format = True
             article = soup.find('article', attrs={'id': 'story'})
             article_p_tags = article.findAll('p')
 
@@ -104,12 +106,13 @@ class NYTParser(BaseParser):
                 )
             ]
 
-        div = soup.find('div', attrs={'class': footer_re})
+        div = soup.find('div', attrs={'class': 'story-addendum story-content theme-correction'})
         if div:
             p_tags += [div]
         footer = soup.find('footer', attrs={'class': 'story-footer story-content'})
+        # import pdb; pdb.set_trace()
         if footer:
-            p_tags += list(footer.findAll(lambda x: x.get('class') != 'story-print-citation' and x.name == 'p'))
+            p_tags += list(footer.findAll(lambda x: x.get('class') is not None and 'story-print-citation' not in x.get('class') and x.name == 'p'))
 
         main_body = '\n\n'.join([p.getText() for p in p_tags])
         authorids = soup.find('div', attrs={'class':'authorIdentification'})
@@ -122,7 +125,7 @@ class NYTParser(BaseParser):
         correction_bottom_tags = soup.findAll('nyt_correction_bottom')
         if correction_bottom_tags:
             bottom_correction = '\n'.join(x.getText() for x in correction_bottom_tags)
-        if not correction_bottom_tags:
+        if not correction_bottom_tags and is_new_format:
             bottom_of_article = soup.find('div', attrs={'class': 'bottom-of-article'})
             if bottom_of_article:
                 bottom_correction = bottom_of_article.getText()

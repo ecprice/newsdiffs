@@ -17,7 +17,7 @@ def test_new_format(mock_grab_url):
     mock_grab_url.return_value = HTML_NEW_FORMAT
     parser = NYTParser('https://www.nytimes.com/2018/05/16/us/politics/mueller-trump-indictment.html')
     assert 'Trump' in parser.body
-    assert len(parser.body.split('\n\n')) == 29
+    assert len(parser.body.split('\n\n')) == 28
     assert not parser.title.endswith('- The New York Times')
 
 
