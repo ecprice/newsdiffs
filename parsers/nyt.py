@@ -110,7 +110,7 @@ class NYTParser(BaseParser):
         if div:
             p_tags += [div]
         footer = soup.find('footer', attrs={'class': 'story-footer story-content'})
-        # import pdb; pdb.set_trace()
+        
         if footer:
             p_tags += list(footer.findAll(lambda x: x.get('class') is not None and 'story-print-citation' not in x.get('class') and x.name == 'p'))
 
@@ -125,7 +125,7 @@ class NYTParser(BaseParser):
         correction_bottom_tags = soup.findAll('nyt_correction_bottom')
         if correction_bottom_tags:
             bottom_correction = '\n'.join(x.getText() for x in correction_bottom_tags)
-        if not correction_bottom_tags and is_new_format:
+        if not correction_bottom_tags:
             bottom_of_article = soup.find('div', attrs={'class': 'bottom-of-article'})
             if bottom_of_article:
                 bottom_correction = bottom_of_article.getText()
