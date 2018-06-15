@@ -127,7 +127,9 @@ class NYTParser(BaseParser):
             bottom_of_article = soup.find('div', attrs={'class': 'bottom-of-article'})
             if bottom_of_article:
                 bottom_correction = bottom_of_article.getText()
-                bottom_correction = bottom_correction[:bottom_correction.index('A version of this article appears in print on')]
+                print_info_index = bottom_correction.find('A version of this article appears in print on')
+                if print_info_index > -1:
+                    bottom_correction = bottom_correction[:print_info_index]
         if not bottom_correction:
             bottom_correction = '\n'
 
