@@ -149,6 +149,7 @@ class BaseParser(object):
 
             # If no http://, prepend domain name
             domain = '/'.join(feeder_url.split('/')[:3])
+            urls = [url if not re.search('^//', url) else concat('http:', url) for url in urls]
             urls = [url if '://' in url else concat(domain, url) for url in urls]
 
             all_urls = all_urls + [url for url in urls if
