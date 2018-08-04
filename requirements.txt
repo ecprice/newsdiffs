@@ -1,8 +1,8 @@
-Django <= 1.5
+Django==1.6
 simplejson
 beautifulsoup4
 beautifulsoup
-South
+South==1.0.2
 html5lib
 python-dateutil==2.7.3
 pytest==3.5.1

@@ -25,6 +25,11 @@ DATABASES = {
         'NAME': 'newsdiffs+newsdiffs',
         'USER': 'newsdiffs',
         'PASSWORD': pwd,
+        # The lifetime of a database connection, in seconds. Use 0 to close
+        # database connections at the end of each request - Django's historical
+        # behavior - and None for unlimited persistent connections.
+        # https://docs.djangoproject.com/en/1.9/ref/settings/#conn-max-age
+        'CONN_MAX_AGE': 60,
         'OPTIONS': {
 # This doesn't seem to work.
 #            'read_default_file': '/mit/ecprice/.my.cnf',
