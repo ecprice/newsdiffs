@@ -7,6 +7,7 @@ Original installation at newsdiffs.org.
 A product of the Knight Mozilla MIT news hackathon in June 2012.
 Authors: Eric Price (ecprice@mit.edu), Greg Price (gnprice@gmail.com),
  and Jennifer 8. Lee (jenny@jennifer8lee.com)
+Factotum: Carl Gieringer
 
 This is free software under the MIT/Expat license; see LICENSE.
 The project's source code lives at http://github.com/ecprice/newsdiffs .
@@ -55,9 +56,7 @@ libraries; on a Debian- or Ubuntu-based system, it may suffice
 
 on a Mac, you will want something like
 
- $ pip install beautifulsoup4
- $ pip install beautifulsoup
- $ pip install html5lib
+ $ pip install beautifulsoup4 beautifulsoup html5lib
 
 Note that we need two versions of BeautifulSoup, both 3.2 and 4.0;
 some websites are parsed correctly in only one version.
@@ -110,3 +109,77 @@ minor edits to two other files: website/frontend/models.py and
 website/frontend/views.py (to define the display name and create a tab
 for the source, respectively).  Search for 'bbc' to find the locations
 to edit.
+
+
+Running MySQL locally
+----------------------------------------------
+```
+$ docker run --name=mysql -p 3306:3306 -d mysql/mysql-server
+# Look for GENERATED in the container output to find the auto-generated root password
+$ docker log mysql | grep GENERATED
+# Use the root password here
+$ docker exec -it mysql mysql -uroot -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.12
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'new-root-password';
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> CREATE USER 'newsdiffs'@'%' IDENTIFIED BY 'newsdiffs-password';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'newsdiffs'@'%' WITH GRANT OPTION;
+Query OK, 0 rows affected, 1 warning (0.08 sec)
+
+mysql> create database newsdiffs;
+Query OK, 1 row affected (0.04 sec)
+
+mysql> ^DBye
+```
+
+Copy `DATABASES` and `CACHES` from `settings_main.py` to `settings_dev.py`.  Update the password in `DATABASES` as 
+necessary for whatever passwords you used above for the `newsdiffs` user.
+
+```
+$ PYTHONPATH=$(pwd) python website/manage.py syncdb
+$ PYTHONPATH=$(pwd) python website/manage.py migrate
+$ PYTHONPATH=$(pwd) python manage.py createcachetable cache_table
+```
+
+Load testing the app
+--------------------
+
+To put load on the system:
+
+```
+locust -f locustfile.py
+```
+
+Visit localhost:8089 and start a test.
+
+To troubleshoot MySQL max_user_connections errors:
+
+```
+$ docker exec -it mysql mysql -uroot -p
+mysql> -- throttle the number of connections so that it is easy to hit the limit
+mysql> ALTER USER 'newsdiffs'@'%' WITH MAX_USER_CONNECTIONS 5;
+mysql> -- this will show you the number of connections to the server
+mysql> show status like '%connected%';
+```
+Start a locust swarm with 300 users at 100 users/second .  Keep refreshing http://127.0.0.1:8000/browse/
+and you should eventually get something like:
+
+> OperationalError at /browse/
+>   (1226, "User 'newsdiffs' has exceeded the 'max_user_connections' resource (current value: 5)")
+
+Now you have recreated the issue.
