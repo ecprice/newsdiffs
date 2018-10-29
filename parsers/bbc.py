@@ -14,13 +14,13 @@ class BBCParser(BaseParser):
                              fromEncoding='utf-8')
 
         self.meta = soup.findAll('meta')
-        elt = soup.find('h1', 'story-header')
+        elt = soup.find('h1', 'story-body__h1')
         if elt is None:
             self.real_article = False
             return
         self.title = elt.getText()
         self.byline = ''
-        self.date = soup.find('span', 'date').getText()
+        self.date = soup.find('div', 'date date--v2').get('data-datetime')
 
         div = soup.find('div', 'story-body')
         if div is None:
