@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  newsdiffs:
+    build:
+      context: ./
+      dockerfile: ./docker/dockerfile
+    volumes:
+      - ./:/app
+    ports:
+      - 8000:8000
