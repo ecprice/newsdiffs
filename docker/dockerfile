@@ -1,0 +1,12 @@
+FROM python:2.7
+
+COPY . /app/.
+
+WORKDIR /app
+
+RUN pip install -r requirements.txt && \
+    python website/manage.py syncdb && \
+    python website/manage.py migrate && \
+    mkdir articles
+
+ENTRYPOINT ["python", "website/manage.py", "runserver", "0.0.0.0:8000"]
